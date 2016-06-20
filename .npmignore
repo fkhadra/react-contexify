@@ -7,3 +7,4 @@ gulpfile.js
 .eslintrc
 node_modules
 .gitignore
+npm-debug.log
