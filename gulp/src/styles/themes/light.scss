@@ -1,0 +1,24 @@
+// Light Theme ------------------------------------------------------- //
+.react-contexify-menu__theme--light {
+  padding: 6px 0;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, .2), 0 0 0 1px #eee;
+  .react-contexify-menu__separator {
+    background-color: #eee;
+  }
+  .react-contexify-menu__item {
+
+    &:not(.react-contexify-menu__item--disabled):hover .react-contexify-menu__item__data {
+      color: #4393e6;
+      background-color: #E0EEFD;
+    }
+
+    &__data {
+      color: #666;
+    }
+    &__icon {
+      margin-right: 8px;
+      width: 12px;
+      text-align: center;
+    }
+  }
+}
