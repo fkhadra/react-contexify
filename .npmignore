@@ -7,3 +7,5 @@ gulpfile.js
 .eslintrc
 node_modules
 npm-debug.log
+scripts/
+webpack.config.js
