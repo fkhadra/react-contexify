@@ -2,12 +2,18 @@
   "name": "react-contexify",
   "version": "1.0.0",
   "main": "lib/index.js",
-  "description": "react contextmenu component",
+  "description": "Add contextmenu to your react component with ease",
+  "keywords": [
+    "react",
+    "context menu",
+    "react component",
+    "menu"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib"
   },
-  "author": "Fadi Khadra",
+  "author": "Fadi Khadra <fdkhadra@gmail.com> (https://sniphpet.com)",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.9.0",
