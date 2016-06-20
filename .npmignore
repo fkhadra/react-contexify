@@ -5,4 +5,5 @@ gulpfile.js
 .idea/
 .babelrc
 .eslintrc
-
+node_modules
+.gitignore
