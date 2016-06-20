@@ -1,3 +1,10 @@
 {
-  "extends": "airbnb"
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "rules": {
+    "indent": ["error", 4],
+    "comma-dangle": ["error", "only-multiline"],
+    "react/jsx-indent": ["error", 4],
+    "react/jsx-indent-props": [2, 4]
+  }
 }

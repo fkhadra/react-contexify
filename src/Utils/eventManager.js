@@ -1,9 +1,8 @@
-/**
- * Created by Gugu on 18-05-16.
- */
+
+/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }] */
 
 const eventManager = {
-    _eventList: new Map(),
+    eventList: new Map(),
 
     /**
      * Bind event
@@ -14,9 +13,9 @@ const eventManager = {
      * @returns {eventManager.on}
      */
     on(event, callback, context = null) {
-        this._eventList.has(event) || this._eventList.set(event, []);
+        this.eventList.has(event) || this.eventList.set(event, []);
 
-        this._eventList.get(event).push({
+        this.eventList.get(event).push({
             callback,
             context: context || this
         });
@@ -34,18 +33,18 @@ const eventManager = {
      */
     off(event = null, callback = null) {
         if (event != null && callback == null) {
-            return this._eventList.delete(event);
+            return this.eventList.delete(event);
         } else if (event != null && callback != null) {
-            const listeners = this._eventList.get(event);
+            const listeners = this.eventList.get(event);
 
-            this._eventList.set(event, listeners.filter(el =>
+            this.eventList.set(event, listeners.filter(el =>
                 !(el.callback === callback || el.callback.toString() === callback.toString())
             ));
-            listeners.length > 0 || this._eventList.delete(event);
+            listeners.length > 0 || this.eventList.delete(event);
 
             return true;
         } else if (event === null && callback === null) {
-            this._eventList.clear();
+            this.eventList.clear();
             return true;
         }
         return false;
@@ -58,9 +57,9 @@ const eventManager = {
      */
     once(event, callback, context) {
         this.on(event, callback, context);
-        const listener = this._eventList.get(event);
+        const listener = this.eventList.get(event);
         const idx = listener.length - 1;
-        listener[idx]['once'] = true;
+        listener[idx].once = true;
         return this;
     },
     /**
@@ -69,13 +68,13 @@ const eventManager = {
      * @returns {boolean}
      */
     emit(event, ...args) {
-        if (!this._eventList.has(event)) {
+        if (!this.eventList.has(event)) {
             console.warn(`<${event}> Event is not registered. Did you forgot to bind the event ?`);
             return false;
         }
-        const listeners = this._eventList.get(event);
+        const listeners = this.eventList.get(event);
 
-        this._eventList.set(event, listeners.filter( listener => {
+        this.eventList.set(event, listeners.filter(listener => {
             listener.callback.call(listener.context, ...args);
             return !listener.once;
         }));

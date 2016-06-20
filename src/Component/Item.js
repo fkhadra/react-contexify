@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import cssClasses from './../cssClasses';
 import classNames from 'classnames';
@@ -24,18 +23,17 @@ class Item extends React.Component {
     }
 
     bindEvent() {
-
         if (this.props.disabled !== true) {
-            if (typeof this.props.onClick === "function") {
-                this.handleClick = (e) => this.props.onClick(this, this.props.target);
+            if (typeof this.props.onClick === 'function') {
+                this.handleClick = () => this.props.onClick(this, this.props.target);
             } else {
-                //Maybe it's unnecessary to warn
-                this.handleClick = () => console.warn(`Did you forget to bind an event on the "${this.props.label}" item ? `);
+                // Maybe it's unnecessary to warn
+                this.handleClick = () => console.warn(`Did you forget to bind an event
+                on the "${this.props.label}" item ? `);
             }
         } else {
             this.handleClick = (e) => e.stopPropagation();
         }
-
     }
 
     buildItem() {
@@ -54,7 +52,7 @@ class Item extends React.Component {
     }
 
     render() {
-        const className= classNames(cssClasses.ITEM,{
+        const className = classNames(cssClasses.ITEM, {
             [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
         });
         return (

@@ -1,9 +1,10 @@
+/* eslint no-return-assign: ["error", "except-parens"] */
+
 import React from 'react';
 import eventManager from './Utils/eventManager';
 import cssClasses from './cssClasses';
 
 export default function (menuId) {
-
     return function (TargetComponent, event = 'contextmenu') {
         const eventList = {
             click: 'onClick',
@@ -13,13 +14,8 @@ export default function (menuId) {
         };
 
         if (!eventList[event]) {
-
             let validEvents = '';
-            for (let k in eventList) {
-                if (eventList.hasOwnProperty(k)) {
-                    validEvents += `'${k}' `;
-                }
-            }
+            Object.keys(eventList).forEach(k => (validEvents += `'${k}' `));
 
             console.warn(`Event must be one of the following values ${validEvents}`);
             return false;
@@ -48,6 +44,6 @@ export default function (menuId) {
                     React.createElement(TargetComponent, this.props)
                 );
             }
-        }
-    }
+        };
+    };
 }

@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 import cssClasses from './../cssClasses';
@@ -7,7 +6,8 @@ import eventManager from '../Utils/eventManager';
 const propTypes = {
     id: PropTypes.string.isRequired,
     theme: React.PropTypes.string,
-    animation: PropTypes.string
+    animation: PropTypes.string,
+    children: PropTypes.element.isRequired
 };
 
 const defaultProps = {
@@ -32,13 +32,16 @@ class ContextMenu extends React.Component {
         eventManager.on(`display::${this.props.id}`, e => this.show(e));
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !(this.state.visible === false && nextState.visible === false);
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.hide);
         eventManager.off(`display::${this.props.id}`);
     }
 
     setMenuPosition() {
-
         const browserSize = {
             width: window.innerWidth,
             height: window.innerHeight
@@ -53,34 +56,18 @@ class ContextMenu extends React.Component {
         let { x, y } = this.state;
 
         if ((x + menuSize.width) > browserSize.width) {
-            x = x - ((x + menuSize.width) - browserSize.width)
+            x = x - ((x + menuSize.width) - browserSize.width);
         }
 
         if ((y + menuSize.height) > browserSize.height) {
-            y = y - ((y + menuSize.height) - browserSize.height)
+            y = y - ((y + menuSize.height) - browserSize.height);
         }
 
         this.setState({
-            x: x,
-            y: y
+            x,
+            y
         });
     }
-
-    show = (e) => {
-        const { x, y } = this.getMousePosition(e);
-        this.setState({
-            visible: true,
-            x: x,
-            y: y,
-            target: e.target
-        }, this.setMenuPosition);
-    };
-
-    hide = () => {
-        this.setState({
-            visible: false
-        });
-    };
 
     getMousePosition(e) {
         const pos = {
@@ -89,7 +76,6 @@ class ContextMenu extends React.Component {
         };
 
         if (e.type === 'touchend' && (pos.x == null || pos.y == null)) {
-
             const touches = e.changedTouches;
 
             if (touches != null && touches.length > 0) {
@@ -110,9 +96,9 @@ class ContextMenu extends React.Component {
     }
 
     getMenuItem() {
-        return React.Children.map(this.props.children, child => {
-            return React.cloneElement(child, { target: this.state.target });
-        });
+        return React.Children.map(this.props.children, child =>
+            React.cloneElement(child, { target: this.state.target })
+        );
     }
 
     getMenuStyle() {
@@ -133,29 +119,39 @@ class ContextMenu extends React.Component {
         );
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !(this.state.visible === false && nextState.visible === false);
-    }
+    show = (e) => {
+        const { x, y } = this.getMousePosition(e);
+        this.setState({
+            visible: true,
+            x,
+            y,
+            target: e.target
+        }, this.setMenuPosition);
+    };
+
+    hide = () => {
+        this.setState({
+            visible: false
+        });
+    };
 
     render() {
         return this.state.visible ?
-            (
-                <aside
-                    className={cssClasses.CONTAINER}
-                    onClick={this.hide}
-                    onContextMenu={this.hide}
+            <aside
+                className={cssClasses.CONTAINER}
+                onClick={this.hide}
+                onContextMenu={this.hide}
+            >
+                <div
+                    className={this.getMenuClasses()}
+                    style={this.getMenuStyle()}
+                    ref={(ref) => (this.menu = ref)}
                 >
-                    <div
-                        className={this.getMenuClasses()}
-                        style={this.getMenuStyle()}
-                        ref={(ref) => (this.menu = ref)}
-                    >
-                        <div>
-                            {this.getMenuItem()}
-                        </div>
+                    <div>
+                        {this.getMenuItem()}
                     </div>
-                </aside>
-            )
+                </div>
+            </aside>
             : null;
     }
 }
