@@ -5,7 +5,7 @@ import eventManager from '../Utils/eventManager';
 
 const propTypes = {
     id: PropTypes.string.isRequired,
-    theme: React.PropTypes.string,
+    theme: PropTypes.string,
     animation: PropTypes.string,
     children: PropTypes.element.isRequired
 };

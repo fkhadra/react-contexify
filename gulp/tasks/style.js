@@ -15,9 +15,9 @@ module.exports = () => {
         .pipe(autoprefixer({
             browsers: ['last 2 versions']
         }))
-        .pipe(rename('react-contexify.css'))
+        .pipe(rename('ReactContexify.css'))
         .pipe(gulp.dest('dist'))
         .pipe(cssnano())
-        .pipe(rename('react-contexify.min.css'))
+        .pipe(rename('ReactContexify.min.css'))
         .pipe(gulp.dest('dist'));
 };
