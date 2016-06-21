@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React Contexify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"/>
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="./prism.css"/>
+    <link rel="stylesheet" href="./ReactContexify.min.css"/>
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .demo-wrapper {
+            background-color: #4393E6;
+            color: #fff;
+            border-radius: 20px;
+            text-align: center;
+            padding: 10px;
+            min-width: 150px;
+        }
+
+        label {
+            display: inline-block;
+            margin: 5px;
+        }
+        .subtitle{
+            text-align: center;
+            margin-top: -25px;
+        }
+        .container{
+            margin-bottom: 50px;
+        }
+        h3{margin-bottom: 0;}
+        h5{font-weight: bold;}
+        hr{margin-top: 0;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+            <h2 class="center">React Contexify</h2>
+        <div class="subtitle">Context menu for your react component</div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <h3>Installation</h3>
+            <hr/>
+            <div>Npm :</div>
+            <pre><code class="language-javascript">npm i react-contexify --save</code></pre>
+            <div>Include also the css file provided. Otherwise it wont work as expected.</div><br/>
+            <div>Script tag:</div>
+                <pre><code class="language-javascript">&lt;script src="/dist/ReactContexify.min.js">&lt;/script></code>
+            <code class="language-javascript">&lt;link rel="stylesheet" href="/dist/ReactContexify.min.css"/></code></pre>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <h3>Features</h3>
+            <hr/>
+            <ul>
+                <li>One menu can be triggered on multiple targets.</li>
+                <li>Create as many contextual menu as you want, as long as the id is unique</li>
+                <li>Easily customizable. Theme are split into different sass file. Fifteen line of code can be enough to create a theme.</li>
+                <li>The context menu never leave the visible screen. You can reduce the window to check the behavior.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="twelve columns">
+            <h3>Demo</h3>
+            <hr/>
+            <div id="app">
+
+            </div>
+            <div class="row">
+                <div class="columns twelve">
+                    <h3>Usage</h3>
+                    <hr/>
+                    <pre>
+                        <code class="language-javascript">
+import { ContextMenu, Item, Separator, menuProvider } from 'react-contexify';
+
+function onClick(item, target) {
+    // item is the item component on which you clicked. You can access all the props
+    console.log(item);
+    // target refer to the html node on which the menu is triggered
+    console.log(target);
+}
+
+// create your menu first
+const MyAwesomeMenu = () => {
+    return (
+        &lt;ContextMenu id='menu_id'> //id is mandatory
+            &lt;Item label="Add" icon="fa fa-plus" onClick={onClick} />
+            &lt;Item label="Remove" icon="fa fa-trash" onClick={onClick} />
+            &lt;Separator/>
+            &lt;Item label="Paste" icon="fa fa-clipboard" disabled />
+        &lt;/ContextMenu>
+    );
+};
+
+const Hodor = () => &lt;div>Hodor&lt;/div>;
+
+// wrap your component
+const HodorWithContextMenu = menuProvider('menu_id')(Hodor);
+
+// all together
+
+const App = () => {
+    return(
+        &lt;div>
+            &lt;HodorWithContextMenu />
+            &lt;MyAwesomeMenu/>
+        &lt;/div>
+    )
+}
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns twelve">
+                    <h3>Api</h3>
+                    <hr/>
+                    <div>
+                        <h5>ContextMenu (Type : React Component)</h5>
+                        <table>
+                            <tr>
+                            <th>Props</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Required</th>
+                            <th>Possible Value</th>
+                            <th>Description</th>
+                            </tr>
+                            <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>string</td>
+                                <td>-</td>
+                                <td>✓</td>
+                                <td>-</td>
+                                <td>Used to trigger the corresponding menu</td>
+                            </tr>
+                            <tr>
+                                <td>theme</td>
+                                <td>string</td>
+                                <td></td>
+                                <td>✘</td>
+                                <td>light | dark</td>
+                                <td>Style your context menu</td>
+                            </tr>
+                            <tr>
+                                <td>animation</td>
+                                <td>string</td>
+                                <td></td>
+                                <td>✘</td>
+                                <td>fadeIn | flipIn | popIn | zoomIn</td>
+                                <td>Opening animation</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h5>Item (Type : React Component)</h5>
+
+                        <table>
+                            <tr>
+                                <th>Props</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                            <tbody>
+                            <tr>
+                                <td>label</td>
+                                <td>string</td>
+                                <td>-</td>
+                                <td>✓</td>
+                                <td>Menu item label</td>
+                            </tr>
+                            <tr>
+                                <td>icon</td>
+                                <td>string</td>
+                                <td></td>
+                                <td>✘</td>
+                                <td>Any css classes icon(work well with font awesome)</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>bool</td>
+                                <td>false</td>
+                                <td>✘</td>
+                                <td>Disable the item</td>
+                            </tr>
+                            <tr>
+                                <td>onClick</td>
+                                <td>function</td>
+                                <td></td>
+                                <td>✘</td>
+                                <td>Callback defined on the item. The callback return the current item and the target</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>any</td>
+                                <td></td>
+                                <td>✘</td>
+                                <td>Can be any additional data you want to pass </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h5>Separator (Type : React Component)</h5>
+                        <div>Separator component don't expect any props.</div>
+                        <br/>
+                    </div>
+                    <div>
+                        <h5>menuProvider (Type : function)</h5>
+                        Syntax :
+                        <code>
+                                menuProvider(id)(targetComponent, event)
+                            </code>
+                        <table>
+                            <tr>
+                                <th>Params</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Required</th>
+                                <th>Possible Value</th>
+                                <th>Description</th>
+                            </tr>
+                            <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td>string</td>
+                                <td>-</td>
+                                <td>✓</td>
+                                <td>-</td>
+                                <td>Id used to map your component to a context menu</td>
+                            </tr>
+                            <tr>
+                                <td>targetComponent</td>
+                                <td>React Component</td>
+                                <td>-</td>
+                                <td>✓</td>
+                                <td>-</td>
+                                <td>The component on which you want to add a context menu</td>
+                            </tr>
+                            <tr>
+                                <td>event</td>
+                                <td>string</td>
+                                <td>contextmenu</td>
+                                <td>✘</td>
+                                <td>click | contextmenu | touchend | dblclick</td>
+                                <td>Event listener to trigger the context menu</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns twelve">
+            <h3>Thanks</h3>
+            <hr/>
+            <div>Big thanks to <a href="https://github.com/electerious">Tobias Reich</a>. This project is based on <a
+                    href="https://github.com/electerious/basicContext">basicContext</a>.  A vanilla js context menu.</div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="columns twelve">
+            <h3>License</h3>
+            <hr/>
+            <div>React Contexify is licensed under MIT. Do anything that you want.</div>
+        </div>
+    </div>
+</div>
+
+<script src="./prism.js"></script>
+<script src="./bundle.js"></script>
+
+</body>
+</html>
