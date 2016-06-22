@@ -6,9 +6,10 @@
   "keywords": [
     "react",
     "context menu",
-    "react component",
+    "react-component",
     "menu",
-    "react-contextmenu"
+    "react-contextmenu",
+    "react-contexify"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
