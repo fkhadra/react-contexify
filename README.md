@@ -31,7 +31,7 @@ Available [here](https://sniphpet.github.io/react-contexify).
 
 # Usage
 
-```
+```javascript
 import { ContextMenu, Item, Separator, menuProvider } from 'react-contexify';
 
 function onClick(item, target) {
