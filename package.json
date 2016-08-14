@@ -15,8 +15,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./scripts/build.sh"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sniphpet/react-contexify.git"
+  },
   "author": "Fadi Khadra <fdkhadra@gmail.com> (https://sniphpet.com)",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sniphpet/react-contexify/issues"
+  },
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
