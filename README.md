@@ -1,4 +1,4 @@
-# React-contexify
+# React-contexify [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/sniphpet/react-contexify.svg?maxAge=2592000)]()
 
 Context menu for your react component
 
@@ -9,7 +9,7 @@ Context menu for your react component
 ```
 npm i react-contexify --save
 ```
-Include also the css file provided. Otherwise it wont work as expected.
+Include also the css file provided. Otherwise it wont work as expected. 
 
 ### Script tag : 
 
@@ -31,8 +31,10 @@ Available [here](https://sniphpet.github.io/react-contexify).
 
 # Usage
 
+1.Create a menu
+
 ```javascript
-import { ContextMenu, Item, Separator, menuProvider } from 'react-contexify';
+import { ContextMenu, Item, Separator } from 'react-contexify';
 
 function onClick(item, target) {
     // item is the item component on which you clicked. You can access all the props
@@ -44,7 +46,7 @@ function onClick(item, target) {
 // create your menu first
 const MyAwesomeMenu = () => {
     return (
-        <ContextMenu id='menu_id'> //id is mandatory
+        <ContextMenu id='menu_id'>
             <Item label="Add" icon="fa fa-plus" onClick={onClick} />
             <Item label="Remove" icon="fa fa-trash" onClick={onClick} />
             <Separator/>
@@ -52,22 +54,87 @@ const MyAwesomeMenu = () => {
         </ContextMenu>
     );
 };
+```
+
+2.Define which component can display the menu
+
+```javascript
+import { ContextMenuProvider, menuProvider } from 'react-contexify';
 
 const Hodor = () => <div>Hodor</div>;
+const Cersei = () => <div>Cersei</div>;
+const Aria = () => <div>Aria</div>;
 
-// wrap your component
-const HodorWithContextMenu = menuProvider('menu_id')(Hodor);
+const CerseiWithContextMenu = () => {
+    return (
+        <ContextMenuProvider id="menu_id">
+            <Cersei />
+        </ContextMenuProvider>
+    )
+};
+// or you can use the curried function to add the same menu for many components
 
-// all together
+const addContextMenu = menuProvider('menu_id'); 
+const HodorWithContextMenu = addContextMenu(Hodor);
+const AriaWithContextMenu = addContextMenu(Aria);
+```
+
+3.All together
+
+```javascript
+// import statement ...
 
 const App = () => {
     return(
         <div>
+            <CerseiWithContextMenu />
             <HodorWithContextMenu />
+            <AriaWithContextMenu />
             <MyAwesomeMenu/>
         </div>
     )
 }
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+```
+
+# Add a context menu to a table
+
+```javascript
+import { ContextMenuProvider } from 'react-contexify';
+
+//You need to use a tr as a render tag otherwise your browser console will bleed !
+const Tr = (props) => {
+    return (
+        <ContextMenuProvider id="menu_id" renderTag="tr">
+            <td>{props.cel1}</td>
+            <td>{props.cel2}</td>
+        </ContextMenuProvider>;
+    )
+}
+
+class Table extends Component {
+  render() {
+    return (
+      <table>
+        <thead>
+        <tr>
+        <th>Cel 1</th>
+        <th>Cel 2</th>
+        </tr>
+        </thead>
+        <tbody>
+          <Tr cel1="lorem" cel2="ipsum" />
+          <Tr cel1="foo" cel2="bar" />
+        </tbody>
+      </table>
+  )
+  }
+}
+
 ```
 
 # Api
@@ -94,13 +161,47 @@ const App = () => {
 
 Separator component don't expect any props. It's just a separator xD.
 
-## menuProvider (Type : function)
+## ContextMenuProvider (Type : React Component)
 
 |Props    |Type    |Default|Required|Possible Value |Description|
 |---------|--------|:-----:|:------:|------------|----|
+|id	      |string or int|	-|	✓|	-|	Id used to map your component to a context menu
+|renderTag|node|	div|	✘|	-|	The render tag of the wrapper
+|event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
+|className|	string|	|	✘|	|	css classes, what else
+|style|	object|	|	✘|	|	style object for inline style
+
+
+## menuProvider (Type : function)
+
+|Args    |Type    |Default|Required|Possible Value |Description|
+|---------|--------|:-----:|:------:|------------|----|
 |id	      |string|	-|	✓|	-|	Id used to map your component to a context menu
+
+- Function returned by menuProvider expect :
+
+|Args    |Type    |Default|Required|Possible Value |Description|
+|---------|--------|:-----:|:------:|------------|----|
 |targetComponent|React Component|	-|	✓|	-|	The component on which you want to add a context menu
-|event|	string|	contextmenu|	✘|	click &#124; contextmenu &#124; touchend &#124; dblclick|	Event listener to trigger the context menu
+|renderTag|node|	div|	✘|	-|	The render tag of the wrapper
+|event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
+
+## Release Notes
+
+### 1.1.0
+
+#### Features
+    
+- Added possibility to set the render tag for the wrapper
+- Added a ContextMenuProvider component
+- Added possibility to set className and style to ContextMenuProvider
+- Removed ContextMenuProvider style.Was too unpredictable 
+
+#### Bug Fixes
+
+- fixed incorrect PropTypes used
+- dead code elimination
+
 
 # Thanks
 
