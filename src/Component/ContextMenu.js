@@ -28,7 +28,8 @@ class ContextMenu extends Component {
             visible: false,
             target: null
         };
-
+        // storing ref
+        this.menu = null;
     }
 
     componentDidMount() {
@@ -43,6 +44,10 @@ class ContextMenu extends Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.hide);
         eventManager.off(`display::${this.props.id}`);
+    }
+
+    setRef(ref) {
+        this.menu = ref;
     }
 
     setMenuPosition() {
@@ -149,7 +154,7 @@ class ContextMenu extends Component {
                 <div
                     className={this.getMenuClasses()}
                     style={this.getMenuStyle()}
-                    ref={(ref) => (this.menu = ref)}
+                    ref={this.setRef}
                 >
                     <div>
                         {this.getMenuItem()}
