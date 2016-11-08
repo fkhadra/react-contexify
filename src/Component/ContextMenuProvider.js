@@ -37,8 +37,8 @@ class ContextMenuProvider extends Component {
     return createElement(
       this.props.renderTag,
       attributes,
-      <TargetComponent {...this.props} />
-    )
+      createElement(this.props.children, {...this.props})
+    );
   }
 }
 
