@@ -10,7 +10,7 @@ const propTypes = {
     ]).isRequired,
     theme: PropTypes.string,
     animation: PropTypes.string,
-    children: PropTypes.element.isRequired
+    children: PropTypes.node.isRequired
 };
 
 const defaultProps = {
