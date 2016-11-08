@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import cssClasses from './../cssClasses';
 import classNames from 'classnames';
 
@@ -12,7 +12,8 @@ const propTypes = {
 };
 
 const defaultProps = {
-    disabled: false
+    disabled: false,
+    onClick: null
 };
 
 class Item extends React.Component {
@@ -24,7 +25,7 @@ class Item extends React.Component {
 
     bindEvent() {
         if (this.props.disabled !== true) {
-            if (typeof this.props.onClick === 'function') {
+            if (null !== this.props.onClick) {
                 this.handleClick = () => this.props.onClick(this, this.props.target);
             } else {
                 // Maybe it's unnecessary to warn
