@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, createElement, cloneElement } from 'react';
+import React, { Component, PropTypes, createElement, Children, cloneElement } from 'react';
 import eventManager from './../Utils/eventManager';
 import cssClasses from './../cssClasses';
 
@@ -8,12 +8,16 @@ const propTypes = {
     PropTypes.number
   ]).isRequired,
   renderTag: PropTypes.node,
-  event: PropTypes.string
+  event: PropTypes.string,
+  className: PropTypes.string,
+  style: PropTypes.object
 };
 
 const defaultProps = {
   renderTag: 'div',
-  event: 'onContextMenu'
+  event: 'onContextMenu',
+  className: '',
+  style: ''
 };
 
 class ContextMenuProvider extends Component {
@@ -28,18 +32,23 @@ class ContextMenuProvider extends Component {
     eventManager.emit(`display::${this.props.id}`, e.nativeEvent);
   }
 
+  getChildren() {
+    const { id, renderTag, event, children, className, style, ...rest } = this.props;
+    return Children.map(this.props.children, child => cloneElement(child, {...rest}));
+  }
+
   render() {
-    const attributes = {
-      [this.props.event]: this.handleEvent,
-      className: cssClasses.PROVIDER
-    };
-    //pull out provider props
-    const { id, renderTag, event, ...rest } = this.props;
+    const { renderTag, event, className, style } = this.props;
+    const attributes = Object.assign({}, {
+      [event]: this.handleEvent,
+      className,
+      style
+    });
 
     return createElement(
-      this.props.renderTag,
+      renderTag,
       attributes,
-      cloneElement(this.props.children, {...rest})
+      this.getChildren()
     );
   }
 }
