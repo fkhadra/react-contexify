@@ -1,10 +1,13 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 import cssClasses from './../cssClasses';
 import eventManager from '../Utils/eventManager';
 
 const propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOf([
+      PropTypes.string,
+      PropTypes.number
+    ]).isRequired,
     theme: PropTypes.string,
     animation: PropTypes.string,
     children: PropTypes.element.isRequired
@@ -15,7 +18,7 @@ const defaultProps = {
     animation: null
 };
 
-class ContextMenu extends React.Component {
+class ContextMenu extends Component {
 
     constructor(props) {
         super(props);
@@ -25,6 +28,7 @@ class ContextMenu extends React.Component {
             visible: false,
             target: null
         };
+
     }
 
     componentDidMount() {
