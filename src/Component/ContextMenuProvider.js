@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, createElement } from 'react';
+import React, { Component, PropTypes, createElement, cloneElement } from 'react';
 import eventManager from './../Utils/eventManager';
 import cssClasses from './../cssClasses';
 
@@ -37,7 +37,7 @@ class ContextMenuProvider extends Component {
     return createElement(
       this.props.renderTag,
       attributes,
-      createElement(this.props.children, {...this.props})
+      cloneElement(this.props.children, {...this.props})
     );
   }
 }

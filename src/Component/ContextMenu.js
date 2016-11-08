@@ -30,6 +30,7 @@ class ContextMenu extends Component {
         };
         // storing ref
         this.menu = null;
+        this.setRef = this.setRef.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
     }
