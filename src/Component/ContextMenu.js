@@ -30,6 +30,8 @@ class ContextMenu extends Component {
         };
         // storing ref
         this.menu = null;
+        this.show = this.show.bind(this);
+        this.hide = this.hide.bind(this);
     }
 
     componentDidMount() {
@@ -128,7 +130,7 @@ class ContextMenu extends Component {
         );
     }
 
-    show = (e) => {
+    show(e) {
         const { x, y } = this.getMousePosition(e);
         this.setState({
             visible: true,
@@ -136,13 +138,11 @@ class ContextMenu extends Component {
             y,
             target: e.target
         }, this.setMenuPosition);
-    };
+    }
 
-    hide = () => {
-        this.setState({
-            visible: false
-        });
-    };
+    hide(){
+        this.setState({visible: false});
+    }
 
     render() {
         return this.state.visible ?
