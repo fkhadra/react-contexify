@@ -4,7 +4,7 @@ import cssClasses from './../cssClasses';
 import eventManager from '../Utils/eventManager';
 
 const propTypes = {
-    id: PropTypes.oneOf([
+    id: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]).isRequired,

@@ -3,7 +3,7 @@ import eventManager from './../Utils/eventManager';
 import cssClasses from './../cssClasses';
 
 const propTypes = {
-  menuId: PropTypes.oneOf([
+  menuId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]).isRequired,
