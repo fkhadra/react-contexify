@@ -1,5 +1,5 @@
 .idea/
 node_modules/
-.sass_caches/
+.sass_cache/
 lib/
 npm-debug.log
