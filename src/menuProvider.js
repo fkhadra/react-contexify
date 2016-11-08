@@ -1,3 +1,4 @@
+import React from 'react';
 import ContextMenuProvider from './Component/ContextMenuProvider';
 
 export default function (menuId) {
