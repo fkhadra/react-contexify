@@ -33,11 +33,13 @@ class ContextMenuProvider extends Component {
       [this.props.event]: this.handleEvent,
       className: cssClasses.PROVIDER
     };
+    //pull out provider props
+    const { menuId, renderTag, event, ...rest } = this.props;
 
     return createElement(
       this.props.renderTag,
       attributes,
-      cloneElement(this.props.children, {...this.props})
+      cloneElement(this.props.children, {...rest})
     );
   }
 }
