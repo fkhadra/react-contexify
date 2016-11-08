@@ -3,7 +3,7 @@ import eventManager from './../Utils/eventManager';
 import cssClasses from './../cssClasses';
 
 const propTypes = {
-  menuId: PropTypes.oneOfType([
+  id: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]).isRequired,
@@ -25,7 +25,7 @@ class ContextMenuProvider extends Component {
 
   handleEvent(e) {
     e.preventDefault();
-    eventManager.emit(`display::${this.props.menuId}`, e.nativeEvent);
+    eventManager.emit(`display::${this.props.id}`, e.nativeEvent);
   }
 
   render() {
@@ -34,7 +34,7 @@ class ContextMenuProvider extends Component {
       className: cssClasses.PROVIDER
     };
     //pull out provider props
-    const { menuId, renderTag, event, ...rest } = this.props;
+    const { id, renderTag, event, ...rest } = this.props;
 
     return createElement(
       this.props.renderTag,
