@@ -1,4 +1,4 @@
-# React-contexify [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/sniphpet/react-contexify.svg?maxAge=2592000)]()
+# React-contexify [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
 
 Context menu for your react component
 
@@ -27,7 +27,7 @@ Include also the css file provided. Otherwise it wont work as expected.
 
 # Demo
 
-Available [here](https://sniphpet.github.io/react-contexify).
+Available [here](https://fkhadra.github.io/react-contexify).
 
 # Usage
 

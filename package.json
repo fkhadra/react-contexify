@@ -17,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sniphpet/react-contexify.git"
+    "url": "git+https://github.com/fkhadra/react-contexify.git"
   },
-  "author": "Fadi Khadra <fdkhadra@gmail.com> (https://sniphpet.com)",
+  "author": "Fadi Khadra <fdkhadra@gmail.com> (https://github.com/fkhadra)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sniphpet/react-contexify/issues"
+    "url": "https://github.com/fkhadra/react-contexify/issues"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
