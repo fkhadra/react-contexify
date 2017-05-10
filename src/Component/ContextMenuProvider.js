@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, createElement, Children, cloneElement } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component, createElement, Children, cloneElement } from 'react';
 import eventManager from './../Utils/eventManager';
 import cssClasses from './../cssClasses';
 
