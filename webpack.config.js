@@ -1,4 +1,5 @@
 /* eslint-disable */
+const path = require('path');
 const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -15,7 +16,10 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [
+          /node_modules/,
+          path.resolve(__dirname,'src', '__tests__')
+        ],
         loader: 'babel-loader',
         options: {
           presets: ['env', 'react', 'stage-0'],
@@ -26,7 +30,8 @@ module.exports = {
   },
   externals: [
     'react',
-    'prop-types'
+    'prop-types',
+    'classnames'
   ],
   plugins: [
     new webpack.LoaderOptionsPlugin({
