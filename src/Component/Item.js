@@ -6,8 +6,10 @@ import cx from 'classnames';
 
 class Item extends PureComponent {
   static propTypes = {
-    label: PropTypes.string,
+    label: PropTypes.node.isRequired,
     icon: PropTypes.string,
+    leftIcon: PropTypes.string,
+    rightIcon: PropTypes.string,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
     data: PropTypes.any,
@@ -16,28 +18,13 @@ class Item extends PureComponent {
 
   static defaultProps = {
     icon: '',
+    leftIcon: '',
+    rightIcon: '',
     disabled: false,
-    onClick: null
+    onClick: () => {}
   };
 
-  constructor(props) {
-    super(props);
-    this.bindEvent();
-  }
-
-  bindEvent() {
-    if (this.props.disabled !== true) {
-      if (this.props.onClick !== null) {
-        this.handleClick = () => this.props.onClick(this, this.props.target);
-      } else {
-                // Maybe it's unnecessary to warn
-        this.handleClick = () => console.warn(`Did you forget to bind an event
-                on the "${this.props.label}" item ? `);
-      }
-    } else {
-      this.handleClick = e => e.stopPropagation();
-    }
-  }
+  handleClick = () => this.props.onClick(this, this.props.target);
 
   buildItem() {
     return (
