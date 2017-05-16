@@ -3,7 +3,7 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 
 import ContextMenu from './../Component/ContextMenu';
-import eventManager from './../Utils/eventManager';
+import eventManager from './../util/eventManager';
 
 describe('ContextMenu', () => {
   it(
@@ -19,16 +19,26 @@ describe('ContextMenu', () => {
       component.unmount();
       expect(eventManager.eventList.has('display::foo')).toBeFalsy();
     });
-    it("Should only rerender when nextState is different from previous state " , () => {
-      ContextMenu.prototype.shouldComponentUpdate = (nextProps, nextState) => {
-        return !(this.state.visible === false && nextState.visible === false);
-      }
+
+    it('Should render null if `visible` is false', () => {
       const component = shallow(
         <ContextMenu id="foo">
           <div>bar</div>
         </ContextMenu>
       );
+      component.setState({ visible: true });
+      expect(component.html()).not.toBeNull();
 
+      component.setState({ visible: false });
+      expect(component.html()).toBeNull();
     });
 
+    it('Children must be instance of `Item`', () => {
+      const component = shallow(
+        <ContextMenu id="foo">
+          <div>bar</div>
+        </ContextMenu>
+      );
+      expect(component).to
+    }); 
 });

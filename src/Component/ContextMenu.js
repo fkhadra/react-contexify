@@ -2,8 +2,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import classNames from 'classnames';
+
+import Item from './Item';
 import cssClasses from './../cssClasses';
-import eventManager from '../Utils/eventManager';
+import eventManager from '../util/eventManager';
+import { childrenOfType } from '../util/propValidator';
 
 class ContextMenu extends Component {
   static propTypes = {
@@ -11,7 +14,7 @@ class ContextMenu extends Component {
       PropTypes.string,
       PropTypes.number
     ]).isRequired,
-    children: PropTypes.node.isRequired,
+    children: childrenOfType(Item).isRequired,
     theme: PropTypes.string,
     animation: PropTypes.string
   };
@@ -36,11 +39,7 @@ class ContextMenu extends Component {
     window.addEventListener('resize', this.hide);
     eventManager.on(`display::${this.props.id}`, e => this.show(e));
   }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return !(this.state.visible === false && nextState.visible === false);
-  }
-
+  
   componentWillUnmount() {
     window.removeEventListener('resize', this.hide);
     eventManager.off(`display::${this.props.id}`);

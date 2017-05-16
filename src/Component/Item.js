@@ -6,7 +6,7 @@ import cx from 'classnames';
 
 class Item extends PureComponent {
   static propTypes = {
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     icon: PropTypes.string,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
