@@ -10,7 +10,7 @@ describe('Custom PropTypes', () => {
   describe('childrenOfType', () => {
     it('Should return an Error if the given children type is not correct',
       () => {
-        const rightProps = { children: <Item /> };
+        const rightProps = { children: <Item>plop</Item> };
         const wrongProps = { children: <div>plop</div> };
 
         expect(childrenOfType(Item)(wrongProps, 'children', 'TestComponent'))
