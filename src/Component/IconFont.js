@@ -20,8 +20,8 @@ class IconFont extends PureComponent {
   render() {
     const className = cx(cssClasses.ITEM_ICON, this.props.className);
     const attributes = Object.assign(
-      {className},
-      Object.keys(this.props.style).length > 0 ? {style: this.props.style} : {}
+      { className },
+      Object.keys(this.props.style).length > 0 ? { style: this.props.style } : {}
     );
 
     return <i {...attributes}>{this.props.children}</i>;

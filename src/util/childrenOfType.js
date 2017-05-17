@@ -14,7 +14,7 @@ function withRequired(fn) {
   return fn;
 }
 
-export const childrenOfType = type => withRequired(
+const childrenOfType = type => withRequired(
   (props, propName, componentName) => {
     const prop = props[propName];
     let check = null;
@@ -27,3 +27,5 @@ export const childrenOfType = type => withRequired(
     return check;
   }
 );
+
+export default childrenOfType;

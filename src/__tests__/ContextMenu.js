@@ -21,47 +21,47 @@ describe('ContextMenu', () => {
       expect(eventManager.eventList.has('display::foo')).toBe(false);
     });
 
-    it('Should render null if `visible` is false', () => {
-      const component = shallow(
-        <ContextMenu id="foo">
-          <Item>bar</Item>
-        </ContextMenu>
+  it('Should render null if `visible` is false', () => {
+    const component = shallow(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+      </ContextMenu>
       );
-      component.setState({ visible: true });
-      expect(component.html()).not.toBeNull();
+    component.setState({ visible: true });
+    expect(component.html()).not.toBeNull();
 
-      component.setState({ visible: false });
-      expect(component.html()).toBeNull();
-    });
+    component.setState({ visible: false });
+    expect(component.html()).toBeNull();
+  });
 
-    it('Should hide ContextMenu when `hide` method is called', () => {
-      const component = shallow(
-        <ContextMenu id="foo">
-          <Item>bar</Item>
-        </ContextMenu>
+  it('Should hide ContextMenu when `hide` method is called', () => {
+    const component = shallow(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+      </ContextMenu>
       );
 
-      component.setState({ visible: true });
-      component.instance().hide();
+    component.setState({ visible: true });
+    component.instance().hide();
 
-      expect(component.state('visible')).toBe(false);
-      expect(component.html()).toBeNull();
-    });
+    expect(component.state('visible')).toBe(false);
+    expect(component.html()).toBeNull();
+  });
 
-    it('Should merge theme and animation when defined', () => {
-      const component = shallow(
-        <ContextMenu id="foo" animation="foo" theme="bar">
-          <Item>bar</Item>
-        </ContextMenu>
+  it('Should merge theme and animation when defined', () => {
+    const component = shallow(
+      <ContextMenu id="foo" animation="foo" theme="bar">
+        <Item>bar</Item>
+      </ContextMenu>
       );
-      component.setState({ visible: true });
+    component.setState({ visible: true });
 
-      expect(component.find('.react-contexify-menu')
+    expect(component.find('.react-contexify-menu')
         .hasClass('foo'))
         .toBe(true);
 
-      expect(component.find('.react-contexify-menu')
+    expect(component.find('.react-contexify-menu')
         .hasClass('react-contexify-menu__theme--bar'))
         .toBe(true);
-    });
+  });
 });

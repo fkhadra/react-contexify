@@ -6,7 +6,7 @@ import cx from 'classnames';
 import Item from './Item';
 import cssClasses from './../cssClasses';
 import eventManager from '../util/eventManager';
-import { childrenOfType } from '../util/propValidator';
+import childrenOfType from '../util/childrenOfType';
 
 class ContextMenu extends Component {
   static propTypes = {
@@ -80,7 +80,6 @@ class ContextMenu extends Component {
   }
 
   getMousePosition(e) {
-
     const pos = {
       x: e.clientX,
       y: e.clientY
@@ -94,7 +93,7 @@ class ContextMenu extends Component {
         pos.y = touches[0].clientY;
       }
     }
-    //just covering my ass I guess
+    // just covering my ass I guess
     if (pos.x === null || pos.x < 0) {
       pos.x = 0;
     }
@@ -150,6 +149,7 @@ class ContextMenu extends Component {
         className={cssClasses.CONTAINER}
         onClick={this.hide}
         onContextMenu={this.hide}
+        role="presentation"
       >
         <div
           className={this.getMenuClasses()}

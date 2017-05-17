@@ -38,7 +38,6 @@ describe('Menu Item', () => {
         data: 'data'
       });
       component.simulate('click');
-
     });
 
   it('Can handle click when disabled', () => {

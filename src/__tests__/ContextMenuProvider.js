@@ -16,6 +16,6 @@ describe('ContextMenuProvider', () => {
       </ContextMenuProvider>
     );
     expect(component.hasClass('bar')).toBe(true);
-    expect(component.html()).toContain('style')
+    expect(component.html()).toContain('style');
   });
 });

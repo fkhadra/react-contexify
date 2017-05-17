@@ -11,10 +11,10 @@ describe('IconFont', () => {
   });
 
   it('Should merge className and style', () => {
-    const component = shallow(<IconFont className="foo"/>);
+    const component = shallow(<IconFont className="foo" />);
     expect(component.prop('className')).toContain('foo');
 
-    component.setProps({style:{width: '10px'}});
+    component.setProps({ style: { width: '10px' } });
     expect(component.prop('style').width).toBe('10px');
   });
 
@@ -24,7 +24,7 @@ describe('IconFont', () => {
 
     expect(component.html()).toContain('foo');
 
-    component.setProps({children: <Bar />});
+    component.setProps({ children: <Bar /> });
     expect(component.html()).toContain('<div>bar</div>');
   });
 });

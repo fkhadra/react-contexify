@@ -20,7 +20,8 @@ class Item extends PureComponent {
     rightIcon: '',
     disabled: false,
     onClick: () => {},
-    data: {}
+    target: {},
+    data: ''
   };
 
   handleClick = () => this.props.onClick(this.props.target, this.props.data);
@@ -41,7 +42,7 @@ class Item extends PureComponent {
     });
 
     return (
-      <div className={className} onClick={this.handleClick}>
+      <div className={className} onClick={this.handleClick} role="presentation">
         {this.buildItem()}
       </div>
     );
