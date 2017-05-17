@@ -1,7 +1,7 @@
 /* global: window */
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 import Item from './Item';
 import cssClasses from './../cssClasses';
@@ -36,16 +36,15 @@ class ContextMenu extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.hide);
     eventManager.on(`display::${this.props.id}`, e => this.show(e));
   }
-  
+
   componentWillUnmount() {
-    window.removeEventListener('resize', this.hide);
     eventManager.off(`display::${this.props.id}`);
   }
 
   hide = () => {
+    window.removeEventListener('resize', this.hide);
     this.setState({ visible: false });
   };
 
@@ -59,7 +58,6 @@ class ContextMenu extends Component {
       height: window.innerHeight
     };
 
-    // Get size of context
     const menuSize = {
       width: this.menu.offsetWidth,
       height: this.menu.offsetHeight
@@ -88,20 +86,20 @@ class ContextMenu extends Component {
       y: e.clientY
     };
 
-    if (e.type === 'touchend' && (pos.x == null || pos.y == null)) {
+    if (e.type === 'touchend' && (pos.x === null || pos.y === null)) {
       const touches = e.changedTouches;
 
-      if (touches != null && touches.length > 0) {
+      if (touches !== null && touches.length > 0) {
         pos.x = touches[0].clientX;
         pos.y = touches[0].clientY;
       }
     }
-
-    if (pos.x == null || pos.x < 0) {
+    //just covering my ass I guess
+    if (pos.x === null || pos.x < 0) {
       pos.x = 0;
     }
 
-    if (pos.y == null || pos.y < 0) {
+    if (pos.y === null || pos.y < 0) {
       pos.y = 0;
     }
 
@@ -123,18 +121,21 @@ class ContextMenu extends Component {
   }
 
   getMenuClasses() {
-    return classNames(
+    const { theme, animation } = this.props;
+
+    return cx(
       cssClasses.MENU,
       {
-        [`react-contexify-menu__theme--${this.props.theme}`]: this.props.theme !==
-        null,
-        [`${this.props.animation}`]: this.props.animation !== null
+        [`react-contexify-menu__theme--${theme}`]: theme !== null,
+        [`${animation}`]: animation !== null
       }
     );
   }
 
   show = e => {
     const { x, y } = this.getMousePosition(e);
+    window.addEventListener('resize', this.hide);
+
     this.setState({
       visible: true,
       x,
@@ -144,21 +145,22 @@ class ContextMenu extends Component {
   };
 
   render() {
-    return this.state.visible ? <aside
-      className={cssClasses.CONTAINER}
-      onClick={this.hide}
-      onContextMenu={this.hide}
-    >
-      <div
-        className={this.getMenuClasses()}
-        style={this.getMenuStyle()}
-        ref={this.setRef}
+    return this.state.visible
+      ? <aside
+        className={cssClasses.CONTAINER}
+        onClick={this.hide}
+        onContextMenu={this.hide}
       >
-        <div>
-          {this.getMenuItem()}
+        <div
+          className={this.getMenuClasses()}
+          style={this.getMenuStyle()}
+          ref={this.setRef}
+        >
+          <div>
+            {this.getMenuItem()}
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
       : null;
   }
 }
