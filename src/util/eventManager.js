@@ -51,19 +51,6 @@ const eventManager = {
   },
     /**
      * @param event
-     * @param callback
-     * @param context
-     * @returns {eventManager.once}
-     */
-  once(event, callback, context) {
-    this.on(event, callback, context);
-    const listener = this.eventList.get(event);
-    const idx = listener.length - 1;
-    listener[idx].once = true;
-    return this;
-  },
-    /**
-     * @param event
      * @param args
      * @returns {boolean}
      */
