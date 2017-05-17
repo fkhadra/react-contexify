@@ -1,6 +1,12 @@
-import React, { PureComponent, createElement, Children, cloneElement } from 'react';
+import React, {
+  PureComponent,
+  createElement,
+  Children,
+  cloneElement
+} from 'react';
 import PropTypes from 'prop-types';
-import eventManager from './../Utils/eventManager';
+
+import eventManager from './../util/eventManager';
 
 class ContextMenuProvider extends PureComponent {
   static propTypes = {
@@ -22,7 +28,7 @@ class ContextMenuProvider extends PureComponent {
     renderTag: 'div',
     event: 'onContextMenu',
     className: '',
-    style: ''
+    style: {}
   };
 
   handleEvent = e => {
@@ -31,8 +37,17 @@ class ContextMenuProvider extends PureComponent {
   };
 
   getChildren() {
-    const { id, renderTag, event, children, className, style, ...rest } = this.props;
-    return Children.map(this.props.children, child => cloneElement(child, { ...rest }));
+    const {
+      id,
+      renderTag,
+      event,
+      children,
+      className,
+      style,
+      ...rest
+    } = this.props;
+    return Children.map(this.props.children,
+      child => cloneElement(child, { ...rest }));
   }
 
   render() {
