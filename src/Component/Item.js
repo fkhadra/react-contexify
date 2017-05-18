@@ -19,12 +19,17 @@ class Item extends PureComponent {
     leftIcon: '',
     rightIcon: '',
     disabled: false,
-    onClick: () => {},
+    onClick: () => {
+    },
     target: {},
     data: ''
   };
 
-  handleClick = () => this.props.onClick(this.props.target, this.props.data);
+  handleClick = (e) => {
+    this.props.disabled
+      ? e.stopPropagation()
+      : this.props.onClick(this.props.target, this.props.data);
+  };
 
   buildItem() {
     return (

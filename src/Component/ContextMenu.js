@@ -43,8 +43,22 @@ class ContextMenu extends Component {
     eventManager.off(`display::${this.props.id}`);
   }
 
-  hide = () => {
+  bindWindowEvent = () => {
+    window.addEventListener('resize', this.hide);
+    window.addEventListener('contextmenu', this.hide);
+    window.addEventListener('click', this.hide);
+    window.addEventListener('scroll', this.hide);
+  };
+
+  unBindWindowEvent = () => {
     window.removeEventListener('resize', this.hide);
+    window.removeEventListener('contextmenu', this.hide);
+    window.removeEventListener('click', this.hide);
+    window.removeEventListener('scroll', this.hide);
+  };
+
+  hide = () => {
+    this.unBindWindowEvent();
     this.setState({ visible: false });
   };
 
@@ -114,7 +128,7 @@ class ContextMenu extends Component {
   getMenuStyle() {
     return {
       left: this.state.x,
-      top: this.state.y,
+      top: this.state.y + 1,
       opacity: 1
     };
   }
@@ -132,25 +146,21 @@ class ContextMenu extends Component {
   }
 
   show = e => {
+    e.stopPropagation();
     const { x, y } = this.getMousePosition(e);
-    window.addEventListener('resize', this.hide);
-
+    this.bindWindowEvent();
     this.setState({
       visible: true,
       x,
       y,
       target: e.target
     }, this.setMenuPosition);
+
   };
 
   render() {
     return this.state.visible
-      ? <aside
-        className={cssClasses.CONTAINER}
-        onClick={this.hide}
-        onContextMenu={this.hide}
-        role="presentation"
-      >
+      ?
         <div
           className={this.getMenuClasses()}
           style={this.getMenuStyle()}
@@ -160,7 +170,6 @@ class ContextMenu extends Component {
             {this.getMenuItem()}
           </div>
         </div>
-      </aside>
       : null;
   }
 }
