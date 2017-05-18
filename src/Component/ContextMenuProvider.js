@@ -1,41 +1,53 @@
+import React, {
+  PureComponent,
+  createElement,
+  Children,
+  cloneElement
+} from 'react';
 import PropTypes from 'prop-types';
-import React, { Component, createElement, Children, cloneElement } from 'react';
-import eventManager from './../Utils/eventManager';
-import cssClasses from './../cssClasses';
 
-const propTypes = {
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]).isRequired,
-  renderTag: PropTypes.node,
-  event: PropTypes.string,
-  className: PropTypes.string,
-  style: PropTypes.object
-};
+import eventManager from './../util/eventManager';
 
-const defaultProps = {
-  renderTag: 'div',
-  event: 'onContextMenu',
-  className: '',
-  style: ''
-};
+class ContextMenuProvider extends PureComponent {
+  static propTypes = {
+    id: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]).isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ]).isRequired,
+    renderTag: PropTypes.node,
+    event: PropTypes.string,
+    className: PropTypes.string,
+    style: PropTypes.object
+  };
 
-class ContextMenuProvider extends Component {
+  static defaultProps = {
+    renderTag: 'div',
+    event: 'onContextMenu',
+    className: '',
+    style: {}
+  };
 
-  constructor(props) {
-    super(props);
-    this.handleEvent = this.handleEvent.bind(this);
-  }
-
-  handleEvent(e) {
+  handleEvent = e => {
     e.preventDefault();
     eventManager.emit(`display::${this.props.id}`, e.nativeEvent);
-  }
+  };
 
   getChildren() {
-    const { id, renderTag, event, children, className, style, ...rest } = this.props;
-    return Children.map(this.props.children, child => cloneElement(child, {...rest}));
+    const {
+      id,
+      renderTag,
+      event,
+      children,
+      className,
+      style,
+      ...rest
+    } = this.props;
+    return Children.map(this.props.children,
+      child => cloneElement(child, { ...rest }));
   }
 
   render() {
@@ -53,8 +65,5 @@ class ContextMenuProvider extends Component {
     );
   }
 }
-
-ContextMenuProvider.propTypes = propTypes;
-ContextMenuProvider.defaultProps = defaultProps;
 
 export default ContextMenuProvider;
