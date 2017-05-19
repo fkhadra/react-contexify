@@ -65,4 +65,14 @@ describe('ContextMenu', () => {
         .hasClass(`${cssClasses.THEME}bar`))
         .toBe(true);
   });
+  it('Should be able to perform conditional rendering when item are null', () => {
+    const component = shallow(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+        {null}
+      </ContextMenu>
+    );
+    component.setState({ visible: true });
+    expect(component.html()).toContain('bar');
+  });
 });

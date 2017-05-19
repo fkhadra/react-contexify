@@ -132,13 +132,24 @@ class ContextMenu extends Component {
     return pos;
   }
 
+  removeNull(v) {
+    return v !== null;
+  }
+
+  cloneItem = item => React.cloneElement(item, {
+    targetNode: this.state.targetNode,
+    refsFromProvider: this.refsFromProvider
+  });
+
   getMenuItem() {
-    return React.Children.map(this.props.children, child =>
-      React.cloneElement(child, {
-        targetNode: this.state.targetNode,
-        refsFromProvider: this.refsFromProvider
-      })
-    );
+    if (Object.prototype.toString.call(this.props.children).slice(8, -1) === 'Array') {
+      return React.Children.map(
+        this.props.children.filter(this.removeNull),
+        this.cloneItem
+      );
+    }
+
+    return this.cloneItem(this.props.children);
   }
 
   getMenuStyle() {
