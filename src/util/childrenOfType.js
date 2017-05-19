@@ -18,12 +18,15 @@ const childrenOfType = type => withRequired(
   (props, propName, componentName) => {
     const prop = props[propName];
     let check = null;
+
     Children.forEach(prop, child => {
-      if (child.type !== type) {
+      // Allow null for conditional rendering: condition && <item>foo</item>
+      if (child !== null && child.type !== type) {
         check = new Error(
           `${componentName} expect children to be of type ${type}`);
       }
     });
+
     return check;
   }
 );
