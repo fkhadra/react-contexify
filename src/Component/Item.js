@@ -25,7 +25,7 @@ class Item extends PureComponent {
     data: ''
   };
 
-  handleClick = (e) => {
+  handleClick = e => {
     this.props.disabled
       ? e.stopPropagation()
       : this.props.onClick(this.props.target, this.props.data);

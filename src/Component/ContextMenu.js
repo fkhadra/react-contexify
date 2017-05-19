@@ -24,6 +24,18 @@ class ContextMenu extends Component {
     animation: null
   };
 
+  static THEME = {
+    light: 'light',
+    dark: 'dark'
+  };
+
+  static ANIMATION = {
+    fade: 'fade',
+    flip: 'flip',
+    pop: 'pop',
+    zoom: 'zoom'
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -155,7 +167,6 @@ class ContextMenu extends Component {
       y,
       target: e.target
     }, this.setMenuPosition);
-
   };
 
   render() {

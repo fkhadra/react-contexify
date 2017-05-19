@@ -33,19 +33,20 @@ describe('Menu Item', () => {
       };
       component.setProps({
         onClick: click,
-        disabled: true,
         target: { foo: 'bar' },
         data: 'data'
       });
       component.simulate('click');
     });
 
-  it('Can handle click when disabled', () => {
+  it('Should remove click when disabled', () => {
     const click = jest.fn();
     component.setProps({ onClick: click, disabled: true });
 
     expect(click).not.toHaveBeenCalled();
-    component.simulate('click');
-    expect(click).toHaveBeenCalled();
+    component.simulate('click', {
+      stopPropagation: () => {}
+    });
+    expect(click).not.toHaveBeenCalled();
   });
 });
