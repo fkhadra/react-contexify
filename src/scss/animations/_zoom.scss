@@ -9,10 +9,6 @@ $delay: 0.4s;
   50% { opacity: 1; }
 }
 
-.zoomIn {
-  animation: zoomIn 0.4s;
-}
-
 @keyframes zoomOut {
   from {
     opacity: 1;
@@ -28,6 +24,10 @@ $delay: 0.4s;
   }
 }
 
-.zoomOut {
+.react-contexify__will-enter--zoom {
+  animation: zoomIn 0.4s;
+}
+
+.react-contexify__will-enter--zoom {
   animation: zoomOut $delay;
 }
