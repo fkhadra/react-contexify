@@ -25,17 +25,21 @@ describe('Menu Item', () => {
   });
 
   it(
-    'Should pass the target and the data props to the provided callback when clicked',
+    'Should pass the targetNode, the refs and the data props to the provided callback when clicked',
     () => {
-      const click = (target, data) => {
-        expect(target.foo).toBe('bar');
+      const click = (targetNode, refs, data) => {
+        expect(targetNode.foo).toBe('bar');
+        expect(refs[0].baz).toBe('baz');
         expect(data).toBe('data');
       };
+
       component.setProps({
         onClick: click,
-        target: { foo: 'bar' },
+        targetNode: { foo: 'bar' },
+        refsFromProvider: [{ baz: 'baz' }],
         data: 'data'
       });
+
       component.simulate('click');
     });
 

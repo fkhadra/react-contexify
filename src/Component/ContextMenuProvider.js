@@ -32,10 +32,23 @@ class ContextMenuProvider extends PureComponent {
     style: {}
   };
 
+  constructor(props) {
+    super(props);
+    this.childrenRefs = [];
+  }
+
   handleEvent = e => {
     e.preventDefault();
-    eventManager.emit(`display::${this.props.id}`, e.nativeEvent);
+    eventManager.emit(
+      `display::${this.props.id}`,
+      e.nativeEvent,
+      this.childrenRefs.length === 1
+        ? this.childrenRefs[0]
+        : this.childrenRefs
+    );
   };
+
+  setChildrenRefs = ref => this.childrenRefs.push(ref);
 
   getChildren() {
     const {
@@ -47,8 +60,16 @@ class ContextMenuProvider extends PureComponent {
       style,
       ...rest
     } = this.props;
-    return isValidElement(this.props.children) ? Children.map(this.props.children,
-      child => cloneElement(child, { ...rest })) : this.props.children;
+
+    // reset refs
+    this.childrenRefs = [];
+
+    return Children.map(this.props.children,
+      child => (
+        isValidElement(child)
+          ? cloneElement(child, { ...rest, ref: this.setChildrenRefs })
+          : child
+      ));
   }
 
   render() {

@@ -42,13 +42,14 @@ class ContextMenu extends Component {
       x: 0,
       y: 0,
       visible: false,
-      target: null
+      targetNode: null
     };
     this.menu = null;
+    this.refsFromProvider = null;
   }
 
   componentDidMount() {
-    eventManager.on(`display::${this.props.id}`, e => this.show(e));
+    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) => this.show(e, refsFromProvider));
   }
 
   componentWillUnmount() {
@@ -133,7 +134,10 @@ class ContextMenu extends Component {
 
   getMenuItem() {
     return React.Children.map(this.props.children, child =>
-      React.cloneElement(child, { target: this.state.target })
+      React.cloneElement(child, {
+        targetNode: this.state.targetNode,
+        refsFromProvider: this.refsFromProvider
+      })
     );
   }
 
@@ -157,15 +161,16 @@ class ContextMenu extends Component {
     );
   }
 
-  show = e => {
+  show = (e, refsFromProvider) => {
     e.stopPropagation();
+    this.refsFromProvider = refsFromProvider;
     const { x, y } = this.getMousePosition(e);
     this.bindWindowEvent();
     this.setState({
       visible: true,
       x,
       y,
-      target: e.target
+      targetNode: e.target
     }, this.setMenuPosition);
   };
 

@@ -5,6 +5,7 @@ import { mount, shallow } from 'enzyme';
 import ContextMenu from './../Component/ContextMenu';
 import Item from './../Component/Item';
 import eventManager from './../util/eventManager';
+import cssClasses from './../cssClasses';
 
 describe('ContextMenu', () => {
   it(
@@ -56,12 +57,12 @@ describe('ContextMenu', () => {
       );
     component.setState({ visible: true });
 
-    expect(component.find('.react-contexify-menu')
-        .hasClass('foo'))
+    expect(component.find('.react-contexify')
+        .hasClass(`${cssClasses.ANIMATION_WILL_ENTER}foo`))
         .toBe(true);
 
-    expect(component.find('.react-contexify-menu')
-        .hasClass('react-contexify-menu__theme--bar'))
+    expect(component.find('.react-contexify')
+        .hasClass(`${cssClasses.THEME}bar`))
         .toBe(true);
   });
 });

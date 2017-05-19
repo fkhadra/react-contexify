@@ -7,12 +7,16 @@ import cssClasses from './../cssClasses';
 class Item extends PureComponent {
   static propTypes = {
     children: PropTypes.node.isRequired,
-    target: PropTypes.object,
+    targetNode: PropTypes.object,
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
-    data: PropTypes.any
+    data: PropTypes.any,
+    refsFromProvider: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(PropTypes.object)
+    ])
   };
 
   static defaultProps = {
@@ -21,14 +25,19 @@ class Item extends PureComponent {
     disabled: false,
     onClick: () => {
     },
-    target: {},
-    data: ''
+    targetNode: {},
+    data: null,
+    refsFromProvider: []
   };
 
   handleClick = e => {
     this.props.disabled
       ? e.stopPropagation()
-      : this.props.onClick(this.props.target, this.props.data);
+      : this.props.onClick(
+        this.props.targetNode,
+      this.props.refsFromProvider,
+      this.props.data
+    );
   };
 
   buildItem() {
