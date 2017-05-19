@@ -2,7 +2,8 @@ import React, {
   PureComponent,
   createElement,
   Children,
-  cloneElement
+  cloneElement,
+  isValidElement
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -46,8 +47,8 @@ class ContextMenuProvider extends PureComponent {
       style,
       ...rest
     } = this.props;
-    return Children.map(this.props.children,
-      child => cloneElement(child, { ...rest }));
+    return isValidElement(this.props.children) ? Children.map(this.props.children,
+      child => cloneElement(child, { ...rest })) : this.props.children;
   }
 
   render() {
