@@ -2,8 +2,6 @@
 * css classes mapping
 * */
 export default {
-  CONTAINER: 'react-contexify-container',
-  PROVIDER: 'react-contexify-provider',
   MENU: 'react-contexify-menu',
   SEPARATOR: 'react-contexify-menu__separator',
   ITEM: 'react-contexify-menu__item',
