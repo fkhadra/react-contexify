@@ -151,8 +151,8 @@ class ContextMenu extends Component {
     return cx(
       cssClasses.MENU,
       {
-        [`react-contexify-menu__theme--${theme}`]: theme !== null,
-        [`${animation}`]: animation !== null
+        [cssClasses.THEME + theme]: theme !== null,
+        [cssClasses.ANIMATION_WILL_ENTER + animation]: animation !== null
       }
     );
   }
