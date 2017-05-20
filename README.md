@@ -1,99 +1,108 @@
 # React-contexify [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
 
-Context menu for your react component
+Add a context menu to your react application with ease !
 
-# Installation
+## Demo
+   
+Live demo [here](https://fkhadra.github.io/react-contexify/)   
 
-### npm : 
+## Installation
 
 ```
-npm i react-contexify --save
+$ npm install --save react-toastify
+$ yarn add react-toastify
 ```
+
 Include also the css file provided. Otherwise it wont work as expected. 
 
-### Script tag : 
+### Style Loader :
+
+```javascript
+import 'react-toastify/dist/ReactContexify.min.css' 
+```
+
+### 1998 Script tag : 
 
 ``` 
-<script src="/dist/ReactContexify.min.js"></script>
 <link rel="stylesheet" href="/dist/ReactContexify.min.css"/>
 ``` 
 
-# Features
+## Features
 
-- One menu can be triggered on multiple targets
+- Don't rely on `findDOMNode`
+- The context menu never leave the visible screen. You can reduce the window to check the behavior
+- The callback provide access to the wrapped component
+- One menu can be use for multiple targets
 - Create as many contextual menu as you want, as long as the id is unique
 - Easily customizable. Theme are split into different sass file. Fifteen line of code can be enough to create a theme
-- The context menu never leave the visible screen. You can reduce the window to check the behavior
 
-# Demo
+## How it works ?
 
-Available [here](https://fkhadra.github.io/react-contexify).
-
-# Usage
-
-1.Create a menu
+### Create your menu
 
 ```javascript
-import { ContextMenu, Item, Separator } from 'react-contexify';
+import { ContextMenu, Item, Separator, IconFont } from 'react-contexify';
 
-function onClick(item, target) {
-    // item is the item component on which you clicked. You can access all the props
-    console.log(item);
+function onClick(targetNode, refs, data) {
     // target refer to the html node on which the menu is triggered
-    console.log(target);
+    console.log(targetNode);
+    //refs contain
+    
+    // Additionnal data props passed down to the `Item`
+    console.log(data);
 }
 
 // create your menu first
-const MyAwesomeMenu = () => {
-    return (
-        <ContextMenu id='menu_id'>
-            <Item label="Add" icon="fa fa-plus" onClick={onClick} />
-            <Item label="Remove" icon="fa fa-trash" onClick={onClick} />
-            <Separator/>
-            <Item label="Paste" icon="fa fa-clipboard" disabled />
-        </ContextMenu>
-    );
-};
+const MyAwesomeMenu = () => (
+    <ContextMenu id='menu_id'>
+        <Item leftIcon={<IconFont className="fa fa-plus" />} onClick={onClick}>
+            Add
+        </Item>
+        <Item leftIcon={<IconFont className="material-icons">remove_circle</IconFont>} onClick={onClick}>
+            Remove
+        </Item>
+        <Separator/>
+        <Item disabled>
+            Paste
+        </Item>
+    </ContextMenu>
+);
+
 ```
 
-2.Define which component can display the menu
+### Define which component can display the menu
 
 ```javascript
 import { ContextMenuProvider, menuProvider } from 'react-contexify';
 
-const Hodor = () => <div>Hodor</div>;
-const Cersei = () => <div>Cersei</div>;
-const Aria = () => <div>Aria</div>;
+//wrap your component with the `ContextMenuProvider`
 
-const CerseiWithContextMenu = () => {
-    return (
-        <ContextMenuProvider id="menu_id">
-            <Cersei />
-        </ContextMenuProvider>
-    )
-};
-// or you can use the curried function to add the same menu for many components
+const Foo = () => <ContextMenuProvider id="menu_id">bar</ContextMenuProvider>;
+const Bar = () => <ContextMenuProvider id="menu_id">baz</ContextMenuProvider>;
+
+// or you can use the curried function to add the same menu for many components, it's up to you
 
 const addContextMenu = menuProvider('menu_id'); 
-const HodorWithContextMenu = addContextMenu(Hodor);
-const AriaWithContextMenu = addContextMenu(Aria);
+const Foo = addContextMenu(YourComponent);
+const Bar = addContextMenu(YourCompoenent);
 ```
 
-3.All together
+### All together
 
 ```javascript
-// import statement ...
+import React from 'react';
 
-const App = () => {
-    return(
-        <div>
-            <CerseiWithContextMenu />
-            <HodorWithContextMenu />
-            <AriaWithContextMenu />
-            <MyAwesomeMenu/>
-        </div>
-    )
-}
+import MyAwesomeMenu from './MyAwesomeMenu';
+import Foo from './Foo';
+import Bar from './Bar';
+
+const App = () => (
+    <div>
+        <Foo />
+        <Bar />
+        <MyAwesomeMenu/>
+    </div>
+)
 
 ReactDOM.render(
   <App />,
@@ -101,7 +110,7 @@ ReactDOM.render(
 );
 ```
 
-# Add a context menu to a table
+## Add a context menu to a table
 
 ```javascript
 import { ContextMenuProvider } from 'react-contexify';
@@ -137,29 +146,53 @@ class Table extends Component {
 
 ```
 
-# Api
+## Api
 
 ## ContextMenu (Type : React Component)
 
 |Props    |Type   |Default|Required|Possible Value                                 |	Description|
 |---------|-------|:-----:|:------:|-----------------------------------------------|------------|
-|id       |	string|-      |	✓      | -                                             |Used to trigger the corresponding menu|
-|theme    |	string|	      |	✘     |	light &#124; dark                              |Style your context menu    |
-|animation|	string|	      |	✘     |	fadeIn &#124; flipIn &#124; popIn &#124; zoomIn|Opening animation|
+|id       |	string\|int|-      |	✓      | -                                             |Used to identify the corresponding menu|
+|children |	`Item`\|`null`|-      |	✓      | -                                             |Menu item|
+|theme    |	string|	      |	✘     |	light \| dark                              |Theme is appended to `react-contexify__theme--${given theme}`   |
+|animation|	string|	      |	✘     |	fade \| flip \| pop \| zoom|Animation is appended to `.react-contexify__will-enter--${given animation}`  |
+
+You can set built-in theme and animation using ContextMenu constant as follow :
+
+`
+<ContextMenu id="foo" theme={ContextMenu.THEME.dark} animation={ContextMenu.ANIMATION.pop}>
+    ...
+</ContextMenu>    
+`
 
 ## Item (Type : React Component)
 
 |Props    |Type    |Default|Required|Description|
 |---------|--------|:-----:|:------:|------------|
-|label	  |string  |-	   |✓	    |Menu item label
-|icon	  |string  |	   |✘	    |Any css classes icon(work well with font awesome)
-|disabled |bool    |false  |✘	    |Disable the item
-|onClick  |function|	   |✘	    |Callback defined on the item. The callback return the current item and the target
-|data	  |any	   |       |✘	    |Can be any additional data you want to pass
+|children	  |node  |-	   |✓	    |Any valid node to render(string, react component...)
+|leftIcon	  |node  |	   |✘	    |Any valid node to render(string, react component...)
+|rightIcon  |node  |	   |✘	    |Any valid node to render(string, react component...)
+|disabled   |bool    |false  |✘	    |Disable the item
+|onClick    |function|	   |✘	    |Callback when the item is clicked
+|data	  |any	   |       |✘	    |Additional data that will be passed to the callback
+
 
 ## Separator (Type : React Component)
 
 Separator component don't expect any props. It's just a separator xD.
+
+`<Separator />`
+
+## IconFont (Type : React Component)
+
+|Props    |Type   |Default|Required|	Description|
+|---------|-------|:-----:|:------:|------------|
+|children |	node|-      |✘	      |Menu item|
+|className    |	string|	      |	✘     |	Additional className|
+|style|	string|	      |	✘     |	Additional style |
+
+`
+import {}
 
 ## ContextMenuProvider (Type : React Component)
 
@@ -188,6 +221,8 @@ Separator component don't expect any props. It's just a separator xD.
 
 ## Release Notes
 
+### 2.0.0
+
 ### 1.1.0
 
 #### Features
@@ -210,5 +245,3 @@ Big thanks to [Tobias Reich](https://github.com/electerious). This project is ba
 # License
 
 React Contexify is licensed under MIT. Do anything that you want.
-
-
