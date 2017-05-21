@@ -16,7 +16,7 @@
     "lint": "eslint src/",
     "lint:fix": "eslint --fix src/",
     "prebuild": "npm run lint && npm run test",
-    "bundle": "webpack --output-filename=dist/ReactToastify.min.js --optimize-minimize",
+    "bundle": "webpack --output-filename=dist/ReactContexify.min.js --optimize-minimize",
     "build": "NODE_ENV=production  npm run bundle && babel --ignore=__tests__ src -d lib",
     "build:dev": "NODE_ENV=development npm run bundle && babel --ignore=__tests__ src -d lib",
     "postbuild": "npm run style",
