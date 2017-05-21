@@ -1,4 +1,4 @@
-# React-contexify [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
+# React-contexify [![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master)](https://travis-ci.org/fkhadra/react-contexify) [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
 
 Add a context menu to your react application with ease !
 
@@ -9,11 +9,12 @@ Live demo [here](https://fkhadra.github.io/react-contexify/)
 ## Installation
 
 ```
-$ npm install --save react-toastify
 $ yarn add react-toastify
+or
+$ npm install --save react-toastify
 ```
 
-Include also the css file provided. Otherwise it wont work as expected. 
+You also need to include the css file provided. Otherwise it wont work as expected. 
 
 ### Style Loader :
 
@@ -29,12 +30,12 @@ import 'react-toastify/dist/ReactContexify.min.css'
 
 ## Features
 
-- Don't rely on `findDOMNode`
 - The context menu never leave the visible screen. You can reduce the window to check the behavior
-- The callback provide access to the wrapped component
+- The callback provide an access to the wrapped component
 - One menu can be use for multiple targets
 - Create as many contextual menu as you want, as long as the id is unique
 - Easily customizable. Theme are split into different sass file. Fifteen line of code can be enough to create a theme
+- Don't rely on `findDOMNode`
 
 ## How it works ?
 
@@ -43,11 +44,12 @@ import 'react-toastify/dist/ReactContexify.min.css'
 ```javascript
 import { ContextMenu, Item, Separator, IconFont } from 'react-contexify';
 
-function onClick(targetNode, refs, data) {
-    // target refer to the html node on which the menu is triggered
+function onClick(targetNode, ref, data) {
+    // targetNode refer to the html node on which the menu is triggered
     console.log(targetNode);
-    //refs contain
-    
+    //ref will be the mounted instance of the wrapped component
+    //If you wrap more than one component, ref will be an array of ref
+    console.log(ref);
     // Additionnal data props passed down to the `Item`
     console.log(data);
 }
@@ -61,6 +63,7 @@ const MyAwesomeMenu = () => (
         <Item leftIcon={<IconFont className="material-icons">remove_circle</IconFont>} onClick={onClick}>
             Remove
         </Item>
+        <Item><IconFont className="fa fa-scissors" />cut</Item>
         <Separator/>
         <Item disabled>
             Paste
@@ -116,14 +119,12 @@ ReactDOM.render(
 import { ContextMenuProvider } from 'react-contexify';
 
 //You need to use a tr as a render tag otherwise your browser console will bleed !
-const Tr = (props) => {
-    return (
-        <ContextMenuProvider id="menu_id" renderTag="tr">
-            <td>{props.cel1}</td>
-            <td>{props.cel2}</td>
-        </ContextMenuProvider>;
-    )
-}
+const Tr = (props) => (
+  <ContextMenuProvider id="menu_id" renderTag="tr">
+    <td>{props.cel1}</td>
+    <td>{props.cel2}</td>
+  </ContextMenuProvider>
+);
 
 class Table extends Component {
   render() {
@@ -152,8 +153,8 @@ class Table extends Component {
 
 |Props    |Type   |Default|Required|Possible Value                                 |	Description|
 |---------|-------|:-----:|:------:|-----------------------------------------------|------------|
-|id       |	string\|int|-      |	✓      | -                                             |Used to identify the corresponding menu|
-|children |	`Item`\|`null`|-      |	✓      | -                                             |Menu item|
+|id       |	string\|int|-      |	✓      | -                                     |Used to identify the corresponding menu|
+|children |	`Item`\|`null`|-      |	✓      | -                                     |Menu item|
 |theme    |	string|	      |	✘     |	light \| dark                              |Theme is appended to `react-contexify__theme--${given theme}`   |
 |animation|	string|	      |	✘     |	fade \| flip \| pop \| zoom|Animation is appended to `.react-contexify__will-enter--${given animation}`  |
 
@@ -176,10 +177,22 @@ You can set built-in theme and animation using ContextMenu constant as follow :
 |onClick    |function|	   |✘	    |Callback when the item is clicked
 |data	  |any	   |       |✘	    |Additional data that will be passed to the callback
 
+### `onClick` 
+ 
+When an you select an Item your callback will receive 3 parameters: `targetNode`, `refs`, `data`.
+
+- if you wrap a single react component refs will be the mounted instance of the wrapped component
+- If you wrap more than one component refs will be an array of ref
+
+**ref will be an instance of the react component only if the component is declared as a class**
+
+If you use any flux store like redux or mobx stick with it.
+
+For more details about ref please read [this](https://facebook.github.io/react/docs/refs-and-the-dom.html)
 
 ## Separator (Type : React Component)
 
-Separator component don't expect any props. It's just a separator xD.
+Don't expect any props. It's just a separator xD.
 
 `<Separator />`
 
@@ -191,8 +204,14 @@ Separator component don't expect any props. It's just a separator xD.
 |className    |	string|	      |	✘     |	Additional className|
 |style|	string|	      |	✘     |	Additional style |
 
-`
-import {}
+The icon font render a i tag.
+
+```javascript
+//example with Font Awesome 
+<IconFont className="fa fa-trash" />
+//example with material icons
+<IconFont className="material-icons">remove_circle</IconFont>
+```
 
 ## ContextMenuProvider (Type : React Component)
 
@@ -201,9 +220,12 @@ import {}
 |id	      |string or int|	-|	✓|	-|	Id used to map your component to a context menu
 |renderTag|node|	div|	✘|	-|	The render tag of the wrapper
 |event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
-|className|	string|	|	✘|	|	css classes, what else
-|style|	object|	|	✘|	|	style object for inline style
+|className|	string|	|	✘|	|	Additional className
+|style|	object|	|	✘|	|	Additional style
 
+```javascript
+const Foo = () => <ContextMenuProvider id="menu_id"><MyComponent /></ContextMenuProvider>;
+```
 
 ## menuProvider (Type : function)
 
@@ -218,10 +240,48 @@ import {}
 |targetComponent|React Component|	-|	✓|	-|	The component on which you want to add a context menu
 |renderTag|node|	div|	✘|	-|	The render tag of the wrapper
 |event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
+|className|	string|	|	✘|	|	Additional className
+|style|	object|	|	✘|	|	Additional style
+
+## Migration from v1 to v2
+
+Breaking changes are a pain for developers but sometimes we have too. 
+
+**Item Component:**
+You can render whatever you want now, which gives you more control.
+```javascript
+//before
+<Item label="foo" />
+// now
+<Item>foo</Item>
+```
+**onClick callback:**
+Having access to the instance of the react component can be sometimes really useful.
+```javascript
+//before
+onClick(targetNode, data)
+// now
+onClick(targetNode, refs, data)
+```
 
 ## Release Notes
 
 ### 2.0.0
+
+- This version introduce breaking changes for the item component
+- Upgrade to `prop-types`
+- Tested with jest and enzyme
+- Reviewed build system
+
+### Features
+
+- The `onClick` callback provide a ref to the wrapped component
+- Can now use condtionnal rendering for dynamic menu. Relate to [issue 12](https://github.com/fkhadra/react-contexify/issues/12)
+- Added `IconFont` component
+
+#### Bug Fixes
+
+- Fixed right click behavior. Relate to [issue 11](https://github.com/fkhadra/react-contexify/issues/11)
 
 ### 1.1.0
 
@@ -237,11 +297,14 @@ import {}
 - fixed incorrect PropTypes used
 - dead code elimination
 
+## Contribute
 
-# Thanks
+Any idea and suggestions are welcome.
+
+## Thanks
 
 Big thanks to [Tobias Reich](https://github.com/electerious). This project is based on [basicContext](https://github.com/electerious/basicContext). A vanilla js context menu.
 
-# License
+## License
 
-React Contexify is licensed under MIT. Do anything that you want.
+React Contexify is licensed under MIT. 
