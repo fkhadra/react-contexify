@@ -1,71 +1,66 @@
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import cssClasses from './../cssClasses';
-import classNames from 'classnames';
+import cx from 'classnames';
 
-const propTypes = {
-    label: PropTypes.string.isRequired,
-    icon: PropTypes.string,
+import cssClasses from './../cssClasses';
+
+class Item extends PureComponent {
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    targetNode: PropTypes.object,
+    leftIcon: PropTypes.node,
+    rightIcon: PropTypes.node,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
     data: PropTypes.any,
-    target: PropTypes.any
-};
+    refsFromProvider: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(PropTypes.object)
+    ])
+  };
 
-const defaultProps = {
+  static defaultProps = {
+    leftIcon: '',
+    rightIcon: '',
     disabled: false,
-    onClick: null
-};
+    onClick: () => {
+    },
+    targetNode: {},
+    data: null,
+    refsFromProvider: []
+  };
 
-class Item extends React.Component {
+  handleClick = e => {
+    this.props.disabled
+      ? e.stopPropagation()
+      : this.props.onClick(
+        this.props.targetNode,
+      this.props.refsFromProvider,
+      this.props.data
+    );
+  };
 
-    constructor(props) {
-        super(props);
-        this.bindEvent();
-    }
+  buildItem() {
+    return (
+      <div className={cssClasses.ITEM_DATA}>
+        {this.props.leftIcon}
+        {this.props.children}
+        {this.props.rightIcon}
+      </div>
+    );
+  }
 
-    bindEvent() {
-        if (this.props.disabled !== true) {
-            if (null !== this.props.onClick) {
-                this.handleClick = () => this.props.onClick(this, this.props.target);
-            } else {
-                // Maybe it's unnecessary to warn
-                this.handleClick = () => console.warn(`Did you forget to bind an event
-                on the "${this.props.label}" item ? `);
-            }
-        } else {
-            this.handleClick = (e) => e.stopPropagation();
-        }
-    }
+  render() {
+    const className = cx(cssClasses.ITEM, {
+      [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
+    });
 
-    buildItem() {
-        return (
-            <div className={cssClasses.ITEM_DATA}>
-                {this.hasIcon()}
-                {this.props.label}
-            </div>
-        );
-    }
-
-    hasIcon() {
-        return this.props.icon
-            ? <span className={`${cssClasses.ITEM_ICON} ${this.props.icon}`}></span>
-            : '';
-    }
-
-    render() {
-        const className = classNames(cssClasses.ITEM, {
-            [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
-        });
-        return (
-            <div className={className} onClick={this.handleClick}>
-                {this.buildItem()}
-            </div>
-        );
-    }
+    return (
+      <div className={className} onClick={this.handleClick} role="presentation">
+        {this.buildItem()}
+      </div>
+    );
+  }
 }
-
-Item.propTypes = propTypes;
-Item.defaultProps = defaultProps;
 
 export default Item;

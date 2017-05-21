@@ -1,5 +1,5 @@
-.react-contexify-menu {
-  position: absolute;
+.react-contexify {
+  position: fixed;
   opacity: 0;
   user-select: none;
   background-color: #ffffff;
@@ -37,11 +37,8 @@
       color: #333;
     }
     &__icon {
-      display: inline-block;
-      margin-right: 10px;
-      width: 12px;
-      text-align: center;
+      font-size: inherit;
+      margin-right: 5px;
     }
-
   }
 }

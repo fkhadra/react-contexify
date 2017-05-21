@@ -1,6 +1,6 @@
 {
   "name": "react-contexify",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "main": "lib/index.js",
   "description": "Add contextmenu to your react component with ease",
   "keywords": [
@@ -12,8 +12,16 @@
     "react-contexify"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./scripts/build.sh"
+    "test": "jest --verbose",
+    "lint": "eslint src/",
+    "lint:fix": "eslint --fix src/",
+    "prebuild": "npm run lint && npm run test",
+    "bundle": "webpack --output-filename=dist/ReactContexify.min.js --optimize-minimize",
+    "build": "NODE_ENV=production  npm run bundle && babel --ignore=__tests__ src -d lib",
+    "build:dev": "NODE_ENV=development npm run bundle && babel --ignore=__tests__ src -d lib",
+    "postbuild": "npm run style",
+    "prestyle": "sass src/scss/main.scss dist/ReactContexify.css",
+    "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | postcss --use cssnano > dist/ReactContexify.min.css"
   },
   "repository": {
     "type": "git",
@@ -25,31 +33,37 @@
     "url": "https://github.com/fkhadra/react-contexify/issues"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
-    "babel-core": "^6.9.1",
-    "babel-eslint": "^6.0.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.5.0",
-    "babel-preset-react": "^6.5.0",
+    "autoprefixer": "^7.1.0",
+    "babel-cli": "^6.11.4",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^20.0.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
-    "eslint": "^2.11.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.8.1",
-    "eslint-plugin-jsx-a11y": "^1.3.0",
-    "eslint-plugin-react": "^5.1.1",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-ruby-sass": "^2.0.6",
-    "gulp-sourcemaps": "^1.6.0",
-    "vinyl-source-stream": "^1.1.0",
-    "webpack": "^1.13.1"
+    "cssnano": "^3.8.0",
+    "enzyme": "^2.8.2",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^15.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-react": "^7.0.1",
+    "jest": "^20.0.1",
+    "postcss": "^6.0.1",
+    "postcss-cli": "^4.0.0",
+    "react": "^15.5.4",
+    "react-addons-test-utils": "^15.3.0",
+    "react-dom": "^15.5.4",
+    "react-test-renderer": "^15.5.4",
+    "webpack": "^2.4.1"
+  },
+  "peerDependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.5.9",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-transition-group": "^1.1.3"
   }
 }

@@ -5,15 +5,15 @@ $delay: 0.3s;
   to { opacity: 1; }
 }
 
-.fadeIn {
-  animation: fadeIn $delay ease;
-}
-
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0;}
 }
 
-.fadeOut {
+.react-contexify__will-enter--fade {
+  animation: fadeIn $delay ease;
+}
+
+.react-contexify__will-leave--fade {
   animation: fadeOut $delay ease;
 }
