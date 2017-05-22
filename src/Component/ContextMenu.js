@@ -1,5 +1,5 @@
 /* global: window */
-import React, { Component } from 'react';
+import React, { Component, isValidElement } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
@@ -132,10 +132,6 @@ class ContextMenu extends Component {
     return pos;
   }
 
-  removeNull(v) {
-    return v !== null;
-  }
-
   cloneItem = item => React.cloneElement(item, {
     targetNode: this.state.targetNode,
     refsFromProvider: this.refsFromProvider
@@ -144,7 +140,7 @@ class ContextMenu extends Component {
   getMenuItem() {
     if (Object.prototype.toString.call(this.props.children).slice(8, -1) === 'Array') {
       return React.Children.map(
-        this.props.children.filter(this.removeNull),
+        this.props.children.filter(isValidElement),
         this.cloneItem
       );
     }

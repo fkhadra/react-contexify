@@ -2,6 +2,15 @@
 
 Add a context menu to your react application with ease !
 
+* [Demo](#demo)
+* [Installation](#installation)
+* [Features](#features)
+* [How it works ?](#how-it-works--)
+* [Add a context menu to a table](#add-a-context-menu-to-a-table)
+* [Api](#api)
+* [Migration from v1 to v2](#migration-from-v1-to-v2)
+* [Release Notes](#release-notes)
+
 ## Demo
    
 Live demo [here](https://fkhadra.github.io/react-contexify/)   
@@ -149,7 +158,7 @@ class Table extends Component {
 
 ## Api
 
-## ContextMenu (Type : React Component)
+### ContextMenu (Type : React Component)
 
 |Props    |Type   |Default|Required|Possible Value                                 |	Description|
 |---------|-------|:-----:|:------:|-----------------------------------------------|------------|
@@ -166,7 +175,7 @@ You can set built-in theme and animation using ContextMenu constant as follow :
 </ContextMenu>    
 `
 
-## Item (Type : React Component)
+### Item (Type : React Component)
 
 |Props    |Type    |Default|Required|Description|
 |---------|--------|:-----:|:------:|------------|
@@ -177,7 +186,7 @@ You can set built-in theme and animation using ContextMenu constant as follow :
 |onClick    |function|	   |✘	    |Callback when the item is clicked
 |data	  |any	   |       |✘	    |Additional data that will be passed to the callback
 
-### `onClick` 
+#### `onClick` 
  
 When an you select an Item your callback will receive 3 parameters: `targetNode`, `refs`, `data`.
 
@@ -190,13 +199,13 @@ If you use any flux store like redux or mobx stick with it.
 
 For more details about ref please read [this](https://facebook.github.io/react/docs/refs-and-the-dom.html)
 
-## Separator (Type : React Component)
+### Separator (Type : React Component)
 
 Don't expect any props. It's just a separator xD.
 
 `<Separator />`
 
-## IconFont (Type : React Component)
+### IconFont (Type : React Component)
 
 |Props    |Type   |Default|Required|	Description|
 |---------|-------|:-----:|:------:|------------|
@@ -213,7 +222,7 @@ The icon font render a i tag.
 <IconFont className="material-icons">remove_circle</IconFont>
 ```
 
-## ContextMenuProvider (Type : React Component)
+### ContextMenuProvider (Type : React Component)
 
 |Props    |Type    |Default|Required|Possible Value |Description|
 |---------|--------|:-----:|:------:|------------|----|
@@ -227,7 +236,7 @@ The icon font render a i tag.
 const Foo = () => <ContextMenuProvider id="menu_id"><MyComponent /></ContextMenuProvider>;
 ```
 
-## menuProvider (Type : function)
+### menuProvider (Type : function)
 
 |Args    |Type    |Default|Required|Possible Value |Description|
 |---------|--------|:-----:|:------:|------------|----|
@@ -265,6 +274,12 @@ onClick(targetNode, refs, data)
 ```
 
 ## Release Notes
+
+### 2.0.1
+
+#### Bug Fixes
+
+- conditional rendering was badly tested, shame on me !
 
 ### 2.0.0
 

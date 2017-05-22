@@ -65,11 +65,12 @@ describe('ContextMenu', () => {
         .hasClass(`${cssClasses.THEME}bar`))
         .toBe(true);
   });
-  it('Should be able to perform conditional rendering when item are null', () => {
+  it('Should be able to perform conditional rendering when child is different than Item', () => {
     const component = shallow(
       <ContextMenu id="foo">
         <Item>bar</Item>
         {null}
+        {false}
       </ContextMenu>
     );
     component.setState({ visible: true });
