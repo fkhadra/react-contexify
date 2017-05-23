@@ -5,7 +5,7 @@ Add a context menu to your react application with ease !
 * [Demo](#demo)
 * [Installation](#installation)
 * [Features](#features)
-* [How it works ?](#how-it-works--)
+* [How it works ?](#how-it-works-)
 * [Add a context menu to a table](#add-a-context-menu-to-a-table)
 * [Api](#api)
 * [Migration from v1 to v2](#migration-from-v1-to-v2)
