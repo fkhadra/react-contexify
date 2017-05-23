@@ -275,6 +275,12 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.0.2
+
+#### Bug Fixes
+
+- Fix issue #14
+
 ### 2.0.1
 
 #### Bug Fixes

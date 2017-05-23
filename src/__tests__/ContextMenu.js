@@ -17,9 +17,10 @@ describe('ContextMenu', () => {
         </ContextMenu>
       );
       expect(eventManager.eventList.has('display::foo')).toBe(true);
-
+      expect(eventManager.eventList.has('hideAll')).toBe(true);
       component.unmount();
       expect(eventManager.eventList.has('display::foo')).toBe(false);
+      expect(eventManager.eventList.has('hideAll')).toBe(false);
     });
 
   it('Should render null if `visible` is false', () => {

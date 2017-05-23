@@ -50,10 +50,12 @@ class ContextMenu extends Component {
 
   componentDidMount() {
     eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) => this.show(e, refsFromProvider));
+    eventManager.on('hideAll', this.hide);
   }
 
   componentWillUnmount() {
     eventManager.off(`display::${this.props.id}`);
+    eventManager.off('hideAll');
   }
 
   bindWindowEvent = () => {
@@ -170,6 +172,7 @@ class ContextMenu extends Component {
 
   show = (e, refsFromProvider) => {
     e.stopPropagation();
+    eventManager.emit('hideAll');
     this.refsFromProvider = refsFromProvider;
     const { x, y } = this.getMousePosition(e);
     this.bindWindowEvent();
