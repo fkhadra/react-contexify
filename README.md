@@ -275,6 +275,13 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.0.3
+
+#### Bug Fix
+
+- Firefox trigger a click event also on context menu which was making the menu disappear. 
+Relate to [issue 16](https://github.com/fkhadra/react-contexify/issues/16)
+
 ### 2.0.2
 
 #### Bug Fixes

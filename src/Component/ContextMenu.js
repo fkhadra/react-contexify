@@ -72,7 +72,11 @@ class ContextMenu extends Component {
     window.removeEventListener('scroll', this.hide);
   };
 
-  hide = () => {
+  hide = e => {
+    // Firefox trigger a click event when you mouse up on contextmenu event
+    if (typeof e !== 'undefined' && e.button === 2 && e.type !== 'contextmenu') {
+      return;
+    }
     this.unBindWindowEvent();
     this.setState({ visible: false });
   };
@@ -105,7 +109,7 @@ class ContextMenu extends Component {
     this.setState({
       x,
       y
-    });
+    }, this.bindWindowEvent);
   }
 
   getMousePosition(e) {
@@ -174,8 +178,9 @@ class ContextMenu extends Component {
     e.stopPropagation();
     eventManager.emit('hideAll');
     this.refsFromProvider = refsFromProvider;
+
     const { x, y } = this.getMousePosition(e);
-    this.bindWindowEvent();
+
     this.setState({
       visible: true,
       x,
