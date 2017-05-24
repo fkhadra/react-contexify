@@ -18,9 +18,9 @@ Live demo [here](https://fkhadra.github.io/react-contexify/)
 ## Installation
 
 ```
-$ yarn add react-toastify
+$ yarn add react-contexify
 or
-$ npm install --save react-toastify
+$ npm install --save react-contexify
 ```
 
 You also need to include the css file provided. Otherwise it wont work as expected. 
