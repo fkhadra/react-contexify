@@ -1,0 +1,22 @@
+{
+  "name": "gh-ctx",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-contexify": "^2.0.2",
+    "react-dom": "^15.5.4",
+    "react-flip-move": "^2.9.12",
+    "react-toastify": "^1.5.0",
+    "react-transition-group": "^1.1.3"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
