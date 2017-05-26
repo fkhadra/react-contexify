@@ -93,7 +93,7 @@
 .react-contexify__will-enter--zoom {
   animation: react-contexify__zoomIn 0.4s; }
 
-.react-contexify__will-enter--zoom {
+.react-contexify__will-leave--zoom {
   animation: react-contexify__zoomOut 0.4s; }
 
 @keyframes react-contexify__fadeIn {

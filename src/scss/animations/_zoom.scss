@@ -25,9 +25,9 @@ $delay: 0.4s;
 }
 
 .react-contexify__will-enter--zoom {
-  animation: react-contexify__zoomIn 0.4s;
+  animation: react-contexify__zoomIn $delay;
 }
 
-.react-contexify__will-enter--zoom {
+.react-contexify__will-leave--zoom {
   animation: react-contexify__zoomOut $delay;
 }
