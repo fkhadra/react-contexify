@@ -21,7 +21,7 @@
     "build:dev": "NODE_ENV=development npm run bundle && babel --ignore=__tests__ src -d lib",
     "postbuild": "npm run style",
     "prestyle": "sass src/scss/main.scss dist/ReactContexify.css",
-    "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | postcss --use cssnano --no-reduceIdents > dist/ReactContexify.min.css"
+    "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | cssnano --no-reduceIdents > dist/ReactContexify.min.css"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "cssnano": "^3.8.0",
+    "cssnano-cli": "^1.0.5",
     "enzyme": "^2.8.2",
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^15.0.0",
