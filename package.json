@@ -21,7 +21,7 @@
     "build:dev": "NODE_ENV=development npm run bundle && babel --ignore=__tests__ src -d lib",
     "postbuild": "npm run style",
     "prestyle": "sass src/scss/main.scss dist/ReactContexify.css",
-    "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | postcss --use cssnano > dist/ReactContexify.min.css"
+    "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | postcss --use cssnano --no-reduceIdents > dist/ReactContexify.min.css"
   },
   "repository": {
     "type": "git",

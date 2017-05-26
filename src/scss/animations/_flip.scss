@@ -1,6 +1,6 @@
 $delay: 0.65s;
 
-@keyframes flipInX {
+@keyframes react-contexify__flipInX {
   from {
     transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
     animation-timing-function: ease-in;
@@ -24,7 +24,7 @@ $delay: 0.65s;
   }
 }
 
-@keyframes flipOutX {
+@keyframes react-contexify__flipOutX {
   from {
     transform: perspective(400px);
   }
@@ -42,10 +42,10 @@ $delay: 0.65s;
 
 .react-contexify__will-enter--flip {
   backface-visibility: visible !important;
-  animation: flipInX $delay;
+  animation: react-contexify__flipInX $delay;
 }
 
 .react-contexify__will-leave--flip {
-  animation: flipOutX $delay;
+  animation: react-contexify__flipOutX $delay;
   backface-visibility: visible !important;
 }

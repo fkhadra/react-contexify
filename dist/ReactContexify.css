@@ -60,29 +60,29 @@
     width: 12px;
     text-align: center; }
 
-@keyframes popIn {
+@keyframes react-contexify__popIn {
   0% {
     transform: scale(0); }
   100% {
     transform: scale(1); } }
-@keyframes popOut {
+@keyframes react-contexify__popOut {
   0% {
     transform: scale(1); }
   100% {
     transform: scale(0); } }
 .react-contexify__will-enter--pop {
-  animation: popIn 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.2); }
+  animation: react-contexify__popIn 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.2); }
 
 .react-contexify__will-leave--pop {
-  animation: popOut 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.2); }
+  animation: react-contexify__popOut 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.2); }
 
-@keyframes zoomIn {
+@keyframes react-contexify__zoomIn {
   from {
     opacity: 0;
     transform: scale3d(0.3, 0.3, 0.3); }
   50% {
     opacity: 1; } }
-@keyframes zoomOut {
+@keyframes react-contexify__zoomOut {
   from {
     opacity: 1; }
   50% {
@@ -91,28 +91,28 @@
   to {
     opacity: 0; } }
 .react-contexify__will-enter--zoom {
-  animation: zoomIn 0.4s; }
+  animation: react-contexify__zoomIn 0.4s; }
 
 .react-contexify__will-enter--zoom {
-  animation: zoomOut 0.4s; }
+  animation: react-contexify__zoomOut 0.4s; }
 
-@keyframes fadeIn {
+@keyframes react-contexify__fadeIn {
   from {
     opacity: 0; }
   to {
     opacity: 1; } }
-@keyframes fadeOut {
+@keyframes react-contexify__fadeOut {
   from {
     opacity: 1; }
   to {
     opacity: 0; } }
 .react-contexify__will-enter--fade {
-  animation: fadeIn 0.3s ease; }
+  animation: react-contexify__fadeIn 0.3s ease; }
 
 .react-contexify__will-leave--fade {
-  animation: fadeOut 0.3s ease; }
+  animation: react-contexify__fadeOut 0.3s ease; }
 
-@keyframes flipInX {
+@keyframes react-contexify__flipInX {
   from {
     transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
     animation-timing-function: ease-in; }
@@ -125,7 +125,7 @@
     transform: perspective(400px) rotate3d(1, 0, 0, -5deg); }
   to {
     transform: perspective(400px); } }
-@keyframes flipOutX {
+@keyframes react-contexify__flipOutX {
   from {
     transform: perspective(400px); }
   30% {
@@ -136,10 +136,10 @@
     opacity: 0; } }
 .react-contexify__will-enter--flip {
   backface-visibility: visible !important;
-  animation: flipInX 0.65s; }
+  animation: react-contexify__flipInX 0.65s; }
 
 .react-contexify__will-leave--flip {
-  animation: flipOutX 0.65s;
+  animation: react-contexify__flipOutX 0.65s;
   backface-visibility: visible !important; }
 
 /*# sourceMappingURL=ReactContexify.css.map */

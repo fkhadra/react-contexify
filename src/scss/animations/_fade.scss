@@ -1,19 +1,19 @@
 $delay: 0.3s;
 
-@keyframes fadeIn {
+@keyframes react-contexify__fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes fadeOut {
+@keyframes react-contexify__fadeOut {
   from { opacity: 1; }
   to { opacity: 0;}
 }
 
 .react-contexify__will-enter--fade {
-  animation: fadeIn $delay ease;
+  animation: react-contexify__fadeIn $delay ease;
 }
 
 .react-contexify__will-leave--fade {
-  animation: fadeOut $delay ease;
+  animation: react-contexify__fadeOut $delay ease;
 }
