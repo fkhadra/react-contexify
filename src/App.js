@@ -1,86 +1,103 @@
 import React, { Component } from 'react';
-import {
-  ContextMenu,
-  Item,
-  IconFont,
-  Separator
-} from 'react-contexify';
+import { ContextMenu } from 'react-contexify';
 import { ToastContainer, toast } from 'react-toastify';
+
 import data from './data.json';
 import DemoTable from './DemoTable';
-import FlipMove from 'react-flip-move';
+import DemoContextMenu from './DemoContextMenu';
+import Roller from './Roller';
 
 import 'react-contexify/dist/ReactContexify.min.css';
 import 'react-toastify/dist/ReactToastify.min.css';
+
 import logo from './logo.svg';
 import './App.css';
 
-class User extends React.PureComponent {
-  render() {
-    const { id, firstname, lastname, companyName, email, avatar } = this.props;
-    return (
-      <div>
-        <div><img src={avatar} alt="avatar" /></div>
-        <div>{firstname}</div>
-        <div>{lastname}</div>
-        <div>{email}</div>
-        <div>{companyName}</div>
-      </div>
-    );
-  }
-}
+const themeList = Object.keys(ContextMenu.THEME);
+themeList.push('none');
+const animationList = Object.keys(ContextMenu.ANIMATION);
+animationList.push('none');
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: data
+      data: data,
+      theme: 'none',
+      animation: 'none',
+      event: 'onContextMenu'
     };
   }
 
+  handleRollerChange = ({ target }) => this.setState(
+    { [target.id]: target.value });
+
   removeEntry = targetNode => this.setState({
-    data: data.filter(item => item.id !== targetNode.dataset.id)
+    data: this.state.data.filter(item => item.id !== targetNode.dataset.id)
+  });
+
+  getRandomAvatar() {
+    const randomString = Math.random().toString(36).substring(7);
+    return `https://robohash.org/${randomString}.jpg?size=50x50`
+  }
+
+  changeAvatar = targetNode => this.setState({
+    data: this.state.data.map(item => {
+      if (item.id === targetNode.dataset.id) {
+        item.avatar = this.getRandomAvatar();
+      }
+      return item;
+    })
   });
 
   handleHelp() {
-    toast("Can't Help you muahaha");
+    toast(<div>Can't Help you muahaha</div>);
   }
 
   render() {
+    const { theme, animation, event, data } = this.state;
     return (
-      <div className="App">
+      <div>
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <h2>Welcome to React-Contexify</h2>
+          <h3>Welcome to React-Contexify</h3>
+          <h6>Adding a context menu to your react app has never been
+            easier!</h6>
+          <div><a href="https://github.com/fkhadra/react-contexify"
+                  className="button button-primary">View on GitHub</a>
+            <a href="https://github.com/fkhadra/react-contexify/zipball/master"
+               className="button button-primary">Download .zip</a>
+            <a href="https://github.com/fkhadra/react-contexify/tarball/master"
+               className="button button-primary">Download .tar.gz</a></div>
         </div>
-        <p className="App-intro">
-
-        </p>
         <div className="container">
           <div className="row">
-            <DemoTable data={this.state.data}/>
+            <Roller
+              theme={theme}
+              animation={animation}
+              event={event}
+              eventList={['onContextMenu', 'onClick', 'onDoubleClick']}
+              themeList={themeList}
+              animationList={animationList}
+              onChange={this.handleRollerChange}
+            />
+          </div>
+          <div className="row">
+            <DemoTable data={data} event={event}/>
           </div>
         </div>
-        <ContextMenu id="demo_id">
-          <Item
-            onClick={this.removeEntry}
-            leftIcon={<IconFont className="fa fa-trash"/>}
-          >
-            Delete Row
-          </Item>
-          <Item disabled>Im disabled</Item>
+        <DemoContextMenu
+          theme={theme}
+          animation={animation}
+          removeEntry={this.removeEntry}
+          changeAvatar={this.changeAvatar}
+          handleHelp={this.handleHelp}
+        />
+        <ToastContainer />;
 
-          <Separator />
-          <Item
-            leftIcon={<IconFont className="fa fa-question"/>}
-            onClick={this.handleHelp}
-          >
-            Help
-          </Item>
-        </ContextMenu>
-        <ToastContainer />
       </div>
-    );
+    )
+      ;
   }
 }
 

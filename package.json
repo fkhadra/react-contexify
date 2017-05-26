@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "react": "^15.5.4",
-    "react-contexify": "^2.0.2",
+    "react-contexify": "^2.0.5",
     "react-dom": "^15.5.4",
     "react-flip-move": "^2.9.12",
     "react-toastify": "^1.5.0",

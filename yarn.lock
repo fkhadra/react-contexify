@@ -4757,9 +4757,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-contexify@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-contexify/-/react-contexify-2.0.2.tgz#0cd5db810a784d30d19b5d163ce8bf9bd1e662b9"
+react-contexify@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-contexify/-/react-contexify-2.0.5.tgz#a0ef3f87099238762011be9af8ddb6efea5a7d76"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.9"
