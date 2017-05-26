@@ -61,6 +61,7 @@ class ContextMenu extends Component {
   bindWindowEvent = () => {
     window.addEventListener('resize', this.hide);
     window.addEventListener('contextmenu', this.hide);
+    window.addEventListener('mousedown', this.hide);
     window.addEventListener('click', this.hide);
     window.addEventListener('scroll', this.hide);
   };
@@ -68,9 +69,14 @@ class ContextMenu extends Component {
   unBindWindowEvent = () => {
     window.removeEventListener('resize', this.hide);
     window.removeEventListener('contextmenu', this.hide);
+    window.removeEventListener('mousedown', this.hide);
     window.removeEventListener('click', this.hide);
     window.removeEventListener('scroll', this.hide);
   };
+
+  onMouseEnter = () => window.removeEventListener('mousedown', this.hide);
+
+  onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
   hide = e => {
     // Firefox trigger a click event when you mouse up on contextmenu event
@@ -196,6 +202,8 @@ class ContextMenu extends Component {
           className={this.getMenuClasses()}
           style={this.getMenuStyle()}
           ref={this.setRef}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
         >
           <div>
             {this.getMenuItem()}
