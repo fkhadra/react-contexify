@@ -4853,9 +4853,9 @@ react-scripts@1.0.5:
   optionalDependencies:
     fsevents "1.0.17"
 
-react-toastify@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-1.5.0.tgz#e9857e0b5d640064e5ba6caf7a96bb1578273de7"
+react-toastify@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-1.6.0.tgz#9cc1c3c5b03970b697855f5617cfacb0e5d5e3b8"
   dependencies:
     prop-types "^15.5.8"
     react-transition-group "^1.1.2"

@@ -1,39 +1,7 @@
 import React, { PureComponent } from 'react';
-import {ContextMenuProvider} from 'react-contexify';
 import {default as Transition } from 'react-transition-group/TransitionGroup';
 
-class Row extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      leaving: false
-    };
-  }
-
-  componentWillLeave(cb) {
-    this.setState({leaving: true});
-    setTimeout(() => cb(), 580)
-  }
-
-  render() {
-    const { id,avatar, firstname, lastname, email, companyName, event } = this.props;
-    return (
-      <ContextMenuProvider
-        id="demo_id"
-        renderTag="tr"
-        event={event}
-        data-id={id}
-        className={this.state.leaving ? 'zoomOut' : ''}
-      >
-        <td><img src={avatar} alt="avatar" /></td>
-        <td>{firstname}</td>
-        <td>{lastname}</td>
-        <td>{email}</td>
-        <td>{companyName}</td>
-      </ContextMenuProvider>
-    )
-  }
-}
+import Row from './Row';
 
 export default class DemoTable extends PureComponent {
   render() {
@@ -41,11 +9,11 @@ export default class DemoTable extends PureComponent {
       <table className="u-full-width">
         <thead>
         <tr>
-          <th title="Field #1">avatar</th>
-          <th title="Field #2">firstname</th>
-          <th title="Field #3">lastname</th>
-          <th title="Field #4">email</th>
-          <th title="Field #5">company</th>
+          <th title="Avatar">Avatar</th>
+          <th title="Firstname">Firstname</th>
+          <th title="Lastname">Lastname</th>
+          <th title="Email">Email</th>
+          <th title="Company">Company</th>
         </tr>
         </thead>
         <Transition component="tbody">

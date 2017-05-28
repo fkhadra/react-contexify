@@ -38,7 +38,7 @@ class App extends Component {
 
   getRandomAvatar() {
     const randomString = Math.random().toString(36).substring(7);
-    return `https://robohash.org/${randomString}.jpg?size=50x50`
+    return `https://robohash.org/${randomString}.jpg?size=50x50`;
   }
 
   changeAvatar = targetNode => this.setState({
@@ -50,9 +50,15 @@ class App extends Component {
     })
   });
 
-  handleHelp() {
-    toast(<div>Can't Help you muahaha</div>);
-  }
+  handleHelp = () => {
+    toast(<div>
+      <img src={this.getRandomAvatar()} alt="help or not"/>
+      <span style={{
+        position: 'absolute',
+        bottom: '15px'}}
+      >Can't Help you sorry !</span>
+    </div>);
+  };
 
   render() {
     const { theme, animation, event, data } = this.state;
@@ -94,10 +100,8 @@ class App extends Component {
           handleHelp={this.handleHelp}
         />
         <ToastContainer />;
-
       </div>
-    )
-      ;
+    );
   }
 }
 
