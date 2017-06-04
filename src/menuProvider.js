@@ -9,7 +9,7 @@ export default function (id) {
     event = 'onContextMenu',
     className = '',
     style = {}) {
-    return () => (
+    return props => (
       <ContextMenuProvider
         id={id}
         renderTag={renderTag}
@@ -17,7 +17,7 @@ export default function (id) {
         className={className}
         style={style}
       >
-        {createElement(TargetComponent)}
+        {createElement(TargetComponent, props)}
       </ContextMenuProvider>);
   };
 }
