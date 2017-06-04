@@ -28,7 +28,7 @@ You also need to include the css file provided. Otherwise it wont work as expect
 ### Style Loader :
 
 ```javascript
-import 'react-toastify/dist/ReactContexify.min.css' 
+import 'react-contexify/dist/ReactContexify.min.css' 
 ```
 
 ### 1998 Script tag : 
