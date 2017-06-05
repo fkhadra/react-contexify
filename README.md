@@ -275,6 +275,11 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.0.6
+
+- Typo fix in documentation
+- Pass props down to `menuProvider` function
+
 ### 2.0.5
 
 - Will now hide menu on mousedown.Relate to [issue 19](https://github.com/fkhadra/react-contexify/issues/19)
