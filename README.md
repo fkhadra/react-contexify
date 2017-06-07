@@ -275,6 +275,10 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.0.7
+
+- Simplified implementation [Pull Request #22](https://github.com/fkhadra/react-contexify/pull/22)
+
 ### 2.0.6
 
 - Typo fix in documentation
