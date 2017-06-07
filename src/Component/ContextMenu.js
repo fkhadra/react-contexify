@@ -150,14 +150,10 @@ class ContextMenu extends Component {
   });
 
   getMenuItem() {
-    if (Object.prototype.toString.call(this.props.children).slice(8, -1) === 'Array') {
-      return React.Children.map(
-        this.props.children.filter(isValidElement),
-        this.cloneItem
-      );
-    }
-
-    return this.cloneItem(this.props.children);
+    return React.Children.map(
+      React.Children.toArray(this.props.children).filter(isValidElement),
+      this.cloneItem,
+    );
   }
 
   getMenuStyle() {
