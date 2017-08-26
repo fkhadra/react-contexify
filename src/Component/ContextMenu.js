@@ -3,7 +3,6 @@ import React, { Component, isValidElement } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import Proxy from './Proxy';
 import Item from './Item';
 import cssClasses from './../cssClasses';
 import eventManager from '../util/eventManager';
@@ -16,7 +15,6 @@ class ContextMenu extends Component {
       PropTypes.number
     ]).isRequired,
     children: childrenOfType(Item).isRequired,
-    REF_CONTAINER: PropTypes.object.isRequired,
     theme: PropTypes.string,
     animation: PropTypes.string
   };
@@ -40,7 +38,7 @@ class ContextMenu extends Component {
 
   constructor(props) {
     super(props);
-    this.menuState = {
+    this.state = {
       x: 0,
       y: 0,
       visible: false,
@@ -86,8 +84,7 @@ class ContextMenu extends Component {
       return;
     }
     this.unBindWindowEvent();
-    this.menuState.visible = false;
-    this.props.REF_CONTAINER.proxyRender(null);
+    this.setState({ visible: false });
   };
 
   setRef = ref => {
@@ -105,7 +102,7 @@ class ContextMenu extends Component {
       height: this.menu.offsetHeight
     };
 
-    let { x, y } = this.menuState;
+    let { x, y } = this.state;
 
     if ((x + menuSize.width) > browserSize.width) {
       x -= ((x + menuSize.width) - browserSize.width);
@@ -115,9 +112,10 @@ class ContextMenu extends Component {
       y -= ((y + menuSize.height) - browserSize.height);
     }
 
-    this.menuState.x = x;
-    this.menuState.y = y;
-    this.bindWindowEvent();
+    this.setState({
+      x,
+      y
+    }, this.bindWindowEvent);
   }
 
   getMousePosition(e) {
@@ -147,7 +145,7 @@ class ContextMenu extends Component {
   }
 
   cloneItem = item => React.cloneElement(item, {
-    targetNode: this.menuState.targetNode,
+    targetNode: this.state.targetNode,
     refsFromProvider: this.refsFromProvider
   });
 
@@ -160,8 +158,8 @@ class ContextMenu extends Component {
 
   getMenuStyle() {
     return {
-      left: this.menuState.x,
-      top: this.menuState.y + 1,
+      left: this.state.x,
+      top: this.state.y + 1,
       opacity: 1
     };
   }
@@ -184,38 +182,31 @@ class ContextMenu extends Component {
     this.refsFromProvider = refsFromProvider;
 
     const { x, y } = this.getMousePosition(e);
-    this.menuState = {
+
+    this.setState({
       visible: true,
       x,
       y,
       targetNode: e.target
-    };
-    // Render to get ref
-    this.proxyRender();
-    // Adjust position with ref and render again
-    this.setMenuPosition();
-    this.proxyRender();
+    }, this.setMenuPosition);
   };
 
-  proxyRender = () => {
-    this.props.REF_CONTAINER.proxyRender(
-      <div
-        className={this.getMenuClasses()}
-        style={this.getMenuStyle()}
-        ref={this.setRef}
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-      >
-        <div>
-          {this.getMenuItem()}
-        </div>
-      </div>
-    );
-  }
-
   render() {
-    return null;
+    return this.state.visible
+      ?
+        <div
+          className={this.getMenuClasses()}
+          style={this.getMenuStyle()}
+          ref={this.setRef}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+        >
+          <div>
+            {this.getMenuItem()}
+          </div>
+        </div>
+      : null;
   }
 }
 
-export default Proxy(ContextMenu);
+export default ContextMenu;

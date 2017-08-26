@@ -1,13 +1,13 @@
 import React, { PureComponent } from "react";
 import { render } from "react-dom";
+import eventManager from './../util/eventManager';
 
-import Container from './Container';
+import ProxyContainer from './Container';
 
 const containerId = "react-contexify-container";
 let HAS_CONTAINER = false;
-let REF_CONTAINER = null;
 
-export default function (Menu) {
+export default function (Component) {
   return class Proxy extends PureComponent {
     componentWillMount() {
       if (!HAS_CONTAINER) {
@@ -15,13 +15,26 @@ export default function (Menu) {
         const container = document.createElement("div");
         container.id = containerId;
         body.appendChild(container);
-        REF_CONTAINER = render(<Container />, document.getElementById(containerId));
+        render(<ProxyContainer />, document.getElementById(containerId));
         HAS_CONTAINER = true;
       }
     }
+    componentDidMount() {
+      this.attachToProxy(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this.attachToProxy(nextProps);
+    }
+
+    attachToProxy(props) {
+      eventManager.emit('PROXY_RENDER', {
+        [props.id]: <Component {...props} key={props.id} />
+      });
+    }
 
     render() {
-      return <Menu {...this.props} REF_CONTAINER={REF_CONTAINER} />;
+      return null;
     }
   };
 }
