@@ -1,5 +1,7 @@
 # React-contexify [![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master)](https://travis-ci.org/fkhadra/react-contexify) [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
 
+![readme-ctx](https://user-images.githubusercontent.com/5574267/29753912-43c54008-8b7b-11e7-9627-258fde1ffddd.gif)
+
 Add a context menu to your react application with ease !
 
 * [Demo](#demo)
@@ -274,6 +276,10 @@ onClick(targetNode, refs, data)
 ```
 
 ## Release Notes
+
+### 2.1.0
+
+- Context menu is now rendered outside of the main react root component to avoid the fixed position being broken by the parent style. For more details please see [issue 27](https://github.com/fkhadra/react-contexify/issues/27)
 
 ### 2.0.7
 
