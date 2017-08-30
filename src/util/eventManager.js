@@ -18,6 +18,10 @@ const eventManager = {
     return this.eventList.delete(event);
   },
 
+  has(event) {
+    return this.eventList.has(event);
+  },
+
   emit(event, ...args) {
     if (!this.eventList.has(event)) {
       console.warn(`<${event}> Event is not registered. Did you forgot to bind the event ?`);

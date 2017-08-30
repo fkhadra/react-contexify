@@ -33,9 +33,13 @@ export default function ({ component, containerId }) {
 
     attachToProxy(props) {
       const C = component;
-      eventManager.emit('PROXY_RENDER', {
-        [props.id]: <C {...props} key={props.id} />
-      });
+      if (eventManager.has('PROXY_RENDER')) {
+        eventManager.emit('PROXY_RENDER', {
+          [props.id]: <C {...props} key={props.id} />
+        });
+      } else {
+        setTimeout(() => this.attachToProxy(props), 250);
+      }
     }
 
     render() {
