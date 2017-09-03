@@ -277,6 +277,10 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.1.2
+
+- Fixed for real ! [issue 27](https://github.com/fkhadra/react-contexify/issues/27)
+
 ### 2.1.0
 
 - Context menu is now rendered outside of the main react root component to avoid the fixed position being broken by the parent style. For more details please see [issue 27](https://github.com/fkhadra/react-contexify/issues/27)

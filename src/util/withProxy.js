@@ -13,10 +13,9 @@ export default function ({ component, containerId }) {
   return class Proxy extends PureComponent {
     componentWillMount() {
       if (cache.indexOf(containerId) === -1) {
-        const body = document.querySelector("body");
         const container = document.createElement("div");
         container.id = containerId;
-        body.appendChild(container);
+        document.body.appendChild(container);
         render(<ProxyContainer />, document.getElementById(containerId));
         cache.push(containerId);
       }
@@ -34,9 +33,9 @@ export default function ({ component, containerId }) {
     attachToProxy(props) {
       const C = component;
       if (eventManager.has('PROXY_RENDER')) {
-        eventManager.emit('PROXY_RENDER', {
-          [props.id]: <C {...props} key={props.id} />
-        });
+        eventManager.emit('PROXY_RENDER',
+          <C {...props} key={props.id} />
+        );
       } else {
         setTimeout(() => this.attachToProxy(props), 250);
       }

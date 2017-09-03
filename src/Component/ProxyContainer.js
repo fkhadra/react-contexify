@@ -5,7 +5,7 @@ export default class ProxyContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      element: {}
+      element: []
     };
   }
 
@@ -17,10 +17,10 @@ export default class ProxyContainer extends Component {
     eventManager.off('PROXY_RENDER');
   }
 
-  proxyRender = element => this.setState({ element: { ...this.state.element, ...element } });
+  proxyRender = element => this.setState(prevState => ({ element: [...prevState.element, element] }));
 
   renderChildren() {
-    return Object.keys(this.state.element).map(k => this.state.element[k]);
+    return this.state.element.map(el => el);
   }
 
   render() {
