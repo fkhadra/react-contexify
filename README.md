@@ -277,6 +277,11 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.1.3
+
+- Fixed [issue 33](https://github.com/fkhadra/react-contexify/issues/33)
+- Removed Proxy Container.
+ 
 ### 2.1.2
 
 - Fixed for real ! [issue 27](https://github.com/fkhadra/react-contexify/issues/27)
