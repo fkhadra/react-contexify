@@ -1,44 +1,32 @@
-/**
- * TODO : Abstract the component
- */
 import React, { PureComponent } from "react";
-import { render } from "react-dom";
+import { render, unmountComponentAtNode } from "react-dom";
 
-import ProxyContainer from './../Component/ProxyContainer';
-import eventManager from './../util/eventManager';
+export default function (Component) {
+  return class WithProxy extends PureComponent {
+    node = null;
 
-const cache = [];
-
-export default function ({ component, containerId }) {
-  return class Proxy extends PureComponent {
     componentWillMount() {
-      if (cache.indexOf(containerId) === -1) {
-        const container = document.createElement("div");
-        container.id = containerId;
-        document.body.appendChild(container);
-        render(<ProxyContainer />, document.getElementById(containerId));
-        cache.push(containerId);
-      }
+      this.appendToBody(this.props);
     }
 
-    componentDidMount() {
-      this.attachToProxy(this.props);
+    componentWillUnmount() {
+      this.removeFromBody();
     }
 
-    // Maybe I need to shallow compare props
     componentWillReceiveProps(nextProps) {
-      this.attachToProxy(nextProps);
+      this.removeFromBody();
+      this.appendToBody(nextProps);
     }
 
-    attachToProxy(props) {
-      const C = component;
-      if (eventManager.has('PROXY_RENDER')) {
-        eventManager.emit('PROXY_RENDER',
-          <C {...props} key={props.id} />
-        );
-      } else {
-        setTimeout(() => this.attachToProxy(props), 250);
-      }
+    removeFromBody() {
+      unmountComponentAtNode(this.node);
+      document.body.removeChild(this.node);
+    }
+
+    appendToBody(props) {
+      const container = document.createElement("div");
+      this.node = document.body.appendChild(container);
+      render(<Component {...props} key={props.id} />, this.node);
     }
 
     render() {
