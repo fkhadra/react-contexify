@@ -46,16 +46,17 @@ class ContextMenu extends Component {
     };
     this.menu = null;
     this.refsFromProvider = null;
+    this.token = null;
   }
 
   componentDidMount() {
     eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) => this.show(e, refsFromProvider));
-    eventManager.on('hideAll', this.hide);
+    this.token = eventManager.on('hideAll', this.hide);
   }
 
   componentWillUnmount() {
     eventManager.off(`display::${this.props.id}`);
-    eventManager.off('hideAll');
+    eventManager.off('hideAll', this.token);
   }
 
   bindWindowEvent = () => {

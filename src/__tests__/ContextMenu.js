@@ -9,7 +9,7 @@ import cssClasses from './../cssClasses';
 
 describe('ContextMenu', () => {
   it(
-    'Should bind event when component did mount and unbind them when will unmount',
+    'Should bind event when component did mount and unbind all the event related to the component when will unmount',
     () => {
       const component = mount(
         <ContextMenu id="foo">
@@ -20,7 +20,6 @@ describe('ContextMenu', () => {
       expect(eventManager.eventList.has('hideAll')).toBe(true);
       component.unmount();
       expect(eventManager.eventList.has('display::foo')).toBe(false);
-      expect(eventManager.eventList.has('hideAll')).toBe(false);
     });
 
   it('Should render null if `visible` is false', () => {
