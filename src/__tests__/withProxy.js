@@ -10,10 +10,7 @@ import withProxy from "./../util/withProxy";
 describe("withProxy", () => {
   it("Wrapped component should render null", () => {
     const Foo = () => <div>Foobar</div>;
-    const Component = withProxy({
-      component: Foo,
-      containerId: "foo"
-    });
+    const Component = withProxy(Foo);
     const renderedComponent = shallow(<Component />);
     expect(renderedComponent.html()).toBe(null);
   });
