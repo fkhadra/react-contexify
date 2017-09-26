@@ -48,8 +48,6 @@ class ContextMenuProvider extends PureComponent {
     );
   };
 
-  setChildrenRefs = ref => this.childrenRefs.push(ref);
-
   getChildren() {
     const {
       id,
@@ -63,11 +61,13 @@ class ContextMenuProvider extends PureComponent {
 
     // reset refs
     this.childrenRefs = [];
+    // use a new ref callback function each time, so that it is guaranteed to be called on each render
+    const setChildRef = ref => ref === null || this.childrenRefs.push(ref);
 
     return Children.map(this.props.children,
       child => (
         isValidElement(child)
-          ? cloneElement(child, { ...rest, ref: this.setChildrenRefs })
+          ? cloneElement(child, { ...rest, ref: setChildRef })
           : child
       ));
   }
