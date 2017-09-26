@@ -277,6 +277,10 @@ onClick(targetNode, refs, data)
 
 ## Release Notes
 
+### 2.1.4
+
+- [Fix child references](https://github.com/fkhadra/react-contexify/pull/36). Thanks to @kinke 
+
 ### 2.1.3
 
 - Fixed [issue 33](https://github.com/fkhadra/react-contexify/issues/33)
