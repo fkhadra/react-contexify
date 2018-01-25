@@ -13,6 +13,7 @@ class Item extends PureComponent {
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
     data: PropTypes.any,
+    outerData: PropTypes.any,
     refsFromProvider: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.arrayOf(PropTypes.object)
@@ -27,6 +28,7 @@ class Item extends PureComponent {
     },
     targetNode: {},
     data: null,
+    outerData: null,
     refsFromProvider: []
   };
 
@@ -36,7 +38,8 @@ class Item extends PureComponent {
       : this.props.onClick(
         this.props.targetNode,
       this.props.refsFromProvider,
-      this.props.data
+      this.props.data,
+      this.props.outerData
     );
   };
 
