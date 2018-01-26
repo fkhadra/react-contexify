@@ -50,7 +50,7 @@ class ContextMenu extends Component {
   }
 
   componentDidMount() {
-    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) => this.show(e, refsFromProvider));
+    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider, data) => this.show(e, refsFromProvider, data));
     this.token = eventManager.on('hideAll', this.hide);
   }
 
@@ -147,7 +147,8 @@ class ContextMenu extends Component {
 
   cloneItem = item => React.cloneElement(item, {
     targetNode: this.state.targetNode,
-    refsFromProvider: this.refsFromProvider
+    refsFromProvider: this.refsFromProvider,
+    outerData: this.state.data
   });
 
   getMenuItem() {
@@ -177,7 +178,7 @@ class ContextMenu extends Component {
     );
   }
 
-  show = (e, refsFromProvider) => {
+  show = (e, refsFromProvider, data) => {
     e.stopPropagation();
     eventManager.emit('hideAll');
     this.refsFromProvider = refsFromProvider;
@@ -188,7 +189,8 @@ class ContextMenu extends Component {
       visible: true,
       x,
       y,
-      targetNode: e.target
+      targetNode: e.target,
+      data
     }, this.setMenuPosition);
   };
 

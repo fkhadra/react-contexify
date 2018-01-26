@@ -13,6 +13,8 @@ class Item extends PureComponent {
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
     data: PropTypes.any,
+    outerData: PropTypes.any,
+    dislabeGuard: PropTypes.func,
     refsFromProvider: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.arrayOf(PropTypes.object)
@@ -27,7 +29,9 @@ class Item extends PureComponent {
     },
     targetNode: {},
     data: null,
-    refsFromProvider: []
+    outerData: null,
+    refsFromProvider: [],
+    dislabeGuard: null
   };
 
   handleClick = e => {
@@ -36,7 +40,8 @@ class Item extends PureComponent {
       : this.props.onClick(
         this.props.targetNode,
       this.props.refsFromProvider,
-      this.props.data
+      this.props.data,
+      this.props.outerData
     );
   };
 
@@ -51,8 +56,16 @@ class Item extends PureComponent {
   }
 
   render() {
+    let disabled = this.props.disabled;
+
+    if (this.props.dislabeGuard) {
+      if (typeof this.props.dislabeGuard === "function") {
+        disabled = this.props.dislabeGuard(this.props, disabled);
+      }
+    }
+
     const className = cx(cssClasses.ITEM, {
-      [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
+      [`${cssClasses.ITEM_DISABLED}`]: disabled
     });
 
     return (

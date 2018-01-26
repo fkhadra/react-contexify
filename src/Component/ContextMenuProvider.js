@@ -22,14 +22,16 @@ class ContextMenuProvider extends PureComponent {
     renderTag: PropTypes.node,
     event: PropTypes.string,
     className: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    data: PropTypes.object
   };
 
   static defaultProps = {
     renderTag: 'div',
     event: 'onContextMenu',
     className: '',
-    style: {}
+    style: {},
+    data: null
   };
 
   constructor(props) {
@@ -44,7 +46,8 @@ class ContextMenuProvider extends PureComponent {
       e.nativeEvent,
       this.childrenRefs.length === 1
         ? this.childrenRefs[0]
-        : this.childrenRefs
+        : this.childrenRefs,
+      this.props.data
     );
   };
 
