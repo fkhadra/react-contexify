@@ -12,6 +12,6 @@ const Ctx = withProxy(ContextMenu);
 
 export { Ctx as ContextMenu };
 
-export const triggerContetMenu = (id, elem, data) => {
-  eventManager.emit(`display::${id}`, elem, null, this.props.data);
+export const triggerContextMenu = (id, elem, data) => {
+  eventManager.emit(`display::${id}`, elem, null, data);
 };
