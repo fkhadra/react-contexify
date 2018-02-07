@@ -7,6 +7,13 @@
   box-shadow: rgba(0, 0, 0, .3) 0 10px 20px, rgb(238, 238, 238) 0 0 0 1px;
   padding: 5px 0;
 
+  & &__submenu{
+    position: absolute;
+    display: none;
+    top: 0;
+    transform: translateX(100%);
+  }
+
   &__separator {
     float: left;
     width: 100%;
@@ -18,10 +25,16 @@
 
   &__item {
     cursor: pointer;
+    position: relative;
 
-    &:not(&--disabled):hover &__data {
+    &:not(&--disabled):hover > &__data {
       color: white;
       background-color: #4393e6;
+    }
+
+    &:not(&--disabled):hover > .react-contexify__submenu {
+      display: inherit;
+      opacity: 1;
     }
 
     &--disabled {

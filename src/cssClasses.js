@@ -3,6 +3,7 @@
 * */
 export default {
   MENU: 'react-contexify',
+  SUBMENU: 'react-contexify react-contexify__submenu',
   SEPARATOR: 'react-contexify__separator',
   ITEM: 'react-contexify__item',
   ITEM_DISABLED: 'react-contexify__item--disabled',

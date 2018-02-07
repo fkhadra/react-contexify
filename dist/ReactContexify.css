@@ -6,6 +6,11 @@
   box-sizing: border-box;
   box-shadow: rgba(0, 0, 0, 0.3) 0 10px 20px, #eeeeee 0 0 0 1px;
   padding: 5px 0; }
+  .react-contexify .react-contexify__submenu {
+    position: absolute;
+    display: none;
+    top: 0;
+    transform: translateX(100%); }
   .react-contexify__separator {
     float: left;
     width: 100%;
@@ -14,10 +19,14 @@
     margin: 4px 0;
     background-color: rgba(0, 0, 0, 0.2); }
   .react-contexify__item {
-    cursor: pointer; }
-    .react-contexify__item:not(.react-contexify__item--disabled):hover .react-contexify__item__data {
+    cursor: pointer;
+    position: relative; }
+    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
       color: white;
       background-color: #4393e6; }
+    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__submenu {
+      display: inherit;
+      opacity: 1; }
     .react-contexify__item--disabled {
       cursor: default;
       opacity: .5; }
@@ -50,7 +59,7 @@
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2), 0 0 0 1px #eee; }
   .react-contexify__theme--light .react-contexify__separator {
     background-color: #eee; }
-  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover .react-contexify__item__data {
+  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
     color: #4393e6;
     background-color: #E0EEFD; }
   .react-contexify__theme--light .react-contexify__item__data {
