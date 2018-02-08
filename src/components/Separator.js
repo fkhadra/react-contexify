@@ -1,7 +1,7 @@
 import React from 'react';
 
-import cssClasses from './../cssClasses';
+import styles from './styles';
 
-const Separator = () => <div className={cssClasses.SEPARATOR} />;
+const Separator = () => <div className={styles.separator} />;
 
 export default Separator;

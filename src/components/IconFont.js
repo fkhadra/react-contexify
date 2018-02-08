@@ -1,31 +1,26 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+
 import cx from 'classnames';
 
-import cssClasses from './../cssClasses';
+import styles from './styles';
 
-class IconFont extends PureComponent {
-  static propTypes = {
-    className: PropTypes.string,
-    style: PropTypes.object,
-    children: PropTypes.node
-  };
+const IconFont = ({ className, style, children }) => (
+  <i className={cx(styles.itemIcon, className)} style={style}>
+    {children}
+  </i>
+);
 
-  static defaultProps = {
-    className: '',
-    style: {},
-    children: ''
-  };
+IconFont.propTypes = {
+  className: PropTypes.string,
+  style: PropTypes.object,
+  children: PropTypes.node
+};
 
-  render() {
-    const className = cx(cssClasses.ITEM_ICON, this.props.className);
-    const attributes = Object.assign(
-      { className },
-      Object.keys(this.props.style).length > 0 ? { style: this.props.style } : {}
-    );
-
-    return <i {...attributes}>{this.props.children}</i>;
-  }
-}
+IconFont.defaultProps = {
+  className: '',
+  style: {},
+  children: ''
+};
 
 export default IconFont;
