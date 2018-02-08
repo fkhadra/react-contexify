@@ -9,7 +9,9 @@
   .react-contexify .react-contexify__submenu {
     position: absolute;
     top: 0;
-    opacity: 1; }
+    left: 100%;
+    pointer-events: none;
+    transition: opacity 0.4s; }
   .react-contexify__separator {
     float: left;
     width: 100%;
@@ -24,6 +26,7 @@
       color: white;
       background-color: #4393e6; }
     .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__submenu {
+      pointer-events: initial;
       opacity: 1; }
     .react-contexify__item--disabled {
       cursor: default;
