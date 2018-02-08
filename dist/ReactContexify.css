@@ -8,9 +8,8 @@
   padding: 5px 0; }
   .react-contexify .react-contexify__submenu {
     position: absolute;
-    display: none;
     top: 0;
-    transform: translateX(100%); }
+    opacity: 1; }
   .react-contexify__separator {
     float: left;
     width: 100%;
@@ -25,7 +24,6 @@
       color: white;
       background-color: #4393e6; }
     .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__submenu {
-      display: inherit;
       opacity: 1; }
     .react-contexify__item--disabled {
       cursor: default;

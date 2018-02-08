@@ -9,9 +9,10 @@
 
   & &__submenu{
     position: absolute;
-    display: none;
     top: 0;
-    transform: translateX(100%);
+    left: 100%;
+    pointer-events: none;
+    transition: opacity 0.4s;
   }
 
   &__separator {
@@ -33,7 +34,7 @@
     }
 
     &:not(&--disabled):hover > .react-contexify__submenu {
-      display: inherit;
+      pointer-events: initial;
       opacity: 1;
     }
 
