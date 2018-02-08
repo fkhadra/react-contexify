@@ -9,7 +9,7 @@ export default class Submenu extends PureComponent {
     title: PropTypes.string.isRequired,
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
-    disabled: PropTypes.bool,
+    disabled: PropTypes.bool
   };
 
   static defaultProps = {
@@ -21,6 +21,38 @@ export default class Submenu extends PureComponent {
     data: null,
     refsFromProvider: []
   };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      styles: {}
+    };
+  }
+
+  setRef = ref => {
+    this.menu = ref;
+  };
+
+  componentDidMount() {
+    const { innerWidth, innerHeight } = window;
+    const rect = this.menu.getBoundingClientRect();
+    const style = {
+      left: rect.right < innerWidth ? '100%' : '-100%'
+    };
+
+    if (rect.bottom > innerHeight) {
+      style.bottom = 0;
+      style.top = 'initial';
+    } else {
+      style.bottom = 'initial';
+      style.top = 0;
+    }
+
+    this.setState({
+      style: style
+    });
+  }
 
   render() {
     const className = cx(cssClasses.ITEM, {
@@ -35,7 +67,13 @@ export default class Submenu extends PureComponent {
           {this.props.rightIcon}
           <span>▶</span>
         </div>
-        <div className={cssClasses.SUBMENU}>{this.props.children}</div>
+        <div
+          className={cssClasses.SUBMENU}
+          ref={this.setRef}
+          style={this.state.style}
+        >
+          {this.props.children}
+        </div>
       </div>
     );
   }
