@@ -1,6 +1,6 @@
 import React, { createElement } from 'react';
 
-import ContextMenuProvider from './Component/ContextMenuProvider';
+import ContextMenuProvider from './components/ContextMenuProvider';
 
 export default function (id) {
   return function (
