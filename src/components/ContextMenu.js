@@ -4,22 +4,23 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import Item from './Item';
-import cssClasses from './../cssClasses';
+import styles from './styles';
 import eventManager from '../util/eventManager';
 import childrenOfType from '../util/childrenOfType';
 
 class ContextMenu extends Component {
   static propTypes = {
-    id: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]).isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: childrenOfType(Item).isRequired,
+    className: PropTypes.string,
+    style: PropTypes.object,
     theme: PropTypes.string,
     animation: PropTypes.string
   };
 
   static defaultProps = {
+    className: '',
+    style: {},
     theme: null,
     animation: null
   };
@@ -36,21 +37,21 @@ class ContextMenu extends Component {
     zoom: 'zoom'
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      x: 0,
-      y: 0,
-      visible: false,
-      targetNode: null
-    };
-    this.menu = null;
-    this.refsFromProvider = null;
-    this.token = null;
-  }
+  state = {
+    x: 0,
+    y: 0,
+    visible: false,
+    targetNode: null
+  };
+
+  menu = null;
+  refsFromProvider = null;
+  token = null;
 
   componentDidMount() {
-    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) => this.show(e, refsFromProvider));
+    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) =>
+      this.show(e, refsFromProvider)
+    );
     this.token = eventManager.on('hideAll', this.hide);
   }
 
@@ -81,7 +82,11 @@ class ContextMenu extends Component {
 
   hide = e => {
     // Firefox trigger a click event when you mouse up on contextmenu event
-    if (typeof e !== 'undefined' && e.button === 2 && e.type !== 'contextmenu') {
+    if (
+      typeof e !== 'undefined' &&
+      e.button === 2 &&
+      e.type !== 'contextmenu'
+    ) {
       return;
     }
     this.unBindWindowEvent();
@@ -93,30 +98,25 @@ class ContextMenu extends Component {
   };
 
   setMenuPosition() {
-    const browserSize = {
-      width: window.innerWidth,
-      height: window.innerHeight
-    };
-
-    const menuSize = {
-      width: this.menu.offsetWidth,
-      height: this.menu.offsetHeight
-    };
-
+    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+    const { offsetWidth: menuWidth, offsetHeight: menuHeight } = this.menu;
     let { x, y } = this.state;
 
-    if ((x + menuSize.width) > browserSize.width) {
-      x -= ((x + menuSize.width) - browserSize.width);
+    if (x + menuWidth > windowWidth) {
+      x -= x + menuWidth - windowWidth;
     }
 
-    if ((y + menuSize.height) > browserSize.height) {
-      y -= ((y + menuSize.height) - browserSize.height);
+    if (y + menuHeight > windowHeight) {
+      y -= y + menuHeight - windowHeight;
     }
 
-    this.setState({
-      x,
-      y
-    }, this.bindWindowEvent);
+    this.setState(
+      {
+        x,
+        y
+      },
+      this.bindWindowEvent
+    );
   }
 
   getMousePosition(e) {
@@ -125,14 +125,15 @@ class ContextMenu extends Component {
       y: e.clientY
     };
 
-    if (e.type === 'touchend' && (pos.x === null || pos.y === null)) {
-      const touches = e.changedTouches;
-
-      if (touches !== null && touches.length > 0) {
-        pos.x = touches[0].clientX;
-        pos.y = touches[0].clientY;
-      }
+    if (
+      e.type === 'touchend' &&
+      (pos.x === null || pos.y === null) &&
+      (e.changedTouches !== null && e.changedTouches.length > 0)
+    ) {
+      pos.x = e.changedTouches[0].clientX;
+      pos.y = e.changedTouches[0].clientY;
     }
+
     // just covering my ass I guess
     if (pos.x === null || pos.x < 0) {
       pos.x = 0;
@@ -145,35 +146,16 @@ class ContextMenu extends Component {
     return pos;
   }
 
-  cloneItem = item => React.cloneElement(item, {
-    targetNode: this.state.targetNode,
-    refsFromProvider: this.refsFromProvider
-  });
+  cloneItem = item =>
+    React.cloneElement(item, {
+      targetNode: this.state.targetNode,
+      refsFromProvider: this.refsFromProvider
+    });
 
   getMenuItem() {
     return React.Children.map(
-      React.Children.toArray(this.props.children).filter(isValidElement),
-      this.cloneItem,
-    );
-  }
-
-  getMenuStyle() {
-    return {
-      left: this.state.x,
-      top: this.state.y + 1,
-      opacity: 1
-    };
-  }
-
-  getMenuClasses() {
-    const { theme, animation } = this.props;
-
-    return cx(
-      cssClasses.MENU,
-      {
-        [cssClasses.THEME + theme]: theme !== null,
-        [cssClasses.ANIMATION_WILL_ENTER + animation]: animation !== null
-      }
+      this.props.children,
+      this.cloneItem
     );
   }
 
@@ -184,29 +166,41 @@ class ContextMenu extends Component {
 
     const { x, y } = this.getMousePosition(e);
 
-    this.setState({
-      visible: true,
-      x,
-      y,
-      targetNode: e.target
-    }, this.setMenuPosition);
+    this.setState(
+      {
+        visible: true,
+        x,
+        y,
+        targetNode: e.target
+      },
+      this.setMenuPosition
+    );
   };
 
   render() {
-    return this.state.visible
-      ?
-        <div
-          className={this.getMenuClasses()}
-          style={this.getMenuStyle()}
-          ref={this.setRef}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
-        >
-          <div>
-            {this.getMenuItem()}
-          </div>
-        </div>
-      : null;
+    const { theme, animation, style, className } = this.props;
+    const cssClasses = cx(styles.menu, className, {
+      [styles.theme + theme]: theme !== null,
+      [styles.animationWillEnter + animation]: animation !== null
+    });
+    const menuStyle = {
+      ...style,
+      left: this.state.x,
+      top: this.state.y + 1,
+      opacity: 1
+    };
+
+    return this.state.visible ? (
+      <div
+        className={cssClasses}
+        style={menuStyle}
+        ref={this.setRef}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      >
+        <div>{this.getMenuItem()}</div>
+      </div>
+    ) : null;
   }
 }
 

@@ -1,34 +1,29 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import cssClasses from './../cssClasses';
+import styles from './styles';
 
 export default class Submenu extends PureComponent {
   static propTypes = {
     children: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
-    leftIcon: PropTypes.node,
-    rightIcon: PropTypes.node,
-    disabled: PropTypes.bool
+    className: PropTypes.string,
+    style: PropTypes.object,
+    disabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func)
   };
 
   static defaultProps = {
-    leftIcon: '',
-    rightIcon: '',
+    className: '',
+    style: {},
     disabled: false,
-    onClick: () => {},
     targetNode: {},
     data: null,
     refsFromProvider: []
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      styles: {}
-    };
-  }
+  state = {
+    styles: {}
+  };
 
   setRef = ref => {
     this.menu = ref;
@@ -55,20 +50,24 @@ export default class Submenu extends PureComponent {
   }
 
   render() {
-    const className = cx(cssClasses.ITEM, {
-      [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
+    const { disabled, className, style } = this.props;
+    const cssClasses = cx(styles.item, className, {
+      [`${styles.itemDisabled}`]:
+        typeof disabled === 'function' ? disabled() : disabled
     });
+    const submenuStyle = {
+      ...style,
+      ...this.state.style
+    };
 
     return (
-      <div className={className} role="presentation">
-        <div className={cssClasses.ITEM_DATA}>
-          {this.props.leftIcon}
+      <div className={cssClasses} role="presentation">
+        <div className={styles.itemContent}>
           {this.props.title}
-          {this.props.rightIcon}
           <span>▶</span>
         </div>
         <div
-          className={cssClasses.SUBMENU}
+          className={styles.submenu}
           ref={this.setRef}
           style={this.state.style}
         >
