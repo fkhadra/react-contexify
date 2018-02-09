@@ -7,7 +7,7 @@ export default {
   separator: 'react-contexify__separator',
   item: 'react-contexify__item',
   itemDisabled: 'react-contexify__item--disabled',
-  itemData: 'react-contexify__item__data',
+  itemContent: 'react-contexify__item__data',
   itemIcon: 'react-contexify__item__icon',
   theme: 'react-contexify__theme--',
   animationWillEnter: 'react-contexify__will-enter--',

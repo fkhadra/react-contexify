@@ -2,15 +2,15 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import cssClasses from './../cssClasses';
+import styles from './styles';
 
 class Item extends PureComponent {
   static propTypes = {
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+    style: PropTypes.object,
     targetNode: PropTypes.object,
-    leftIcon: PropTypes.node,
-    rightIcon: PropTypes.node,
-    disabled: PropTypes.bool,
+    disabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func),
     onClick: PropTypes.func,
     data: PropTypes.any,
     refsFromProvider: PropTypes.oneOfType([
@@ -20,11 +20,10 @@ class Item extends PureComponent {
   };
 
   static defaultProps = {
-    leftIcon: '',
-    rightIcon: '',
+    className: '',
+    style: {},
     disabled: false,
-    onClick: () => {
-    },
+    onClick: () => {},
     targetNode: {},
     data: null,
     refsFromProvider: []
@@ -34,30 +33,27 @@ class Item extends PureComponent {
     this.props.disabled
       ? e.stopPropagation()
       : this.props.onClick(
-        this.props.targetNode,
-      this.props.refsFromProvider,
-      this.props.data
-    );
+          this.props.targetNode,
+          this.props.refsFromProvider,
+          this.props.data
+        );
   };
 
-  buildItem() {
-    return (
-      <div className={cssClasses.ITEM_DATA}>
-        {this.props.leftIcon}
-        {this.props.children}
-        {this.props.rightIcon}
-      </div>
-    );
-  }
-
   render() {
-    const className = cx(cssClasses.ITEM, {
-      [`${cssClasses.ITEM_DISABLED}`]: this.props.disabled
+    const { className, disabled, style, children, data } = this.props;
+    const cssClasses = cx(styles.item, className, {
+      [`${styles.itemDisabled}`]:
+        typeof disabled === 'function' ? disabled(data) : disabled
     });
 
     return (
-      <div className={className} onClick={this.handleClick} role="presentation">
-        {this.buildItem()}
+      <div
+        className={cssClasses}
+        style={style}
+        onClick={this.handleClick}
+        role="presentation"
+      >
+        <div className={styles.itemContent}>{children}</div>
       </div>
     );
   }
