@@ -47,17 +47,20 @@ class ContextMenu extends Component {
   menu = null;
   refsFromProvider = null;
   token = null;
+  unsub = [];
 
   componentDidMount() {
-    eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) =>
-      this.show(e, refsFromProvider)
+    this.unsub.push(
+      eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) =>
+        this.show(e, refsFromProvider)
+      )
     );
-    this.token = eventManager.on('hideAll', this.hide);
+
+    this.unsub.push(eventManager.on('hideAll', this.hide));
   }
 
   componentWillUnmount() {
-    eventManager.off(`display::${this.props.id}`);
-    eventManager.off('hideAll', this.token);
+    this.unsub.forEach(cb => cb());
   }
 
   bindWindowEvent = () => {
@@ -153,10 +156,7 @@ class ContextMenu extends Component {
     });
 
   getMenuItem() {
-    return React.Children.map(
-      this.props.children,
-      this.cloneItem
-    );
+    return React.Children.map(this.props.children, this.cloneItem);
   }
 
   show = (e, refsFromProvider) => {
