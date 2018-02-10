@@ -24,24 +24,22 @@ describe('Menu Item', () => {
     expect(click).toHaveBeenCalled();
   });
 
-  it(
-    'Should pass the targetNode, the refs and the data props to the provided callback when clicked',
-    () => {
-      const click = (targetNode, refs, data) => {
-        expect(targetNode.foo).toBe('bar');
-        expect(refs[0].baz).toBe('baz');
-        expect(data).toBe('data');
-      };
+  it('Should pass the targetNode, the refs and the data props to the provided callback when clicked', () => {
+    const click = (targetNode, refs, data) => {
+      expect(targetNode.foo).toBe('bar');
+      expect(refs[0].baz).toBe('baz');
+      expect(data).toBe('data');
+    };
 
-      component.setProps({
-        onClick: click,
-        targetNode: { foo: 'bar' },
-        refsFromProvider: [{ baz: 'baz' }],
-        data: 'data'
-      });
-
-      component.simulate('click');
+    component.setProps({
+      onClick: click,
+      targetNode: { foo: 'bar' },
+      refsFromProvider: [{ baz: 'baz' }],
+      data: 'data'
     });
+
+    component.simulate('click');
+  });
 
   it('Should remove click when disabled', () => {
     const click = jest.fn();

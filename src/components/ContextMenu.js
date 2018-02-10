@@ -6,12 +6,11 @@ import cx from 'classnames';
 import Item from './Item';
 import styles from './styles';
 import eventManager from '../util/eventManager';
-import childrenOfType from '../util/childrenOfType';
 
 class ContextMenu extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    children: childrenOfType(Item).isRequired,
+    children: PropTypes.node.isRequired,
     className: PropTypes.string,
     style: PropTypes.object,
     theme: PropTypes.string,
@@ -19,7 +18,7 @@ class ContextMenu extends Component {
   };
 
   static defaultProps = {
-    className: '',
+    className: null,
     style: {},
     theme: null,
     animation: null
@@ -46,16 +45,10 @@ class ContextMenu extends Component {
 
   menu = null;
   refsFromProvider = null;
-  token = null;
   unsub = [];
 
   componentDidMount() {
-    this.unsub.push(
-      eventManager.on(`display::${this.props.id}`, (e, refsFromProvider) =>
-        this.show(e, refsFromProvider)
-      )
-    );
-
+    this.unsub.push(eventManager.on(`display::${this.props.id}`, this.show));
     this.unsub.push(eventManager.on('hideAll', this.hide));
   }
 
@@ -137,7 +130,6 @@ class ContextMenu extends Component {
       pos.y = e.changedTouches[0].clientY;
     }
 
-    // just covering my ass I guess
     if (pos.x === null || pos.x < 0) {
       pos.x = 0;
     }
@@ -149,20 +141,23 @@ class ContextMenu extends Component {
     return pos;
   }
 
-  cloneItem = item =>
-    React.cloneElement(item, {
-      targetNode: this.state.targetNode,
-      refsFromProvider: this.refsFromProvider
-    });
-
   getMenuItem() {
-    return React.Children.map(this.props.children, this.cloneItem);
+    return React.Children.map(this.props.children, item =>
+      React.cloneElement(item, {
+        targetNode: this.state.targetNode,
+        refsFromProvider: this.refsFromProvider,
+        dataFromProvider: this.dataFromProvider
+      })
+    );
   }
 
-  show = (e, refsFromProvider) => {
+  show = (e, refsFromProvider, data) => {
     e.stopPropagation();
     eventManager.emit('hideAll');
+
+    // store for later use
     this.refsFromProvider = refsFromProvider;
+    this.dataFromProvider = data;
 
     const { x, y } = this.getMousePosition(e);
 
@@ -190,17 +185,19 @@ class ContextMenu extends Component {
       opacity: 1
     };
 
-    return this.state.visible ? (
-      <div
-        className={cssClasses}
-        style={menuStyle}
-        ref={this.setRef}
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-      >
-        <div>{this.getMenuItem()}</div>
-      </div>
-    ) : null;
+    return (
+      this.state.visible && (
+        <div
+          className={cssClasses}
+          style={menuStyle}
+          ref={this.setRef}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+        >
+          <div>{this.getMenuItem()}</div>
+        </div>
+      )
+    );
   }
 }
 

@@ -5,24 +5,30 @@ import styles from './styles';
 
 export default class Submenu extends PureComponent {
   static propTypes = {
-    children: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    targetNode: PropTypes.object,
+    dataFromProvider: PropTypes.any,
+    refsFromProvider: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(PropTypes.object)
+    ]),
     className: PropTypes.string,
     style: PropTypes.object,
-    disabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func)
+    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
   };
 
   static defaultProps = {
-    className: '',
+    targetNode: null,
+    dataFromProvider: null,
+    refsFromProvider: null,
+    className: null,
     style: {},
-    disabled: false,
-    targetNode: {},
-    data: null,
-    refsFromProvider: []
+    disabled: false
   };
 
   state = {
-    styles: {}
+    style: {}
   };
 
   setRef = ref => {
@@ -49,6 +55,18 @@ export default class Submenu extends PureComponent {
     });
   }
 
+  getMenuItem() {
+    const { targetNode, refsFromProvider, dataFromProvider } = this.props;
+
+    return React.Children.map(this.props.children, item =>
+      React.cloneElement(item, {
+        targetNode,
+        refsFromProvider,
+        dataFromProvider
+      })
+    );
+  }
+
   render() {
     const { disabled, className, style } = this.props;
     const cssClasses = cx(styles.item, className, {
@@ -71,7 +89,7 @@ export default class Submenu extends PureComponent {
           ref={this.setRef}
           style={this.state.style}
         >
-          {this.props.children}
+          {this.getMenuItem()}
         </div>
       </div>
     );

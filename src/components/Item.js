@@ -10,9 +10,10 @@ class Item extends PureComponent {
     className: PropTypes.string,
     style: PropTypes.object,
     targetNode: PropTypes.object,
-    disabled: PropTypes.oneOfType(PropTypes.bool, PropTypes.func),
+    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     onClick: PropTypes.func,
     data: PropTypes.any,
+    dataFromProvider: PropTypes.any,
     refsFromProvider: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.arrayOf(PropTypes.object)
@@ -20,30 +21,49 @@ class Item extends PureComponent {
   };
 
   static defaultProps = {
-    className: '',
+    className: null,
     style: {},
     disabled: false,
     onClick: () => {},
     targetNode: {},
     data: null,
-    refsFromProvider: []
+    refsFromProvider: [],
+    dataFromProvider: null
   };
 
   handleClick = e => {
     this.props.disabled
       ? e.stopPropagation()
-      : this.props.onClick(
-          this.props.targetNode,
-          this.props.refsFromProvider,
-          this.props.data
-        );
+      : this.props.onClick({
+          targetNode: this.props.targetNode,
+          refs: this.props.refsFromProvider,
+          data: this.props.data,
+          dataFromProvider: this.props.dataFromProvider
+        });
   };
 
   render() {
-    const { className, disabled, style, children, data } = this.props;
+    const {
+      className,
+      disabled,
+      style,
+      children,
+      data,
+      refsFromProvider,
+      dataFromProvider,
+      targetNode
+    } = this.props;
+
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
-        typeof disabled === 'function' ? disabled(data) : disabled
+        typeof disabled === 'function'
+          ? disabled({
+              targetNode,
+              refs: refsFromProvider,
+              data: data,
+              dataFromProvider: dataFromProvider
+            })
+          : disabled
     });
 
     return (

@@ -14,7 +14,7 @@ const eventManager = {
       return false;
     }
     this.eventList.get(event).forEach(cb => cb.call(this, ...args));
-    
+
     return true;
   }
 };

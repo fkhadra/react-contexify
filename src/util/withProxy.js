@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import React, { PureComponent } from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
 
-export default function (Component) {
+export default function(Component) {
   return class WithProxy extends PureComponent {
     node = null;
 
@@ -24,7 +24,7 @@ export default function (Component) {
     }
 
     appendToBody(props) {
-      const container = document.createElement("div");
+      const container = document.createElement('div');
       this.node = document.body.appendChild(container);
       render(<Component {...props} key={props.id} />, this.node);
     }

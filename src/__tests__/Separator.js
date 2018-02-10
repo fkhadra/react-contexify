@@ -8,10 +8,9 @@ import cssClasses from './../cssClasses';
 describe('Separator', () => {
   it('Render without crash', () => {
     const component = shallow(<Separator />);
-    expect(
-      component
-      .contains(<div className={cssClasses.SEPARATOR} />)
-    ).toBe(true);
+    expect(component.contains(<div className={cssClasses.SEPARATOR} />)).toBe(
+      true
+    );
   });
 
   it('Should not accept additional props', () => {

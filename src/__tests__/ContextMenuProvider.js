@@ -7,11 +7,7 @@ import ContextMenuProvider from './../Component/ContextMenuProvider';
 describe('ContextMenuProvider', () => {
   it('Should merge className and style', () => {
     const component = shallow(
-      <ContextMenuProvider
-        id="foo"
-        className="bar"
-        style={{ width: '10px' }}
-      >
+      <ContextMenuProvider id="foo" className="bar" style={{ width: '10px' }}>
         <div>baz</div>
       </ContextMenuProvider>
     );
