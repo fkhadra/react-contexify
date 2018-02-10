@@ -73,5 +73,12 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.6.0"
+  },
+  "jest": {
+    "verbose": true,
+    "setupFiles": [
+      "raf/polyfill",
+      "<rootDir>/setupTests.js"
+    ]
   }
 }
