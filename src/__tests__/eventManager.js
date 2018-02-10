@@ -15,13 +15,14 @@ describe('Event Manager', () => {
     expect(eventManager.eventList.get('foo').size).toBe(2);
   });
 
-  it('Should be able to dispatch event', () => {
+  it('Should be able to dispatch event', done => {
     const mock = jest.fn();
     eventManager.on('foo', () => {
       mock();
       expect(mock).toHaveBeenCalled();
+      done();
     });
-    expect(mock).not.toHaveBeenCalled();
+
     eventManager.emit('foo');
   });
 
