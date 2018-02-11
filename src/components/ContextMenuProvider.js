@@ -17,7 +17,7 @@ class ContextMenuProvider extends PureComponent {
     event: PropTypes.string,
     className: PropTypes.string,
     style: PropTypes.object,
-    collectRef: PropTypes.bool,
+    storeRef: PropTypes.bool,
     data: PropTypes.any
   };
 
@@ -26,7 +26,7 @@ class ContextMenuProvider extends PureComponent {
     event: 'onContextMenu',
     className: null,
     style: {},
-    collectRef: false,
+    storeRef: false,
     data: null
   };
 
@@ -50,7 +50,7 @@ class ContextMenuProvider extends PureComponent {
       children,
       className,
       style,
-      collectRef,
+      storeRef,
       data,
       ...rest
     } = this.props;
@@ -66,7 +66,7 @@ class ContextMenuProvider extends PureComponent {
         isValidElement(child)
           ? cloneElement(child, {
               ...rest,
-              ...(collectRef ? { ref: setChildRef } : {})
+              ...(storeRef ? { ref: setChildRef } : {})
             })
           : child
     );

@@ -62,7 +62,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to collect children ref', () => {
     const component = mount(
-      <ContextMenuProvider id="foo" collectRef>
+      <ContextMenuProvider id="foo" storeRef>
         <div>foo</div>
         <div>bar</div>
       </ContextMenuProvider>
