@@ -87,7 +87,7 @@ export default class Submenu extends PureComponent {
         <div
           className={styles.submenu}
           ref={this.setRef}
-          style={this.state.style}
+          style={submenuStyle}
         >
           {this.getMenuItem()}
         </div>
