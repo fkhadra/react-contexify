@@ -1,4 +1,4 @@
-import React, {
+import {
   PureComponent,
   createElement,
   Children,
@@ -37,7 +37,7 @@ class ContextMenuProvider extends PureComponent {
     eventManager.emit(
       `display::${this.props.id}`,
       e.nativeEvent,
-      this.childrenRefs.length === 1 ? this.childrenRefs[0] : this.childrenRefs,
+      this.childrenRefs,
       this.props.data
     );
   };

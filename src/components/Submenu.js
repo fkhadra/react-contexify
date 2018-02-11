@@ -5,7 +5,7 @@ import styles from './styles';
 
 export default class Submenu extends PureComponent {
   static propTypes = {
-    title: PropTypes.string.isRequired,
+    label: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
     targetNode: PropTypes.object,
     dataFromProvider: PropTypes.any,
@@ -68,10 +68,14 @@ export default class Submenu extends PureComponent {
   }
 
   render() {
-    const { disabled, className, style } = this.props;
+    const { disabled, className, style, label, targetNode, refsFromProvider, dataFromProvider } = this.props;
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
-        typeof disabled === 'function' ? disabled() : disabled
+        typeof disabled === 'function' ? disabled({
+          targetNode,
+          dataFromProvider,
+          refs: refsFromProvider
+        }) : disabled
     });
     const submenuStyle = {
       ...style,
@@ -81,7 +85,7 @@ export default class Submenu extends PureComponent {
     return (
       <div className={cssClasses} role="presentation">
         <div className={styles.itemContent}>
-          {this.props.title}
+          {label}
           <span>▶</span>
         </div>
         <div

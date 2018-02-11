@@ -5,10 +5,10 @@ exports[`Submenu Should not go offscreen 1`] = `
   className={null}
   dataFromProvider={null}
   disabled={false}
+  label="bar"
   refsFromProvider={null}
   style={Object {}}
   targetNode={null}
-  title="bar"
 >
   <div
     className="react-contexify__item"
@@ -52,10 +52,10 @@ exports[`Submenu Should render without crash 💥 1`] = `
   className={null}
   dataFromProvider={null}
   disabled={false}
+  label="bar"
   refsFromProvider={null}
   style={Object {}}
   targetNode={null}
-  title="bar"
 >
   <div
     className="react-contexify__item"

@@ -1,9 +1,8 @@
 /* global: window */
-import React, { Component, isValidElement } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import Item from './Item';
 import styles from './styles';
 import eventManager from '../util/eventManager';
 
