@@ -1,10 +1,7 @@
 /* eslint-env jest */
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 
-import ContextMenu from './../Component/ContextMenu';
-import Item from './../Component/Item';
-import eventManager from './../util/eventManager';
 import withProxy from './../util/withProxy';
 
 describe('withProxy', () => {

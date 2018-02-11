@@ -6,7 +6,6 @@ export { default as Separator } from './components/Separator';
 export {
   default as ContextMenuProvider
 } from './components/ContextMenuProvider';
-export { default as withMenu } from './util/withMenu';
 export { default as IconFont } from './components/IconFont';
 export { default as Submenu } from './components/Submenu';
 
