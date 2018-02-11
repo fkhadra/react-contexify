@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Submenu Should not go offscreen 1`] = `
+<Submenu
+  className={null}
+  dataFromProvider={null}
+  disabled={false}
+  refsFromProvider={null}
+  style={Object {}}
+  targetNode={null}
+  title="bar"
+>
+  <div
+    className="react-contexify__item"
+    role="presentation"
+  >
+    <div
+      className="react-contexify__item__data"
+    >
+      bar
+      <span>
+        ▶
+      </span>
+    </div>
+    <div
+      className="react-contexify react-contexify__submenu"
+      style={
+        Object {
+          "bottom": 0,
+          "left": "-100%",
+          "top": "initial",
+        }
+      }
+    >
+      <Children
+        dataFromProvider={null}
+        key=".0"
+        refsFromProvider={null}
+        targetNode={null}
+      >
+        <div>
+          foo
+        </div>
+      </Children>
+    </div>
+  </div>
+</Submenu>
+`;
+
+exports[`Submenu Should render without crash 💥 1`] = `
+<Submenu
+  className={null}
+  dataFromProvider={null}
+  disabled={false}
+  refsFromProvider={null}
+  style={Object {}}
+  targetNode={null}
+  title="bar"
+>
+  <div
+    className="react-contexify__item"
+    role="presentation"
+  >
+    <div
+      className="react-contexify__item__data"
+    >
+      bar
+      <span>
+        ▶
+      </span>
+    </div>
+    <div
+      className="react-contexify react-contexify__submenu"
+      style={
+        Object {
+          "bottom": "initial",
+          "left": "100%",
+          "top": 0,
+        }
+      }
+    >
+      <Children
+        dataFromProvider={null}
+        key=".0"
+        refsFromProvider={null}
+        targetNode={null}
+      >
+        <div>
+          foo
+        </div>
+      </Children>
+    </div>
+  </div>
+</Submenu>
+`;
