@@ -67,19 +67,29 @@ export default class Submenu extends PureComponent {
     );
   }
 
-  handleClick(e){
+  handleClick(e) {
     e.stopPropagation();
   }
 
   render() {
-    const { disabled, className, style, label, targetNode, refsFromProvider, dataFromProvider } = this.props;
+    const {
+      disabled,
+      className,
+      style,
+      label,
+      targetNode,
+      refsFromProvider,
+      dataFromProvider,
+    } = this.props;
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
-        typeof disabled === 'function' ? disabled({
-          targetNode,
-          dataFromProvider,
-          refs: refsFromProvider
-        }) : disabled
+        typeof disabled === 'function'
+          ? disabled({
+              targetNode,
+              dataFromProvider,
+              refs: refsFromProvider
+            })
+          : disabled
     });
     const submenuStyle = {
       ...style,
@@ -87,8 +97,11 @@ export default class Submenu extends PureComponent {
     };
 
     return (
-      <div className={cssClasses} role="presentation" onClick={this.handleClick}>
-        <div className={styles.itemContent}>
+      <div
+        className={cssClasses}
+        role="presentation"
+      >
+        <div className={styles.itemContent} onClick={this.handleClick}>
           {label}
           <span>▶</span>
         </div>
