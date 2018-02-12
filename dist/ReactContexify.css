@@ -11,7 +11,12 @@
     top: 0;
     left: 100%;
     pointer-events: none;
-    transition: opacity 0.4s; }
+    transition: opacity 0.275s; }
+  .react-contexify__submenu-arrow {
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    line-height: 22px; }
   .react-contexify__separator {
     float: left;
     width: 100%;
@@ -34,10 +39,11 @@
     .react-contexify__item__data {
       min-width: 140px;
       padding: 6px 12px;
-      display: inline-block;
+      display: flex;
       text-align: left;
       white-space: nowrap;
-      color: #333; }
+      color: #333;
+      position: relative; }
     .react-contexify__item__icon {
       font-size: inherit;
       margin-right: 5px; }

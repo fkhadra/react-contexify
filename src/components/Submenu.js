@@ -103,7 +103,7 @@ export default class Submenu extends PureComponent {
       >
         <div className={styles.itemContent} onClick={this.handleClick}>
           {label}
-          <span>▶</span>
+          <span className={styles.submenuArrow}>▶</span>
         </div>
         <div
           className={styles.submenu}

@@ -19,7 +19,9 @@ exports[`Submenu Should not go offscreen 1`] = `
       onClick={[Function]}
     >
       bar
-      <span>
+      <span
+        className="react-contexify__submenu-arrow"
+      >
         ▶
       </span>
     </div>
@@ -67,7 +69,9 @@ exports[`Submenu Should render without crash 💥 1`] = `
       onClick={[Function]}
     >
       bar
-      <span>
+      <span
+        className="react-contexify__submenu-arrow"
+      >
         ▶
       </span>
     </div>
