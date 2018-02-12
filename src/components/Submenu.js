@@ -67,6 +67,10 @@ export default class Submenu extends PureComponent {
     );
   }
 
+  handleClick(e){
+    e.stopPropagation();
+  }
+
   render() {
     const { disabled, className, style, label, targetNode, refsFromProvider, dataFromProvider } = this.props;
     const cssClasses = cx(styles.item, className, {
@@ -83,7 +87,7 @@ export default class Submenu extends PureComponent {
     };
 
     return (
-      <div className={cssClasses} role="presentation">
+      <div className={cssClasses} role="presentation" onClick={this.handleClick}>
         <div className={styles.itemContent}>
           {label}
           <span>▶</span>
