@@ -9,7 +9,7 @@ type ItemCallback = {
   /**
    * Ref collected from the context menu provider
    */
-  refs: Array<any>;
+  refs: Array<any> | any;
   /**
    * Data passed to the item
    */
@@ -57,7 +57,7 @@ interface IContextMenuProvider extends IStyle {
 
   /**
    * Store the children refs. Those refs are passed to the Item onClick callback.
-   * `Default: false`
+   * `Default: true`
    */
   storeRef?: boolean;
 

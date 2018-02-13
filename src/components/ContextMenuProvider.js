@@ -26,7 +26,7 @@ class ContextMenuProvider extends PureComponent {
     event: 'onContextMenu',
     className: null,
     style: {},
-    storeRef: false,
+    storeRef: true,
     data: null
   };
 
@@ -37,7 +37,7 @@ class ContextMenuProvider extends PureComponent {
     eventManager.emit(
       `display::${this.props.id}`,
       e.nativeEvent,
-      this.childrenRefs,
+      this.childrenRefs.length === 1 ? this.childrenRefs[0] : this.childrenRefs,
       this.props.data
     );
   };
