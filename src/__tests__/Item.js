@@ -22,8 +22,8 @@ describe('Menu Item', () => {
   it('Should pass an object when clicked', done => {
     const onClick = obj => {
       expect(Object.keys(obj)).toEqual([
-        'targetNode',
-        'refs',
+        'event',
+        'ref',
         'data',
         'dataFromProvider'
       ]);
@@ -32,7 +32,7 @@ describe('Menu Item', () => {
 
     const component = shallow(<Item 
       onClick={onClick} 
-      targetNode={{ foo: 'bar' }} 
+      event={{ foo: 'bar' }} 
       refsFromProvider={[{ baz: 'baz' }]}
       dataFromProvider='dataFromProvider'
       data='data'

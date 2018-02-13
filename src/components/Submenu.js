@@ -1,13 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import styles from './styles';
 
-export default class Submenu extends PureComponent {
+export default class Submenu extends Component {
   static propTypes = {
     label: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
-    targetNode: PropTypes.object,
+    arrow: PropTypes.node,
+    nativeEvent: PropTypes.object,
     dataFromProvider: PropTypes.any,
     refsFromProvider: PropTypes.oneOfType([
       PropTypes.object,
@@ -19,7 +20,8 @@ export default class Submenu extends PureComponent {
   };
 
   static defaultProps = {
-    targetNode: null,
+    arrow: '▶',
+    nativeEvent: null,
     dataFromProvider: null,
     refsFromProvider: null,
     className: null,
@@ -56,11 +58,11 @@ export default class Submenu extends PureComponent {
   }
 
   getMenuItem() {
-    const { targetNode, refsFromProvider, dataFromProvider } = this.props;
+    const { nativeEvent, refsFromProvider, dataFromProvider } = this.props;
 
     return React.Children.map(this.props.children, item =>
       React.cloneElement(item, {
-        targetNode,
+        nativeEvent,
         refsFromProvider,
         dataFromProvider
       })
@@ -73,11 +75,12 @@ export default class Submenu extends PureComponent {
 
   render() {
     const {
+      arrow,
       disabled,
       className,
       style,
       label,
-      targetNode,
+      nativeEvent,
       refsFromProvider,
       dataFromProvider,
     } = this.props;
@@ -85,9 +88,9 @@ export default class Submenu extends PureComponent {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-              targetNode,
+              event: nativeEvent,
               dataFromProvider,
-              refs: refsFromProvider
+              ref: refsFromProvider
             })
           : disabled
     });
@@ -103,7 +106,7 @@ export default class Submenu extends PureComponent {
       >
         <div className={styles.itemContent} onClick={this.handleClick}>
           {label}
-          <span className={styles.submenuArrow}>▶</span>
+          <span className={styles.submenuArrow}>{arrow}</span>
         </div>
         <div
           className={styles.submenu}

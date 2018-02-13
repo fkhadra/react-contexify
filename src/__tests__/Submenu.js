@@ -30,4 +30,10 @@ describe('Submenu', () => {
     component  = mount(<Submenu label="bar" disabled={() => true}><Children /></Submenu>);
     expect(component.html()).toMatch(styles.itemDisabled);
   });
+
+  it('Should accept a custom arrow ➡️', () => {
+    const component = mount(<Submenu label="bar" arrow="🦄"><Children /></Submenu>);
+    expect(toJson(component)).toMatchSnapshot();
+  });
+
 });

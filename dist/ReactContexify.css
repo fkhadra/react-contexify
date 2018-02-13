@@ -45,13 +45,15 @@
       color: #333;
       position: relative; }
     .react-contexify__item__icon {
-      font-size: inherit;
+      font-size: 20px;
       margin-right: 5px; }
 
 .react-contexify__theme--dark {
   padding: 6px 0;
   background-color: rgba(40, 40, 40, 0.98);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4), 0 0 0 1px #222; }
+  .react-contexify__theme--dark .react-contexify__submenu {
+    background-color: rgba(40, 40, 40, 0.98); }
   .react-contexify__theme--dark .react-contexify__separator {
     background-color: #eee; }
   .react-contexify__theme--dark .react-contexify__item__data {

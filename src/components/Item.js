@@ -1,15 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import styles from './styles';
 
-class Item extends PureComponent {
+class Item extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
     style: PropTypes.object,
-    targetNode: PropTypes.object,
+    nativeEvent: PropTypes.object,
     disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     onClick: PropTypes.func,
     data: PropTypes.any,
@@ -25,7 +25,7 @@ class Item extends PureComponent {
     style: {},
     disabled: false,
     onClick: () => {},
-    targetNode: {},
+    nativeEvent: {},
     data: null,
     refsFromProvider: [],
     dataFromProvider: null
@@ -35,8 +35,8 @@ class Item extends PureComponent {
     this.props.disabled
       ? e.stopPropagation()
       : this.props.onClick({
-          targetNode: this.props.targetNode,
-          refs: this.props.refsFromProvider,
+          event: this.props.nativeEvent,
+          ref: this.props.refsFromProvider,
           data: this.props.data,
           dataFromProvider: this.props.dataFromProvider
         });
@@ -51,15 +51,15 @@ class Item extends PureComponent {
       data,
       refsFromProvider,
       dataFromProvider,
-      targetNode
+      nativeEvent
     } = this.props;
 
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-              targetNode,
-              refs: refsFromProvider,
+              event: nativeEvent,
+              ref: refsFromProvider,
               data: data,
               dataFromProvider: dataFromProvider
             })

@@ -23,28 +23,17 @@ class ContextMenu extends Component {
     animation: null
   };
 
-  static THEME = {
-    light: 'light',
-    dark: 'dark'
-  };
-
-  static ANIMATION = {
-    fade: 'fade',
-    flip: 'flip',
-    pop: 'pop',
-    zoom: 'zoom'
-  };
-
   state = {
     x: 0,
     y: 0,
     visible: false,
-    targetNode: null
+    nativeEvent: null
   };
 
   menu = null;
   refsFromProvider = null;
   unsub = [];
+  hideTimeout = null;
 
   componentDidMount() {
     this.unsub.push(eventManager.on(`display::${this.props.id}`, this.show));
@@ -53,6 +42,7 @@ class ContextMenu extends Component {
 
   componentWillUnmount() {
     this.unsub.forEach(cb => cb());
+    this.unBindWindowEvent();
   }
 
   bindWindowEvent = () => {
@@ -76,16 +66,16 @@ class ContextMenu extends Component {
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
   hide = e => {
-    // Firefox trigger a click event when you mouse up on contextmenu event
-    if (
-      typeof e !== 'undefined' &&
-      e.button === 2 &&
-      e.type !== 'contextmenu'
-    ) {
-      return;
-    }
-    this.unBindWindowEvent();
-    this.setState({ visible: false });
+      // Firefox trigger a click event when you mouse up on contextmenu event
+      if (
+        typeof e !== 'undefined' &&
+        e.button === 2 &&
+        e.type !== 'contextmenu'
+      ) {
+        return;
+      }
+      this.unBindWindowEvent();
+      this.setState({ visible: false });
   };
 
   setRef = ref => {
@@ -143,7 +133,7 @@ class ContextMenu extends Component {
   getMenuItem() {
     return React.Children.map(this.props.children, item =>
       React.cloneElement(item, {
-        targetNode: this.state.targetNode,
+        nativeEvent: this.state.nativeEvent,
         refsFromProvider: this.refsFromProvider,
         dataFromProvider: this.dataFromProvider
       })
@@ -165,7 +155,7 @@ class ContextMenu extends Component {
         visible: true,
         x,
         y,
-        targetNode: e.target
+        nativeEvent: e
       },
       this.setMenuPosition
     );

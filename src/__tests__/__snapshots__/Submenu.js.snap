@@ -1,14 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Submenu Should not go offscreen 1`] = `
+exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
 <Submenu
+  arrow="🦄"
   className={null}
   dataFromProvider={null}
   disabled={false}
   label="bar"
+  nativeEvent={null}
   refsFromProvider={null}
   style={Object {}}
-  targetNode={null}
+>
+  <div
+    className="react-contexify__item"
+    role="presentation"
+  >
+    <div
+      className="react-contexify__item__data"
+      onClick={[Function]}
+    >
+      bar
+      <span
+        className="react-contexify__submenu-arrow"
+      >
+        🦄
+      </span>
+    </div>
+    <div
+      className="react-contexify react-contexify__submenu"
+      style={
+        Object {
+          "bottom": 0,
+          "left": "-100%",
+          "top": "initial",
+        }
+      }
+    >
+      <Children
+        dataFromProvider={null}
+        key=".0"
+        nativeEvent={null}
+        refsFromProvider={null}
+      >
+        <div>
+          foo
+        </div>
+      </Children>
+    </div>
+  </div>
+</Submenu>
+`;
+
+exports[`Submenu Should not go offscreen 1`] = `
+<Submenu
+  arrow="▶"
+  className={null}
+  dataFromProvider={null}
+  disabled={false}
+  label="bar"
+  nativeEvent={null}
+  refsFromProvider={null}
+  style={Object {}}
 >
   <div
     className="react-contexify__item"
@@ -38,8 +90,8 @@ exports[`Submenu Should not go offscreen 1`] = `
       <Children
         dataFromProvider={null}
         key=".0"
+        nativeEvent={null}
         refsFromProvider={null}
-        targetNode={null}
       >
         <div>
           foo
@@ -52,13 +104,14 @@ exports[`Submenu Should not go offscreen 1`] = `
 
 exports[`Submenu Should render without crash 💥 1`] = `
 <Submenu
+  arrow="▶"
   className={null}
   dataFromProvider={null}
   disabled={false}
   label="bar"
+  nativeEvent={null}
   refsFromProvider={null}
   style={Object {}}
-  targetNode={null}
 >
   <div
     className="react-contexify__item"
@@ -88,8 +141,8 @@ exports[`Submenu Should render without crash 💥 1`] = `
       <Children
         dataFromProvider={null}
         key=".0"
+        nativeEvent={null}
         refsFromProvider={null}
-        targetNode={null}
       >
         <div>
           foo

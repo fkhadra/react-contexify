@@ -4,12 +4,12 @@ type ItemCallback = {
   /**
    * Same as html node element
    */
-  targetNode: object;
+  event: object;
 
   /**
    * Ref collected from the context menu provider
    */
-  refs: Array<any> | any;
+  ref: Array<any> | any;
   /**
    * Data passed to the item
    */
@@ -132,6 +132,11 @@ interface ISubmenu extends IStyle {
   children: React.ReactNode;
 
   /**
+   * Render a custom arrow
+   */
+  arrow: React.ReactNode;
+
+  /**
    * A function or a boolean to disable or not the current Item
    */
   disabled?: boolean | ((
@@ -139,12 +144,12 @@ interface ISubmenu extends IStyle {
       /**
        * Same as html node element
        */
-      targetNode: object;
+      event: object;
 
       /**
        * Ref collected from the context menu provider
        */
-      refs: Array<any>;
+      ref: Array<any>;
 
       /**
        * Data passed to the context menu provider
@@ -152,6 +157,46 @@ interface ISubmenu extends IStyle {
       dataFromProvider: any;
     }
   ) => boolean);
+}
+
+/**
+ * Helper to set the context menu theme
+ */
+interface Itheme {
+  /**
+   * Use the light theme
+   */
+  light: string;
+
+  /**
+   * Use the dark theme
+   */
+  dark: string;
+}
+
+/**
+ * Helper to set the context menu animation
+ */
+interface Ianimation {
+  /**
+   * Fade in when appear
+   */
+  fade: string;
+
+  /**
+   * Flip when appear
+   */
+  flip: string;
+
+  /**
+   * Pop when appear
+   */
+  pop: string;
+
+  /**
+   * Zoom when appear
+   */
+  zoom: string;
 }
 
 /**
@@ -183,3 +228,13 @@ export class Separator extends React.Component<> {};
  * Submenu container
  */
 export class Submenu extends React.Component<ISubmenu> {};
+
+/**
+ * Helper to define the theme
+ */
+export let theme: Itheme;
+
+/**
+ * Helper to define the animation
+ */
+export let animation: Ianimation;

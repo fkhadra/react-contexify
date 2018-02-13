@@ -1,5 +1,5 @@
 import {
-  PureComponent,
+  Component,
   createElement,
   Children,
   cloneElement,
@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import eventManager from './../util/eventManager';
 
-class ContextMenuProvider extends PureComponent {
+class ContextMenuProvider extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
@@ -42,6 +42,8 @@ class ContextMenuProvider extends PureComponent {
     );
   };
 
+  setChildRef = ref => ref === null || this.childrenRefs.push(ref);
+
   getChildren() {
     const {
       id,
@@ -57,8 +59,6 @@ class ContextMenuProvider extends PureComponent {
 
     // reset refs
     this.childrenRefs = [];
-    // use a new ref callback function each time, so that it is guaranteed to be called on each render
-    const setChildRef = ref => ref === null || this.childrenRefs.push(ref);
 
     return Children.map(
       children,
@@ -66,7 +66,7 @@ class ContextMenuProvider extends PureComponent {
         isValidElement(child)
           ? cloneElement(child, {
               ...rest,
-              ...(storeRef ? { ref: setChildRef } : {})
+              ...(storeRef ? { ref: this.setChildRef } : {})
             })
           : child
     );
