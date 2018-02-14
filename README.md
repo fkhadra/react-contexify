@@ -1,8 +1,37 @@
 # React-contexify ![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master)](https://travis-ci.org/fkhadra/react-contexify) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]() [![Coverage Status](https://coveralls.io/repos/github/fkhadra/react-contexify/badge.svg?branch=master)](https://coveralls.io/github/fkhadra/react-contexify?branch=master)
 
+A declarative context menu for React 😲 !
+
 ![readme-ctx](https://user-images.githubusercontent.com/5574267/29753912-43c54008-8b7b-11e7-9627-258fde1ffddd.gif)
 
-A declarative context menu for React 😲 !
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [The gist](#the-gist)
+    - [Wrap component with the html tag of your choice](#wrap-component-with-the-html-tag-of-your-choice)
+    - [Disable an Item](#disable-an-item)
+    - [Disable a submenu](#disable-a-submenu)
+    - [Change the Submenu arrow](#change-the-submenu-arrow)
+    - [The onClick callback](#the-onclick-callback)
+        - [event](#event)
+        - [ref](#ref)
+        - [data](#data)
+        - [dataFromProvider](#datafromprovider)
+        - [Why use destructuring assignment?](#why-use-destructuring-assignment)
+- [Api](#api)
+    - [ContextMenuProvider](#contextmenuprovider)
+    - [ContextMenu](#contextmenu)
+    - [Submenu](#submenu)
+    - [Item](#item)
+    - [Separator](#separator)
+    - [IconFont](#iconfont)
+- [To-Do](#to-do)
+- [Migration from v2 to v3](#migration-from-v2-to-v3)
+- [Browser Support](#browser-support)
+- [Release Notes](#release-notes)
+- [Contribute](#contribute)
+- [License](#license)
+
 
 > ⚠️ The v3 introduce a lots of breaking changes. Please consider reading the migration guide.
 
@@ -233,41 +262,6 @@ const onClick = ({ event, ref, data, dataFromProvider }) => {
 - As a maintainer, easier to extend the library: `({ event, ref, data, dataFromProvider, theFithParameter }) => {}`
 - `'destructuring'.substring(-1, 8)` 💥
 
-
-## Add a context menu to a table
-
-```javascript
-import { ContextMenuProvider } from 'react-contexify';
-
-//You need to use a tr as a render tag otherwise your browser console will bleed !
-const Tr = (props) => (
-  <ContextMenuProvider id="menu_id" renderTag="tr">
-    <td>{props.cel1}</td>
-    <td>{props.cel2}</td>
-  </ContextMenuProvider>
-);
-
-class Table extends Component {
-  render() {
-    return (
-      <table>
-        <thead>
-        <tr>
-        <th>Cel 1</th>
-        <th>Cel 2</th>
-        </tr>
-        </thead>
-        <tbody>
-          <Tr cel1="lorem" cel2="ipsum" />
-          <Tr cel1="foo" cel2="bar" />
-        </tbody>
-      </table>
-  )
-  }
-}
-
-```
-
 ## Api
 
 ### ContextMenuProvider 
@@ -308,6 +302,14 @@ import { ContextMenu, Item, theme, animation } from 'react-contexify';
     {/* and so on  */}
 </ContextMenu>    
 ```
+
+### Submenu 
+
+| Props                                                        | Default | Required | Description                                                                   |
+|--------------------------------------------------------------|---------|----------|-------------------------------------------------------------------------------|
+| label: node                                                  | -       | ✓        | Submenu label. It can be a string or any node element like `<div>hello</div>` |
+| disabled: bool \| ({ event, ref, dataFromProvider }) => bool | false   | ✘        | Disable the item. If a function, it must return a boolean.                    |
+| arrow: node                                                  | -       | ✘        | Define a custom arrow                                                         |
 
 ### Item 
 
@@ -371,6 +373,7 @@ IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 ### v3
 
 - Support submenu
+- Add typescript definition
 - Reviewed the api
 
 ### 2.1.4
