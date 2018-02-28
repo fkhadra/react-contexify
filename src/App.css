@@ -23,19 +23,22 @@
 @keyframes zoomOut {
   from {
     opacity: 1;
+    height: 100%;
   }
 
   50% {
     opacity: 0;
     transform: scale3d(.3, .3, .3);
+    height: 50%;
   }
   to {
     opacity: 0;
+    height: 0;
   }
 }
 
 .zoomOut{
-  animation: zoomOut 800ms linear;
+  animation: zoomOut 700ms linear;
 }
 .button {
   margin: 5px;

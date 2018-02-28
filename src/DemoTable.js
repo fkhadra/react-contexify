@@ -1,24 +1,40 @@
-import React, { PureComponent } from 'react';
-import {default as Transition } from 'react-transition-group/TransitionGroup';
+import React, { Component } from 'react';
+import { ContextMenuProvider } from 'react-contexify';
+
+import { TransitionGroup, Transition } from 'react-transition-group';
 
 import Row from './Row';
 
-export default class DemoTable extends PureComponent {
+export default class DemoTable extends Component {
   render() {
     return (
       <table className="u-full-width">
         <thead>
-        <tr>
-          <th title="Avatar">Avatar</th>
-          <th title="Firstname">Firstname</th>
-          <th title="Lastname">Lastname</th>
-          <th title="Email">Email</th>
-          <th title="Company">Company</th>
-        </tr>
+          <tr>
+            <th title="Avatar">Avatar</th>
+            <th title="Firstname">Firstname</th>
+            <th title="Lastname">Lastname</th>
+            <th title="Email">Email</th>
+            <th title="Company">Company</th>
+          </tr>
         </thead>
-        <Transition component="tbody">
-          {this.props.data.map(item => <Row key={item.id} event={this.props.event} {...item}/>)}
-        </Transition>
+        <TransitionGroup component="tbody">
+          {this.props.data.map(item => (
+            <Transition
+              timeout={700}
+              key={item.id}
+              onExit={node => node.classList.add('zoomOut')}
+            >
+              <ContextMenuProvider
+                id="demo_id"
+                event={this.props.event}
+                renderTag="tr"
+              >
+                <Row event={this.props.event} {...item} />
+              </ContextMenuProvider>
+            </Transition>
+          ))}
+        </TransitionGroup>
       </table>
     );
   }

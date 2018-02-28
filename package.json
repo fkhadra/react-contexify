@@ -4,16 +4,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^15.5.4",
-    "react-contexify": "^2.0.5",
-    "react-dom": "^15.5.4",
-    "react-flip-move": "^2.9.12",
-    "react-toastify": "^1.6.0",
-    "react-transition-group": "^1.1.3"
+    "react": "^16.2.0",
+    "react-contexify": "/Users/gugu/works/react-contexify",
+    "react-dom": "^16.2.0",
+    "react-toastify": "^3.3.4"
   },
   "devDependencies": {
     "gh-pages": "^1.0.0",
-    "react-scripts": "1.0.5"
+    "react-scripts": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

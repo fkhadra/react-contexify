@@ -1,63 +1,58 @@
 import React, { Component } from 'react';
-import { ContextMenu } from 'react-contexify';
+import { ContextMenu, theme, animation } from 'react-contexify';
 import { ToastContainer, toast } from 'react-toastify';
 
 import data from './data.json';
 import DemoTable from './DemoTable';
-import DemoContextMenu from './DemoContextMenu';
+import Menu from './Menu';
 import Roller from './Roller';
 
 import 'react-contexify/dist/ReactContexify.min.css';
-import 'react-toastify/dist/ReactToastify.min.css';
 
 import logo from './logo.svg';
 import './App.css';
 
-const themeList = Object.keys(ContextMenu.THEME);
+const themeList = Object.keys(theme);
 themeList.push('none');
-const animationList = Object.keys(ContextMenu.ANIMATION);
+const animationList = Object.keys(animation);
 animationList.push('none');
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: data,
-      theme: 'none',
-      animation: 'none',
-      event: 'onContextMenu'
-    };
-  }
+  state = {
+    data: data,
+    theme: 'none',
+    animation: 'none',
+    event: 'onContextMenu'
+  };
 
-  handleRollerChange = ({ target }) => this.setState(
-    { [target.id]: target.value });
+  handleRollerChange = ({ target }) =>
+    this.setState({ [target.id]: target.value });
 
-  removeEntry = targetNode => this.setState({
-    data: this.state.data.filter(item => item.id !== targetNode.dataset.id)
-  });
+  removeEntry = ({ ref }) => {
+    this.setState({
+      data: this.state.data.filter(item => item.id !== ref.props.id)
+    });
+  };
 
   getRandomAvatar() {
-    const randomString = Math.random().toString(36).substring(7);
+    const randomString = Math.random()
+      .toString(36)
+      .substring(7);
     return `https://robohash.org/${randomString}.jpg?size=50x50`;
   }
 
-  changeAvatar = targetNode => this.setState({
-    data: this.state.data.map(item => {
-      if (item.id === targetNode.dataset.id) {
-        item.avatar = this.getRandomAvatar();
-      }
-      return item;
-    })
-  });
+  changeAvatar = ({ ref: { props } }) =>
+    this.setState({
+      data: this.state.data.map(item => {
+        if (item.id === props.id) {
+          item.avatar = this.getRandomAvatar();
+        }
+        return item;
+      })
+    });
 
-  handleHelp = () => {
-    toast(<div>
-      <img src={this.getRandomAvatar()} alt="help or not"/>
-      <span style={{
-        position: 'absolute',
-        bottom: '15px'}}
-      >Can't Help you sorry !</span>
-    </div>);
+  dontClick = () => {
+   toast.warn("💩 You shall not click!");
   };
 
   render() {
@@ -65,16 +60,28 @@ class App extends Component {
     return (
       <div>
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <h3>Welcome to React-Contexify</h3>
-          <h6>Adding a context menu to your react app has never been
-            easier!</h6>
-          <div><a href="https://github.com/fkhadra/react-contexify"
-                  className="button button-primary">View on GitHub</a>
-            <a href="https://github.com/fkhadra/react-contexify/zipball/master"
-               className="button button-primary">Download .zip</a>
-            <a href="https://github.com/fkhadra/react-contexify/tarball/master"
-               className="button button-primary">Download .tar.gz</a></div>
+          <img src={logo} className="App-logo" alt="logo" />
+          <h3>A declarative context menu for React</h3>
+          <div>
+            <a
+              href="https://github.com/fkhadra/react-contexify"
+              className="button button-primary"
+            >
+              View on GitHub
+            </a>
+            <a
+              href="https://github.com/fkhadra/react-contexify/zipball/master"
+              className="button button-primary"
+            >
+              Download .zip
+            </a>
+            <a
+              href="https://github.com/fkhadra/react-contexify/tarball/master"
+              className="button button-primary"
+            >
+              Download .tar.gz
+            </a>
+          </div>
         </div>
         <div className="container">
           <div className="row">
@@ -89,15 +96,15 @@ class App extends Component {
             />
           </div>
           <div className="row">
-            <DemoTable data={data} event={event}/>
+            <DemoTable data={data} event={event} />
           </div>
         </div>
-        <DemoContextMenu
+        <Menu
           theme={theme}
           animation={animation}
           removeEntry={this.removeEntry}
           changeAvatar={this.changeAvatar}
-          handleHelp={this.handleHelp}
+          dontClick={this.dontClick}
         />
         <ToastContainer />;
       </div>
