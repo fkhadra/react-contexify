@@ -3,3 +3,5 @@ node_modules/
 .sass-cache/
 lib/
 npm-debug.log
+coverage/
+yarn-error.log*

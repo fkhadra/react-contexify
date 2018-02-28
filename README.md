@@ -1,17 +1,39 @@
-# React-contexify [![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master)](https://travis-ci.org/fkhadra/react-contexify) [![npm](https://img.shields.io/npm/dt/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
+# React-contexify ![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]() [![Coverage Status](https://coveralls.io/repos/github/fkhadra/react-contexify/badge.svg?branch=master)](https://coveralls.io/github/fkhadra/react-contexify?branch=master)
+
+A declarative context menu for React 😲 !
 
 ![readme-ctx](https://user-images.githubusercontent.com/5574267/29753912-43c54008-8b7b-11e7-9627-258fde1ffddd.gif)
 
-Add a context menu to your react application with ease !
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [The gist](#the-gist)
+    - [Wrap component with the html tag of your choice](#wrap-component-with-the-html-tag-of-your-choice)
+    - [Disable an Item](#disable-an-item)
+    - [Disable a submenu](#disable-a-submenu)
+    - [Change the Submenu arrow](#change-the-submenu-arrow)
+    - [The onClick callback](#the-onclick-callback)
+        - [event](#event)
+        - [ref](#ref)
+        - [data](#data)
+        - [dataFromProvider](#datafromprovider)
+        - [Why use destructuring assignment?](#why-use-destructuring-assignment)
+- [Api](#api)
+    - [ContextMenuProvider](#contextmenuprovider)
+    - [ContextMenu](#contextmenu)
+    - [Submenu](#submenu)
+    - [Item](#item)
+    - [Separator](#separator)
+    - [IconFont](#iconfont)
+- [To-Do](#to-do)
+- [Migration from v2 to v3](#migration-from-v2-to-v3)
+- [Browser Support](#browser-support)
+- [Release Notes](#release-notes)
+- [Contribute](#contribute)
+- [License](#license)
 
-* [Demo](#demo)
-* [Installation](#installation)
-* [Features](#features)
-* [How it works ?](#how-it-works-)
-* [Add a context menu to a table](#add-a-context-menu-to-a-table)
-* [Api](#api)
-* [Migration from v1 to v2](#migration-from-v1-to-v2)
-* [Release Notes](#release-notes)
+
+> ⚠️ The v3 introduces a lot of breaking changes. Please consider reading the migration guide.
 
 ## Demo
    
@@ -25,257 +47,335 @@ or
 $ npm install --save react-contexify
 ```
 
-You also need to include the css file provided. Otherwise it wont work as expected. 
+## Usage
 
-### Style Loader :
-
-```javascript
-import 'react-contexify/dist/ReactContexify.min.css' 
-```
-
-### 1998 Script tag : 
-
-``` 
-<link rel="stylesheet" href="/dist/ReactContexify.min.css"/>
-``` 
-
-## Features
-
-- The context menu never leave the visible screen. You can reduce the window to check the behavior
-- The callback provide an access to the wrapped component
-- One menu can be use for multiple targets
-- Create as many contextual menu as you want, as long as the id is unique
-- Easily customizable. Theme are split into different sass file. Fifteen line of code can be enough to create a theme
-- Don't rely on `findDOMNode`
-
-## How it works ?
-
-### Create your menu
+### The gist
 
 ```javascript
-import { ContextMenu, Item, Separator, IconFont } from 'react-contexify';
+import { ContextMenu, Item, Separator, Submenu, ContextMenuProvider } from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.min.css';
 
-function onClick(targetNode, ref, data) {
-    // targetNode refer to the html node on which the menu is triggered
-    console.log(targetNode);
-    //ref will be the mounted instance of the wrapped component
-    //If you wrap more than one component, ref will be an array of ref
-    console.log(ref);
-    // Additionnal data props passed down to the `Item`
-    console.log(data);
-}
-
+const onClick = ({ event, ref, data, dataFromProvider }) => console.log('Hello');
 // create your menu first
 const MyAwesomeMenu = () => (
     <ContextMenu id='menu_id'>
-        <Item leftIcon={<IconFont className="fa fa-plus" />} onClick={onClick}>
-            Add
-        </Item>
-        <Item leftIcon={<IconFont className="material-icons">remove_circle</IconFont>} onClick={onClick}>
-            Remove
-        </Item>
-        <Item><IconFont className="fa fa-scissors" />cut</Item>
-        <Separator/>
-        <Item disabled>
-            Paste
-        </Item>
+       <Item onClick={onClick}>Lorem</Item>
+       <Item onClick={onClick}>Ipsum</Item>
+       <Separator />
+       <Item disabled>Dolor</Item>
+       <Separator />
+       <Submenu label="Foobar">
+        <Item onClick={onClick}>Foo</Item>
+        <Item onClick={onClick}>Bar</Item>
+       </Submenu>
     </ContextMenu>
 );
 
-```
-
-### Define which component can display the menu
-
-```javascript
-import { ContextMenuProvider, menuProvider } from 'react-contexify';
-
-//wrap your component with the `ContextMenuProvider`
-
-const Foo = () => <ContextMenuProvider id="menu_id">bar</ContextMenuProvider>;
-const Bar = () => <ContextMenuProvider id="menu_id">baz</ContextMenuProvider>;
-
-// or you can use the curried function to add the same menu for many components, it's up to you
-
-const addContextMenu = menuProvider('menu_id'); 
-const Foo = addContextMenu(YourComponent);
-const Bar = addContextMenu(YourCompoenent);
-```
-
-### All together
-
-```javascript
-import React from 'react';
-
-import MyAwesomeMenu from './MyAwesomeMenu';
-import Foo from './Foo';
-import Bar from './Bar';
-
 const App = () => (
     <div>
-        <Foo />
-        <Bar />
-        <MyAwesomeMenu/>
+        <h1>Welcome to My App</h1>
+        <ContextMenuProvider id="menu_id">
+            <div>Some Content ... </div>
+        </ContextMenuProvider>
+        <MyAwesomeMenu />
     </div>
-)
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
 );
+
 ```
 
-## Add a context menu to a table
+### Wrap component with the html tag of your choice
 
-```javascript
-import { ContextMenuProvider } from 'react-contexify';
+The `ContextMenuProvider` expose a `renderTag` prop to let you do that.
 
-//You need to use a tr as a render tag otherwise your browser console will bleed !
+```js
 const Tr = (props) => (
   <ContextMenuProvider id="menu_id" renderTag="tr">
     <td>{props.cel1}</td>
     <td>{props.cel2}</td>
   </ContextMenuProvider>
 );
+```
 
-class Table extends Component {
-  render() {
-    return (
-      <table>
-        <thead>
-        <tr>
-        <th>Cel 1</th>
-        <th>Cel 2</th>
-        </tr>
-        </thead>
-        <tbody>
-          <Tr cel1="lorem" cel2="ipsum" />
-          <Tr cel1="foo" cel2="bar" />
-        </tbody>
-      </table>
-  )
-  }
+### Disable an Item 
+
+You can disable an `Item` with a boolean or a callback. When a callback is used, a boolean must be returned. The callback has access to the same parameter as the `onClick` callback.
+
+```js
+const isDisabled = ({ event, ref, data, dataFromProvider }) => {
+    return true;
+}
+
+<ContextMenu id='menu_id'>
+    <Item disabled>Foo</Item>
+    <Item disabled={isDisabled}>Bar</Item>
+</ContextMenu>
+```
+
+### Disable a submenu
+
+Disable a `Submenu` is simple as disabling an `Item`. The disabled callback is slightly different, there is no data param. 
+
+```js
+<ContextMenu id='menu_id'>
+    <Item>Foo</Item>
+    <Submenu label="Submenu" disabled>
+        <Item>Bar</Item>
+    </Submenu>
+</ContextMenu>
+```
+
+### Change the Submenu arrow
+
+```js
+<ContextMenu id='menu_id'>
+    <Item>Foo</Item>
+    <Submenu label="Submenu" arrow="🦄">
+        <Item>Bar</Item>
+    </Submenu>
+    <Separator />
+    <Submenu label="Submenu" arrow={<i className="rocket">🚀</i>}>
+        <Item>Bar</Item>
+    </Submenu>
+</ContextMenu>
+```
+
+
+### The onClick callback
+
+The `onClick` callback of the `Item` component gives you access to an object with 4 properties:
+
+#### event
+
+The event property refers to the native event which triggered the menu. It can be used to access the mouse coordinate or any other event prop.
+
+```js
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+    // Accessing the mouse coordinate
+    console.log(event.clientX, event.clientY);
+}
+```
+
+#### ref
+
+> If you wrap a single react component ref will be the mounted instance of the wrapped component.
+
+> If you wrap more than one component ref will be an array containing a ref of every component.
+
+**ref will be an instance of the react component only if the component is declared as a class**
+
+For more details about ref please read [this](https://facebook.github.io/react/docs/refs-and-the-dom.html)
+
+- With a single component
+
+```js
+const Wrapped = () => (
+    <ContextMenuProvider id="id">
+        <Avatar id="foobar" />
+    </ContextMenuProdider>
+);
+
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+   // Retrieve the Avatar id
+   console.log(ref.props.id); 
 }
 
 ```
 
+- With more than one component
+
+```js
+const Wrapped = () => (
+    <ContextMenuProvider id="id">
+        <Avatar id="foobar" />
+        <Avatar id="plop" />
+    </ContextMenuProdider>
+);
+
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+   // Print foobar
+   console.log(ref[0].props.id); 
+
+   // Print plop
+   console.log(ref[1].props.id); 
+}
+
+```
+
+- With an html node, the ref contains the html node 🤣
+
+```js
+const Wrapped = () => (
+    <ContextMenuProvider id="id">
+        <div id="foobar" data-xxx="plop">bar</div>
+    </ContextMenuProdider>
+);
+
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+   // Retrieve the div id
+   console.log(ref.id); 
+
+   // Access the data attribue
+   console.log(ref.dataset.xxx); 
+}
+
+```
+
+With more than one html node wrapped you get an array as well.
+
+
+#### data
+
+```js
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+   // Print Ada
+   console.log(data.name); 
+}
+
+const YourMenu = () => (
+    <ContextMenu>
+        <Item data={name: 'Ada'} onClick={onClick}>Hello</Item>
+    </ContextMenu>
+);
+```
+
+#### dataFromProvider
+
+The data prop passed to the `ContextMenuProvider` is accessible for every `Item` as `dataFromProvider`.
+
+```js
+const Wrapped = () => (
+    <ContextMenuProvider id="id" data={name: 'Ada'}>
+        <div id="foobar" data-xxx="plop">bar</div>
+    </ContextMenuProdider>
+);
+
+const onClick = ({ event, ref, data, dataFromProvider }) => {
+   // Print Ada Again 
+   console.log(dataFromProvider.name); 
+}
+
+```
+
+#### Why use destructuring assignment?
+
+- As a developer, pick only what you want: `({ ref }) => {}`
+- As a maintainer, easier to extend the library: `({ event, ref, data, dataFromProvider, theFithParameter }) => {}`
+- `'destructuring'.substring(-1, 8)` 💥
+
 ## Api
 
-### ContextMenu (Type : React Component)
+### ContextMenuProvider 
 
-|Props    |Type   |Default|Required|Possible Value                                 |	Description|
-|---------|-------|:-----:|:------:|-----------------------------------------------|------------|
-|id       |	string\|int|-      |	✓      | -                                     |Used to identify the corresponding menu|
-|children |	`Item`\|`null`|-      |	✓      | -                                     |Menu item|
-|theme    |	string|	      |	✘     |	light \| dark                              |Theme is appended to `react-contexify__theme--${given theme}`   |
-|animation|	string|	      |	✘     |	fade \| flip \| pop \| zoom|Animation is appended to `.react-contexify__will-enter--${given animation}`  |
+| Props                | Default         | Required | Description                                                                              |
+|----------------------|-----------------|----------|------------------------------------------------------------------------------------------|
+| id: string \| number | -               | ✓        | Id used to map your component to a context menu                                          |
+| renderTag: string    | 'div'           | ✘        | The tag used to wrap the child component                                                 |
+| event: string        | 'onContextMenu' | ✘        | Same as React Event (onClick, onContextMenu ...).	Event used to trigger the context menu |
+| data: any            | -               | ✘        | Data are passed to the Item onClick callback.                                            |
+| storeRef: boolean    | true            | ✘        | Store ref of the wrapped component.                                                      |
+| className: string    | -               | ✘        | Additional className                                                                     |
+| style: object        | -               | ✘        | Additional style                                                                         |
 
-You can set built-in theme and animation using ContextMenu constant as follow :
+```javascript
+<ContextMenuProvider id="menu_id" data={foo: 'bar'}>
+    <MyComponent />
+</ContextMenuProvider>
+```
 
-`
-<ContextMenu id="foo" theme={ContextMenu.THEME.dark} animation={ContextMenu.ANIMATION.pop}>
-    ...
+### ContextMenu
+
+| Props                | Required | Possible Value              | Description                                                                 |
+|----------------------|----------|-----------------------------|-----------------------------------------------------------------------------|
+| id: string \| number | ✓        | -                           | Used to identify the corresponding menu                                     |
+| style: object        | ✘        | -                           | An optional style to apply                                                  |
+| classname: string    | ✘        | -                           | An optional css class to apply                                              |
+| theme: string        | ✘        | light \| dark               | Theme is appended to `react-contexify__theme--${given theme}`               |
+| animation: string    | ✘        | fade \| flip \| pop \| zoom | Animation is appended to `.react-contexify__will-enter--${given animation}` |
+
+```js
+// You can set built-in theme and animation using the provided helpers as follow
+import { ContextMenu, Item, theme, animation } from 'react-contexify';
+
+<ContextMenu id="foo" theme={theme.dark} animation={animation.pop}>
+    <Item>Foo</Item>
+    <Item disabled>Bar</Item>
+    {/* and so on  */}
 </ContextMenu>    
-`
+```
 
-### Item (Type : React Component)
+### Submenu 
 
-|Props    |Type    |Default|Required|Description|
-|---------|--------|:-----:|:------:|------------|
-|children	  |node  |-	   |✓	    |Any valid node to render(string, react component...)
-|leftIcon	  |node  |	   |✘	    |Any valid node to render(string, react component...)
-|rightIcon  |node  |	   |✘	    |Any valid node to render(string, react component...)
-|disabled   |bool    |false  |✘	    |Disable the item
-|onClick    |function|	   |✘	    |Callback when the item is clicked
-|data	  |any	   |       |✘	    |Additional data that will be passed to the callback
+| Props                                                        | Default | Required | Description                                                                   |
+|--------------------------------------------------------------|---------|----------|-------------------------------------------------------------------------------|
+| label: node                                                  | -       | ✓        | Submenu label. It can be a string or any node element like `<div>hello</div>` |
+| disabled: bool \| ({ event, ref, dataFromProvider }) => bool | false   | ✘        | Disable the item. If a function, it must return a boolean.                    |
+| arrow: node                                                  | -       | ✘        | Define a custom arrow                                                         |
 
-#### `onClick` 
- 
-When an you select an Item your callback will receive 3 parameters: `targetNode`, `refs`, `data`.
+### Item 
 
-- if you wrap a single react component refs will be the mounted instance of the wrapped component
-- If you wrap more than one component refs will be an array of ref
+| Props                                                              | Default | Required | Description                                                |
+|--------------------------------------------------------------------|---------|----------|------------------------------------------------------------|
+| disabled: bool \| ({ event, ref, data, dataFromProvider }) => bool | false   | ✘        | Disable the item. If a function, it must return a boolean. |
+| onClick: ({ event, ref, data, dataFromProvider }) => void          | -       | ✘        | Callback when the item is clicked                          |
+| data: any                                                          | -       | ✘        | Additional data that will be passed to the callback        |
 
-**ref will be an instance of the react component only if the component is declared as a class**
-
-If you use any flux store like redux or mobx stick with it.
-
-For more details about ref please read [this](https://facebook.github.io/react/docs/refs-and-the-dom.html)
-
-### Separator (Type : React Component)
+### Separator 
 
 Don't expect any props. It's just a separator xD.
 
 `<Separator />`
 
-### IconFont (Type : React Component)
+### IconFont 
 
-|Props    |Type   |Default|Required|	Description|
-|---------|-------|:-----:|:------:|------------|
-|children |	node|-      |✘	      |Menu item|
-|className    |	string|	      |	✘     |	Additional className|
-|style|	string|	      |	✘     |	Additional style |
+| Props             | Required | Description          |
+|-------------------|----------|----------------------|
+| className: string | ✘        | Additional className |
+| style: object     | ✘        | Additional style     |
 
-The icon font render a i tag.
+The icon font renders a i tag. It's just a helper
 
 ```javascript
 //example with Font Awesome 
-<IconFont className="fa fa-trash" />
+<Item>
+    <IconFont className="fa fa-trash" />Delete
+</Item>
 //example with material icons
-<IconFont className="material-icons">remove_circle</IconFont>
+<Item>
+    <IconFont className="material-icons">remove_circle</IconFont>Delete
+<Item>
 ```
 
-### ContextMenuProvider (Type : React Component)
+## To-Do
 
-|Props    |Type    |Default|Required|Possible Value |Description|
-|---------|--------|:-----:|:------:|------------|----|
-|id	      |string or int|	-|	✓|	-|	Id used to map your component to a context menu
-|renderTag|node|	div|	✘|	-|	The render tag of the wrapper
-|event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
-|className|	string|	|	✘|	|	Additional className
-|style|	object|	|	✘|	|	Additional style
+- [ ] Allow keyboard navigation
+- [ ] Switch or not to styled component?
+- [ ] Accessibility
+- [ ] RTL support
 
-```javascript
-const Foo = () => <ContextMenuProvider id="menu_id"><MyComponent /></ContextMenuProvider>;
-```
 
-### menuProvider (Type : function)
+## Migration from v2 to v3
 
-|Args    |Type    |Default|Required|Possible Value |Description|
-|---------|--------|:-----:|:------:|------------|----|
-|id	      |string|	-|	✓|	-|	Id used to map your component to a context menu
+A huge part of the code has been reviewed. The api has been simplified.
 
-- Function returned by menuProvider expect :
+- There is no more `leftIcon` and `rightIcon` on the `Item` component. Do `<Item><IconFont className="fa fa-delete" /> delete</Item>` instead
+- The `menuProvider` HOC has been removed. You can create yours easely
+- The `onClick` callback use destructuring assignment over explicit parameter
 
-|Args    |Type    |Default|Required|Possible Value |Description|
-|---------|--------|:-----:|:------:|------------|----|
-|targetComponent|React Component|	-|	✓|	-|	The component on which you want to add a context menu
-|renderTag|node|	div|	✘|	-|	The render tag of the wrapper
-|event|	string|	onContextMenu|	✘|	Same as React Event (onClick, onContextMenu ...)|	Event to trigger the context menu
-|className|	string|	|	✘|	|	Additional className
-|style|	object|	|	✘|	|	Additional style
 
-## Migration from v1 to v2
+## Browser Support
 
-Breaking changes are a pain for developers but sometimes we have too. 
-
-**Item Component:**
-You can render whatever you want now, which gives you more control.
-```javascript
-//before
-<Item label="foo" />
-// now
-<Item>foo</Item>
-```
-**onClick callback:**
-Having access to the instance of the react component can be sometimes really useful.
-```javascript
-//before
-onClick(targetNode, data)
-// now
-onClick(targetNode, refs, data)
-```
+![IE](https://cloud.githubusercontent.com/assets/398893/3528325/20373e76-078e-11e4-8e3a-1cb86cf506f0.png) | ![Chrome](https://cloud.githubusercontent.com/assets/398893/3528328/23bc7bc4-078e-11e4-8752-ba2809bf5cce.png) | ![Firefox](https://cloud.githubusercontent.com/assets/398893/3528329/26283ab0-078e-11e4-84d4-db2cf1009953.png) | ![Opera](https://cloud.githubusercontent.com/assets/398893/3528330/27ec9fa8-078e-11e4-95cb-709fd11dac16.png) | ![Safari](https://cloud.githubusercontent.com/assets/398893/3528331/29df8618-078e-11e4-8e3e-ed8ac738693f.png) | ![Edge](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png)
+--- | --- | --- | --- | --- | --- |
+IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ## Release Notes
+
+### v3
+
+- Support submenu
+- Add typescript definition
+- Reviewed the api
+- Upgrade to react 16
 
 ### 2.1.4
 
@@ -369,10 +469,6 @@ Relate to [issue 16](https://github.com/fkhadra/react-contexify/issues/16)
 ## Contribute
 
 Any idea and suggestions are welcome.
-
-## Thanks
-
-Big thanks to [Tobias Reich](https://github.com/electerious). This project is based on [basicContext](https://github.com/electerious/basicContext). A vanilla js context menu.
 
 ## License
 

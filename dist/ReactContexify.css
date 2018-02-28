@@ -6,6 +6,16 @@
   box-sizing: border-box;
   box-shadow: rgba(0, 0, 0, 0.3) 0 10px 20px, #eeeeee 0 0 0 1px;
   padding: 5px 0; }
+  .react-contexify .react-contexify__submenu {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+    transition: opacity 0.275s; }
+  .react-contexify__submenu-arrow {
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    line-height: 22px; }
   .react-contexify__separator {
     float: left;
     width: 100%;
@@ -14,28 +24,35 @@
     margin: 4px 0;
     background-color: rgba(0, 0, 0, 0.2); }
   .react-contexify__item {
-    cursor: pointer; }
-    .react-contexify__item:not(.react-contexify__item--disabled):hover .react-contexify__item__data {
+    cursor: pointer;
+    position: relative; }
+    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
       color: white;
       background-color: #4393e6; }
+    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__submenu {
+      pointer-events: initial;
+      opacity: 1; }
     .react-contexify__item--disabled {
       cursor: default;
       opacity: .5; }
     .react-contexify__item__data {
       min-width: 140px;
       padding: 6px 12px;
-      display: inline-block;
+      display: flex;
       text-align: left;
       white-space: nowrap;
-      color: #333; }
+      color: #333;
+      position: relative; }
     .react-contexify__item__icon {
-      font-size: inherit;
+      font-size: 20px;
       margin-right: 5px; }
 
 .react-contexify__theme--dark {
   padding: 6px 0;
   background-color: rgba(40, 40, 40, 0.98);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4), 0 0 0 1px #222; }
+  .react-contexify__theme--dark .react-contexify__submenu {
+    background-color: rgba(40, 40, 40, 0.98); }
   .react-contexify__theme--dark .react-contexify__separator {
     background-color: #eee; }
   .react-contexify__theme--dark .react-contexify__item__data {
@@ -50,7 +67,7 @@
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2), 0 0 0 1px #eee; }
   .react-contexify__theme--light .react-contexify__separator {
     background-color: #eee; }
-  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover .react-contexify__item__data {
+  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
     color: #4393e6;
     background-color: #E0EEFD; }
   .react-contexify__theme--light .react-contexify__item__data {

@@ -2,32 +2,32 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 
-import ContextMenu from './../Component/ContextMenu';
-import Item from './../Component/Item';
+import ContextMenu from './../components/ContextMenu';
+import Item from './../components/Item';
 import eventManager from './../util/eventManager';
-import cssClasses from './../cssClasses';
+
+beforeEach(() => eventManager.eventList.clear());
 
 describe('ContextMenu', () => {
-  it(
-    'Should bind event when component did mount and unbind all the event related to the component when will unmount',
-    () => {
-      const component = mount(
-        <ContextMenu id="foo">
-          <Item>bar</Item>
-        </ContextMenu>
-      );
-      expect(eventManager.eventList.has('display::foo')).toBe(true);
-      expect(eventManager.eventList.has('hideAll')).toBe(true);
-      component.unmount();
-      expect(eventManager.eventList.has('display::foo')).toBe(false);
-    });
+  it('Should bind event when component did mount and unbind all the event related to the component when will unmount', () => {
+    const component = mount(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+      </ContextMenu>
+    );
+    expect(eventManager.eventList.get('display::foo').size).toBe(1);
+    expect(eventManager.eventList.get('hideAll').size).toBe(1);
+    component.unmount();
+    expect(eventManager.eventList.get('display::foo').size).toBe(0);
+    expect(eventManager.eventList.get('hideAll').size).toBe(0);
+  });
 
-  it('Should render null if `visible` is false', () => {
+  it('Should render null if the context menu is not visible', () => {
     const component = shallow(
       <ContextMenu id="foo">
         <Item>bar</Item>
       </ContextMenu>
-      );
+    );
     component.setState({ visible: true });
     expect(component.html()).not.toBeNull();
 
@@ -36,11 +36,11 @@ describe('ContextMenu', () => {
   });
 
   it('Should hide ContextMenu when `hide` method is called', () => {
-    const component = shallow(
+    const component = mount(
       <ContextMenu id="foo">
         <Item>bar</Item>
       </ContextMenu>
-      );
+    );
 
     component.setState({ visible: true });
     component.instance().hide();
@@ -49,31 +49,50 @@ describe('ContextMenu', () => {
     expect(component.html()).toBeNull();
   });
 
-  it('Should merge theme and animation when defined', () => {
-    const component = shallow(
-      <ContextMenu id="foo" animation="foo" theme="bar">
-        <Item>bar</Item>
-      </ContextMenu>
-      );
-    component.setState({ visible: true });
+  it('Should remove the mousedown event on window object when mouse enter the context menu', () => {
+    global.removeEventListener = jest.fn();
 
-    expect(component.find('.react-contexify')
-        .hasClass(`${cssClasses.ANIMATION_WILL_ENTER}foo`))
-        .toBe(true);
-
-    expect(component.find('.react-contexify')
-        .hasClass(`${cssClasses.THEME}bar`))
-        .toBe(true);
-  });
-  it('Should be able to perform conditional rendering when child is different than Item', () => {
-    const component = shallow(
+    const component = mount(
       <ContextMenu id="foo">
         <Item>bar</Item>
-        {null}
-        {false}
       </ContextMenu>
     );
+
     component.setState({ visible: true });
-    expect(component.html()).toContain('bar');
+    component.simulate('mouseenter');
+    expect(global.removeEventListener).toHaveBeenCalled();
+  });
+
+  it('Should add the mousedown event on window object when mouse leave the context menu', () => {
+    global.addEventListener = jest.fn();
+
+    const component = mount(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+      </ContextMenu>
+    );
+
+    component.setState({ visible: true });
+    component.simulate('mouseleave');
+    expect(global.addEventListener).toHaveBeenCalled();
+  });
+
+  it('Should display the menu when corresponding event is emitted', () => {
+    global.innerWidth = 0;
+    global.innerHeight = 0;
+
+    const component = mount(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+      </ContextMenu>
+    );
+
+     expect(component.html()).toBeNull();
+     component.instance().menu = {
+       offsetWidth: 100,
+       offsetHeight: 100
+     };
+     eventManager.emit('display::foo', {stopPropagation(){}, clientX:1, clientY:1 }, [], []);
+     expect(component.html()).not.toBeNull();
   });
 });

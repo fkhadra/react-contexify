@@ -7,7 +7,7 @@
   }
   .react-contexify__item {
 
-    &:not(.react-contexify__item--disabled):hover .react-contexify__item__data {
+    &:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
       color: #4393e6;
       background-color: #E0EEFD;
     }
