@@ -42,8 +42,6 @@ class ContextMenuProvider extends Component {
     );
   };
 
-  setChildRef = ref => ref === null || this.childrenRefs.push(ref);
-
   getChildren() {
     const {
       id,
@@ -59,6 +57,8 @@ class ContextMenuProvider extends Component {
 
     // reset refs
     this.childrenRefs = [];
+
+    this.setChildRef = ref => ref === null || this.childrenRefs.push(ref);
 
     return Children.map(
       children,
@@ -79,7 +79,7 @@ class ContextMenuProvider extends Component {
       className,
       style
     };
-
+    
     return createElement(renderTag, attributes, this.getChildren());
   }
 }

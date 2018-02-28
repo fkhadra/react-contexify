@@ -1,4 +1,4 @@
-# React-contexify ![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master)](https://travis-ci.org/fkhadra/react-contexify) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]() [![Coverage Status](https://coveralls.io/repos/github/fkhadra/react-contexify/badge.svg?branch=master)](https://coveralls.io/github/fkhadra/react-contexify?branch=master)
+# React-contexify ![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]() [![Coverage Status](https://coveralls.io/repos/github/fkhadra/react-contexify/badge.svg?branch=master)](https://coveralls.io/github/fkhadra/react-contexify?branch=master)
 
 A declarative context menu for React 😲 !
 
@@ -33,7 +33,7 @@ A declarative context menu for React 😲 !
 - [License](#license)
 
 
-> ⚠️ The v3 introduce a lots of breaking changes. Please consider reading the migration guide.
+> ⚠️ The v3 introduces a lot of breaking changes. Please consider reading the migration guide.
 
 ## Demo
    
@@ -113,7 +113,7 @@ const isDisabled = ({ event, ref, data, dataFromProvider }) => {
 
 ### Disable a submenu
 
-Disable a `Submenu` is simple as disable an `Item`. The disabled callback is slightly different, there is no data param. 
+Disable a `Submenu` is simple as disabling an `Item`. The disabled callback is slightly different, there is no data param. 
 
 ```js
 <ContextMenu id='menu_id'>
@@ -142,11 +142,11 @@ Disable a `Submenu` is simple as disable an `Item`. The disabled callback is sli
 
 ### The onClick callback
 
-The `onClick` callback of the `Item` component give you access to an object with 4 properties:
+The `onClick` callback of the `Item` component gives you access to an object with 4 properties:
 
 #### event
 
-The event property refer to the native event which triggered the menu. It can be used to access the mouse coordinate or any other event prop.
+The event property refers to the native event which triggered the menu. It can be used to access the mouse coordinate or any other event prop.
 
 ```js
 const onClick = ({ event, ref, data, dataFromProvider }) => {
@@ -201,7 +201,7 @@ const onClick = ({ event, ref, data, dataFromProvider }) => {
 
 ```
 
-- With a html node, the ref contain the html node 🤣
+- With an html node, the ref contains the html node 🤣
 
 ```js
 const Wrapped = () => (
@@ -332,7 +332,7 @@ Don't expect any props. It's just a separator xD.
 | className: string | ✘        | Additional className |
 | style: object     | ✘        | Additional style     |
 
-The icon font render a i tag. It's just a helper
+The icon font renders a i tag. It's just a helper
 
 ```javascript
 //example with Font Awesome 
@@ -375,6 +375,7 @@ IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 - Support submenu
 - Add typescript definition
 - Reviewed the api
+- Upgrade to react 16
 
 ### 2.1.4
 
