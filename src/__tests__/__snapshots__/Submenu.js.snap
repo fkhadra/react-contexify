@@ -31,7 +31,7 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
       style={
         Object {
           "bottom": 0,
-          "left": "-100%",
+          "right": "100%",
           "top": "initial",
         }
       }
@@ -82,7 +82,7 @@ exports[`Submenu Should not go offscreen 1`] = `
       style={
         Object {
           "bottom": 0,
-          "left": "-100%",
+          "right": "100%",
           "top": "initial",
         }
       }

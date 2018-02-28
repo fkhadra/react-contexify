@@ -118,7 +118,7 @@ Disable a `Submenu` is simple as disabling an `Item`. The disabled callback is s
 ```js
 <ContextMenu id='menu_id'>
     <Item>Foo</Item>
-    <Submenu lavbel="Submenu" disabled>
+    <Submenu label="Submenu" disabled>
         <Item>Bar</Item>
     </Submenu>
 </ContextMenu>

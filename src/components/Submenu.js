@@ -30,7 +30,11 @@ export default class Submenu extends Component {
   };
 
   state = {
-    style: {}
+    style: {
+      left: '100%',
+      top:0,
+      bottom: 'initial'
+    }
   };
 
   setRef = ref => {
@@ -40,9 +44,13 @@ export default class Submenu extends Component {
   componentDidMount() {
     const { innerWidth, innerHeight } = window;
     const rect = this.menu.getBoundingClientRect();
-    const style = {
-      left: rect.right < innerWidth ? '100%' : '-100%'
-    };
+    const style = {};
+
+    if(rect.right < innerWidth) {
+      style.left = '100%';
+    } else {
+      style.right = '100%';
+    }
 
     if (rect.bottom > innerHeight) {
       style.bottom = 0;

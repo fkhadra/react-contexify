@@ -4,3 +4,4 @@ node_modules/
 lib/
 npm-debug.log
 coverage/
+yarn-error.log*
