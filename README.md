@@ -83,15 +83,61 @@ const App = () => (
 
 ```
 
-### Wrap component with the html tag of your choice
+### Wrap component with the Component of your choice
 
-The `ContextMenuProvider` expose a `renderTag` prop to let you do that.
+The `ContextMenuProvider` expose a `component` prop to let you do render a custom component or any valid html tag.
+
+#### Html tag
+
+If you just want to replace the default html tag, just pass the desired tag to component:
 
 ```js
-const Tr = (props) => (
-  <ContextMenuProvider id="menu_id" renderTag="tr">
-    <td>{props.cel1}</td>
-    <td>{props.cel2}</td>
+const ComponentWithMenu = (props) => (
+  <ContextMenuProvider id="menu_id" component="li">
+    <h4>{props.cel1}</h4>
+    <h4>{props.cel2}</h4>
+  </ContextMenuProvider>
+);
+```
+
+
+#### Custom Component
+
+If you want to use a custom component, it works like react-router. Don't forget to render the chilren and 
+to grab the event to trigger the context menu:
+
+```js
+const CustomComponent = ({ children, ...rest  }) => (
+ <aside {...rest}>
+    <div>
+        {children}
+    </div>
+ </aside>
+);
+
+const ComponentWithMenu = (props) => (
+  <ContextMenuProvider id="menu_id" component={CustomComponent}>
+    <h4>{props.cel1}</h4>
+    <h4>{props.cel2}</h4>
+  </ContextMenuProvider>
+);
+```
+
+#### Using a render props
+
+You can also use a render props: 
+
+```js
+const ComponentWithMenu = (props) => (
+  <ContextMenuProvider id="menu_id" render={({ children, ...rest  }) => ( 
+      <aside {...rest}>
+        <div>
+            {children}
+        </div>
+    </aside>)}
+    >
+    <h4>{props.cel1}</h4>
+    <h4>{props.cel2}</h4>
   </ContextMenuProvider>
 );
 ```
@@ -269,7 +315,8 @@ const onClick = ({ event, ref, data, dataFromProvider }) => {
 | Props                | Default         | Required | Description                                                                              |
 |----------------------|-----------------|----------|------------------------------------------------------------------------------------------|
 | id: string \| number | -               | ✓        | Id used to map your component to a context menu                                          |
-| renderTag: string    | 'div'           | ✘        | The tag used to wrap the child component                                                 |
+| component: node      | 'div'           | ✘        | The component used to wrap the child component                                           |
+| render: function     | -               | ✘        | Render props                                                                             |
 | event: string        | 'onContextMenu' | ✘        | Same as React Event (onClick, onContextMenu ...).	Event used to trigger the context menu |
 | data: any            | -               | ✘        | Data are passed to the Item onClick callback.                                            |
 | storeRef: boolean    | true            | ✘        | Store ref of the wrapped component.                                                      |

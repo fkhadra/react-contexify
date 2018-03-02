@@ -9,11 +9,13 @@ import PropTypes from 'prop-types';
 
 import eventManager from './../util/eventManager';
 
+
 class ContextMenuProvider extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
-    renderTag: PropTypes.node,
+    component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+    render: PropTypes.func,
     event: PropTypes.string,
     className: PropTypes.string,
     style: PropTypes.object,
@@ -22,7 +24,8 @@ class ContextMenuProvider extends Component {
   };
 
   static defaultProps = {
-    renderTag: 'div',
+    component: 'div',
+    render: null,
     event: 'onContextMenu',
     className: null,
     style: {},
@@ -45,7 +48,7 @@ class ContextMenuProvider extends Component {
   getChildren() {
     const {
       id,
-      renderTag,
+      component,
       event,
       children,
       className,
@@ -73,14 +76,18 @@ class ContextMenuProvider extends Component {
   }
 
   render() {
-    const { renderTag, event, className, style } = this.props;
+    const { component, render, event, className, style } = this.props;
     const attributes = {
       [event]: this.handleEvent,
       className,
       style
     };
+
+    if (typeof render === 'function') {
+      return render({...attributes, children: this.getChildren()})
+    }
     
-    return createElement(renderTag, attributes, this.getChildren());
+    return createElement(component, attributes, this.getChildren());
   }
 }
 

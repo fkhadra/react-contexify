@@ -18,7 +18,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to choose the render tag', () => {
     const component = shallow(
-      <ContextMenuProvider id="foo" renderTag='span'>
+      <ContextMenuProvider id="foo" component='span'>
         baz
       </ContextMenuProvider>
     );
