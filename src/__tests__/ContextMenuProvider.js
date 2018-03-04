@@ -16,13 +16,22 @@ describe('ContextMenuProvider', () => {
     expect(component.html()).toContain('style');
   });
 
-  it('Should be able to choose the render tag', () => {
+  it('Should be able to render any node', () => {
     const component = shallow(
       <ContextMenuProvider id="foo" component='span'>
         baz
       </ContextMenuProvider>
     );
 
+    expect(component.html()).toContain('<span>baz</span>');
+  });
+
+  it('Should be able to use a render props', () => {
+    const component = shallow(
+      <ContextMenuProvider id="foo" render={() => <span>baz</span>}>
+        baz
+      </ContextMenuProvider>
+    );
     expect(component.html()).toContain('<span>baz</span>');
   });
 
