@@ -335,7 +335,7 @@ const onClick = ({ event, ref, data, dataFromProvider }) => {
 |----------------------|----------|-----------------------------|-----------------------------------------------------------------------------|
 | id: string \| number | ✓        | -                           | Used to identify the corresponding menu                                     |
 | style: object        | ✘        | -                           | An optional style to apply                                                  |
-| classname: string    | ✘        | -                           | An optional css class to apply                                              |
+| className: string    | ✘        | -                           | An optional css class to apply                                              |
 | theme: string        | ✘        | light \| dark               | Theme is appended to `react-contexify__theme--${given theme}`               |
 | animation: string    | ✘        | fade \| flip \| pop \| zoom | Animation is appended to `.react-contexify__will-enter--${given animation}` |
 
