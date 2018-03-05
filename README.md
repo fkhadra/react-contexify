@@ -407,6 +407,7 @@ A huge part of the code has been reviewed. The api has been simplified.
 - There is no more `leftIcon` and `rightIcon` on the `Item` component. Do `<Item><IconFont className="fa fa-delete" /> delete</Item>` instead
 - The `menuProvider` HOC has been removed. You can create yours easely
 - The `onClick` callback use destructuring assignment over explicit parameter
+- `renderTag` as been replaced by `component` and `render` props. Same api as react-router
 
 
 ## Browser Support
