@@ -6,6 +6,11 @@ import cx from 'classnames';
 import styles from './styles';
 import eventManager from '../util/eventManager';
 
+const KEY = {
+  ENTER: 13,
+  ESC: 27
+};
+
 class ContextMenu extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -51,6 +56,7 @@ class ContextMenu extends Component {
     window.addEventListener('mousedown', this.hide);
     window.addEventListener('click', this.hide);
     window.addEventListener('scroll', this.hide);
+    window.addEventListener('keydown', this.handleKeyboard);
   };
 
   unBindWindowEvent = () => {
@@ -59,6 +65,7 @@ class ContextMenu extends Component {
     window.removeEventListener('mousedown', this.hide);
     window.removeEventListener('click', this.hide);
     window.removeEventListener('scroll', this.hide);
+    window.removeEventListener('keydown', this.handleKeyboard);
   };
 
   onMouseEnter = () => window.removeEventListener('mousedown', this.hide);
@@ -77,6 +84,13 @@ class ContextMenu extends Component {
       this.unBindWindowEvent();
       this.setState({ visible: false });
   };
+
+  handleKeyboard = e => {
+    if(e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
+      this.unBindWindowEvent();
+      this.setState({ visible: false });
+    }
+  }
 
   setRef = ref => {
     this.menu = ref;
