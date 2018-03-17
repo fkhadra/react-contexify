@@ -5,7 +5,7 @@ export default function(Component) {
   return class WithProxy extends PureComponent {
     node = null;
 
-    componentWillMount() {
+    componentDidMount() {
       this.appendToBody(this.props);
     }
 
