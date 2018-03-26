@@ -31,8 +31,10 @@ class Item extends Component {
     dataFromProvider: null
   };
 
+  disabled = false;
+
   handleClick = e => {
-    this.props.disabled
+    this.disabled
       ? e.stopPropagation()
       : this.props.onClick({
           event: this.props.nativeEvent,
@@ -53,17 +55,19 @@ class Item extends Component {
       dataFromProvider,
       nativeEvent
     } = this.props;
+    
+    this.disabled =
+      typeof disabled === 'function'
+        ? disabled({
+            event: nativeEvent,
+            ref: refsFromProvider,
+            data: data,
+            dataFromProvider: dataFromProvider
+          })
+        : disabled;
 
     const cssClasses = cx(styles.item, className, {
-      [`${styles.itemDisabled}`]:
-        typeof disabled === 'function'
-          ? disabled({
-              event: nativeEvent,
-              ref: refsFromProvider,
-              data: data,
-              dataFromProvider: dataFromProvider
-            })
-          : disabled
+      [`${styles.itemDisabled}`]: this.disabled
     });
 
     return (
