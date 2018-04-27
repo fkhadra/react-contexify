@@ -145,9 +145,11 @@ class ContextMenu extends Component {
   }
 
   getMenuItem() {
-    const children = this.props.children.filter(
-      child => Boolean(child)
-    );
+    const children = React.Children
+      .toArray(this.props.children)
+      .filter(
+        child => Boolean(child)
+      );
 
     return React.Children.map(children, item =>
       React.cloneElement(item, {
