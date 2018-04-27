@@ -1,5 +1,6 @@
 /* global: window */
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
@@ -18,7 +19,8 @@ class ContextMenu extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     theme: PropTypes.string,
-    animation: PropTypes.string
+    animation: PropTypes.string,
+    stickToElement: PropTypes.oneOf(['bottom-left', 'bottom-right'])
   };
 
   static defaultProps = {
@@ -100,6 +102,19 @@ class ContextMenu extends Component {
     const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
     const { offsetWidth: menuWidth, offsetHeight: menuHeight } = this.menu;
     let { x, y } = this.state;
+    const { stickToElement } = this.props;
+
+    if (stickToElement) {
+        const bounds = findDOMNode(this.refsFromProvider).getBoundingClientRect();
+
+        if (stickToElement === 'bottom-left') {
+            x = bounds.x;
+            y = bounds.y + bounds.height + 5;
+        } else if (stickToElement === 'bottom-right') {
+            x = bounds.x - menuWidth + bounds.width;
+            y = bounds.y + bounds.height + 5;
+        }
+    }
 
     if (x + menuWidth > windowWidth) {
       x -= x + menuWidth - windowWidth;
