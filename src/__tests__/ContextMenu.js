@@ -1,6 +1,7 @@
 /* eslint-env jest */
 import React from 'react';
 import { mount, shallow } from 'enzyme';
+import toJson from 'enzyme-to-json';
 
 import ContextMenu from './../components/ContextMenu';
 import Item from './../components/Item';
@@ -47,6 +48,17 @@ describe('ContextMenu', () => {
 
     expect(component.state('visible')).toBe(false);
     expect(component.html()).toBeNull();
+  });
+
+  it('Should remove null Item from menu', () => {
+    const component = mount(
+      <ContextMenu id="foo">
+        <Item>bar</Item>
+        {null}
+      </ContextMenu>
+    );
+    component.setState({ visible: true });
+    expect(toJson(component)).toMatchSnapshot();
   });
 
   it('Should remove the mousedown event on window object when mouse enter the context menu', () => {

@@ -418,6 +418,10 @@ IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ## Release Notes
 
+### v3.0.1
+
+- Filter out falsy children when rendering menu-items
+
 ### v3
 
 - Support submenu
