@@ -51,11 +51,10 @@ class ContextMenu extends Component {
   }
 
   bindWindowEvent = () => {
-    // Do not subscribe to click here.
-    // Some browsers trigger a click event causing the menu to get closed
     window.addEventListener('resize', this.hide);
     window.addEventListener('contextmenu', this.hide);
     window.addEventListener('mousedown', this.hide);
+    window.addEventListener('click', this.hide);
     window.addEventListener('scroll', this.hide);
     window.addEventListener('keydown', this.handleKeyboard);
   };
@@ -69,17 +68,18 @@ class ContextMenu extends Component {
     window.removeEventListener('keydown', this.handleKeyboard);
   };
 
-  onMouseEnter = () => {
-    // Do not subscribe to click until the menu is open
-    // Some browsers trigger a click event causing the menu to get closed
-    window.addEventListener('click', this.hide);
-    //
-    window.removeEventListener('mousedown', this.hide);
-  }
+  onMouseEnter = () => window.removeEventListener('mousedown', this.hide);
 
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
   hide = e => {
+      if (typeof e !== 'undefined' && e.button === 2 && e.type !== 'contextmenu') {
+        return;
+      }
+      // Safari trigger a click event when you ctrl + trackpad
+      if (typeof e !== 'undefined' && e.ctrlKey === true && e.type !== 'contextmenu') {
+        return;
+      }
       this.unBindWindowEvent();
       this.setState({ visible: false });
   };
