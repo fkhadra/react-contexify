@@ -395,9 +395,9 @@ The icon font renders a i tag. It's just a helper
 ## To-Do
 
 - [ ] Allow keyboard navigation
-- [ ] Switch or not to styled component?
 - [ ] Accessibility
 - [ ] RTL support
+- [ ] Update build system
 
 
 ## Migration from v2 to v3
@@ -417,6 +417,10 @@ A huge part of the code has been reviewed. The api has been simplified.
 IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ## Release Notes
+
+### v3.0.2
+
+- Prevent menu to disappear in Safari/Firefox. [View PR](https://github.com/fkhadra/react-contexify/pull/68)
 
 ### v3.0.1
 

@@ -12,7 +12,7 @@ describe('Menu Item', () => {
 
   it('Should handle click', () => {
     const click = jest.fn();
-    const component = shallow(<Item onClick={click}>foo</Item>)
+    const component = shallow(<Item onClick={click}>foo</Item>);
 
     expect(click).not.toHaveBeenCalled();
     component.simulate('click');
@@ -30,24 +30,32 @@ describe('Menu Item', () => {
       done();
     };
 
-    const component = shallow(<Item 
-      onClick={onClick} 
-      event={{ foo: 'bar' }} 
-      refsFromProvider={[{ baz: 'baz' }]}
-      dataFromProvider='dataFromProvider'
-      data='data'
-      >foo</Item>)
+    const component = shallow(
+      <Item
+        onClick={onClick}
+        event={{ foo: 'bar' }}
+        refsFromProvider={[{ baz: 'baz' }]}
+        dataFromProvider="dataFromProvider"
+        data="data"
+      >
+        foo
+      </Item>
+    );
 
     component.simulate('click');
   });
 
   it('Should prevent click when disabled', () => {
     const click = jest.fn();
-    const component = shallow(<Item onClick={click} disabled>foo</Item>);
+    const component = shallow(
+      <Item onClick={click} disabled>
+        foo
+      </Item>
+    );
 
     expect(click).not.toHaveBeenCalled();
     component.simulate('click', {
-      stopPropagation(){}
+      stopPropagation() {}
     });
     expect(click).not.toHaveBeenCalled();
   });

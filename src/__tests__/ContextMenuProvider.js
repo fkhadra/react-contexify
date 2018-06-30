@@ -18,7 +18,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to render any node', () => {
     const component = shallow(
-      <ContextMenuProvider id="foo" component='span'>
+      <ContextMenuProvider id="foo" component="span">
         baz
       </ContextMenuProvider>
     );
@@ -37,9 +37,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should emit the event to display the context menu on right click', done => {
     const component = shallow(
-      <ContextMenuProvider id="foo">
-        baz
-      </ContextMenuProvider>
+      <ContextMenuProvider id="foo">baz</ContextMenuProvider>
     );
     const handleEvent = jest.fn();
 
@@ -49,24 +47,24 @@ describe('ContextMenuProvider', () => {
       done();
     });
 
-    component.find('div').simulate('contextmenu', { preventDefault(){} });
+    component.find('div').simulate('contextmenu', { preventDefault() {} });
   });
 
   it('Should allow to use any mouse event to display the context menu', done => {
     const component = shallow(
-      <ContextMenuProvider id="foo" event='onClick'>
+      <ContextMenuProvider id="foo" event="onClick">
         baz
       </ContextMenuProvider>
     );
     const handleEvent = jest.fn();
-    
+
     eventManager.on('display::foo', () => {
       handleEvent();
       expect(handleEvent).toHaveBeenCalled();
       done();
     });
 
-    component.find('div').simulate('click', { preventDefault(){} });
+    component.find('div').simulate('click', { preventDefault() {} });
   });
 
   it('Should be able to collect children ref', () => {
@@ -76,7 +74,7 @@ describe('ContextMenuProvider', () => {
         <div>bar</div>
       </ContextMenuProvider>
     );
-    
+
     expect(component.instance().childrenRefs.length).toBe(2);
   });
 });

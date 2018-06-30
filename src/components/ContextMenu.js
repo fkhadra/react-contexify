@@ -73,23 +73,31 @@ class ContextMenu extends Component {
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
   hide = e => {
-      if (typeof e !== 'undefined' && e.button === 2 && e.type !== 'contextmenu') {
-        return;
-      }
-      // Safari trigger a click event when you ctrl + trackpad
-      if (typeof e !== 'undefined' && e.ctrlKey === true && e.type !== 'contextmenu') {
-        return;
-      }
-      this.unBindWindowEvent();
-      this.setState({ visible: false });
+    if (
+      typeof e !== 'undefined' &&
+      e.button === 2 &&
+      e.type !== 'contextmenu'
+    ) {
+      return;
+    }
+    // Safari trigger a click event when you ctrl + trackpad
+    if (
+      typeof e !== 'undefined' &&
+      e.ctrlKey === true &&
+      e.type !== 'contextmenu'
+    ) {
+      return;
+    }
+    this.unBindWindowEvent();
+    this.setState({ visible: false });
   };
 
   handleKeyboard = e => {
-    if(e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
+    if (e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
       this.unBindWindowEvent();
       this.setState({ visible: false });
     }
-  }
+  };
 
   setRef = ref => {
     this.menu = ref;
@@ -144,11 +152,9 @@ class ContextMenu extends Component {
   }
 
   getMenuItem() {
-    const children = React.Children
-      .toArray(this.props.children)
-      .filter(
-        child => Boolean(child)
-      ); 
+    const children = React.Children.toArray(this.props.children).filter(child =>
+      Boolean(child)
+    );
 
     return React.Children.map(children, item =>
       React.cloneElement(item, {

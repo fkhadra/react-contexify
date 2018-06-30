@@ -8,8 +8,6 @@ import styles from './../components/styles';
 describe('Separator', () => {
   it('Render without crash', () => {
     const component = shallow(<Separator />);
-    expect(component.contains(<div className={styles.separator} />)).toBe(
-      true
-    );
+    expect(component.contains(<div className={styles.separator} />)).toBe(true);
   });
 });

@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import eventManager from './../util/eventManager';
 
-
 class ContextMenuProvider extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -84,9 +83,9 @@ class ContextMenuProvider extends Component {
     };
 
     if (typeof render === 'function') {
-      return render({...attributes, children: this.getChildren()})
+      return render({ ...attributes, children: this.getChildren() });
     }
-    
+
     return createElement(component, attributes, this.getChildren());
   }
 }
