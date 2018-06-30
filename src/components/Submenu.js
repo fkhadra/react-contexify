@@ -32,7 +32,7 @@ export default class Submenu extends Component {
   state = {
     style: {
       left: '100%',
-      top:0,
+      top: 0,
       bottom: 'initial'
     }
   };
@@ -46,7 +46,7 @@ export default class Submenu extends Component {
     const rect = this.menu.getBoundingClientRect();
     const style = {};
 
-    if(rect.right < innerWidth) {
+    if (rect.right < innerWidth) {
       style.left = '100%';
     } else {
       style.right = '100%';
@@ -90,7 +90,7 @@ export default class Submenu extends Component {
       label,
       nativeEvent,
       refsFromProvider,
-      dataFromProvider,
+      dataFromProvider
     } = this.props;
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
@@ -108,19 +108,12 @@ export default class Submenu extends Component {
     };
 
     return (
-      <div
-        className={cssClasses}
-        role="presentation"
-      >
+      <div className={cssClasses} role="presentation">
         <div className={styles.itemContent} onClick={this.handleClick}>
           {label}
           <span className={styles.submenuArrow}>{arrow}</span>
         </div>
-        <div
-          className={styles.submenu}
-          ref={this.setRef}
-          style={submenuStyle}
-        >
+        <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
           {this.getMenuItem()}
         </div>
       </div>

@@ -55,7 +55,7 @@ class Item extends Component {
       dataFromProvider,
       nativeEvent
     } = this.props;
-    
+
     this.disabled =
       typeof disabled === 'function'
         ? disabled({

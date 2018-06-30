@@ -99,12 +99,17 @@ describe('ContextMenu', () => {
       </ContextMenu>
     );
 
-     expect(component.html()).toBeNull();
-     component.instance().menu = {
-       offsetWidth: 100,
-       offsetHeight: 100
-     };
-     eventManager.emit('display::foo', {stopPropagation(){}, clientX:1, clientY:1 }, [], []);
-     expect(component.html()).not.toBeNull();
+    expect(component.html()).toBeNull();
+    component.instance().menu = {
+      offsetWidth: 100,
+      offsetHeight: 100
+    };
+    eventManager.emit(
+      'display::foo',
+      { stopPropagation() {}, clientX: 1, clientY: 1 },
+      [],
+      []
+    );
+    expect(component.html()).not.toBeNull();
   });
 });
