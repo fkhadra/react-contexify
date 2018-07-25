@@ -418,6 +418,10 @@ IE 11+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ## Release Notes
 
+### v3.0.3
+
+- Allow nested `ContextMenuProvider` [View Issue](https://github.com/fkhadra/react-contexify/pull/67). 
+
 ### v3.0.2
 
 - Prevent menu to disappear in Safari/Firefox. [View PR](https://github.com/fkhadra/react-contexify/pull/68)
