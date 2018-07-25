@@ -36,6 +36,7 @@ class ContextMenuProvider extends Component {
 
   handleEvent = e => {
     e.preventDefault();
+    e.stopPropagation();
     eventManager.emit(
       `display::${this.props.id}`,
       e.nativeEvent,

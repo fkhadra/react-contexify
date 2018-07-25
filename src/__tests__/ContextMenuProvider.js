@@ -36,7 +36,7 @@ describe('ContextMenuProvider', () => {
   });
 
   it('Should emit the event to display the context menu on right click', done => {
-    const component = shallow(
+    const component = mount(
       <ContextMenuProvider id="foo">baz</ContextMenuProvider>
     );
     const handleEvent = jest.fn();
@@ -51,7 +51,7 @@ describe('ContextMenuProvider', () => {
   });
 
   it('Should allow to use any mouse event to display the context menu', done => {
-    const component = shallow(
+    const component = mount(
       <ContextMenuProvider id="foo" event="onClick">
         baz
       </ContextMenuProvider>
