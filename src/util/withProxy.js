@@ -13,9 +13,11 @@ export default function(Component) {
       this.removeFromBody();
     }
 
-    componentWillReceiveProps(nextProps) {
-      this.removeFromBody();
-      this.appendToBody(nextProps);
+    componentDidUpdate(prevProps) {
+      if (prevProps !== this.props) {
+        this.removeFromBody();
+        this.appendToBody(this.props);
+      }
     }
 
     removeFromBody() {
