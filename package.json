@@ -21,7 +21,7 @@
     "prebuild": "npm run lint && npm run test",
     "bundle": "webpack --output-filename=dist/ReactContexify.min.js --optimize-minimize",
     "build": "NODE_ENV=production  npm run bundle && babel --ignore=__tests__ src -d lib",
-    "build:dev": "NODE_ENV=development npm run bundle && babel --ignore=__tests__ src -d lib",
+    "build:dev": "NODE_ENV=development  npm run bundle && babel --ignore=__tests__ src -d lib",
     "postbuild": "npm run style",
     "prestyle": "sass src/scss/main.scss dist/ReactContexify.css",
     "style": "postcss --use autoprefixer -b 'last 2 versions' < dist/ReactContexify.css | cssnano --no-reduceIdents > dist/ReactContexify.min.css"
@@ -38,13 +38,13 @@
   "devDependencies": {
     "autoprefixer": "^7.2.5",
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^8.2.6",
     "babel-jest": "^22.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
-    "babel-preset-react-app": "^3.1.1",
-    "coveralls": "^3.0.0",
+    "babel-preset-react-app": "^3.1.2",
+    "coveralls": "^3.0.2",
     "cssnano": "^3.10.0",
     "cssnano-cli": "^1.0.5",
     "enzyme": "^3.3.0",
@@ -56,7 +56,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.4.0",
-    "jest": "^22.2.1",
+    "jest": "^22.4.4",
     "jest-cli": "^22.2.1",
     "postcss": "^6.0.17",
     "postcss-cli": "^5.0.0",
@@ -73,9 +73,12 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "mouse-event-offset": "^3.0.2",
     "prop-types": "^15.6.0"
   },
   "jest": {
+    "testURL": "http://localhost",
+    "testEnvironment": "jsdom",
     "verbose": true,
     "setupFiles": [
       "raf/polyfill",

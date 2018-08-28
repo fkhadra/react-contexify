@@ -3,7 +3,10 @@ import { render, unmountComponentAtNode } from 'react-dom';
 
 export default function(Component) {
   return class WithProxy extends PureComponent {
-    node = null;
+    constructor(props) {
+      super(props)
+      this.node = null;
+    }
 
     componentDidMount() {
       this.appendToBody(this.props);
@@ -21,8 +24,8 @@ export default function(Component) {
     }
 
     removeFromBody() {
-      unmountComponentAtNode(this.node);
       document.body.removeChild(this.node);
+      unmountComponentAtNode(this.node);
     }
 
     appendToBody(props) {
