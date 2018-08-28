@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import relEventOffset from 'mouse-event-offset'
 
 import styles from './styles';
 import eventManager from '../util/eventManager';
@@ -18,14 +19,14 @@ class ContextMenu extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     theme: PropTypes.string,
-    animation: PropTypes.string
+    animation: PropTypes.string,
   };
 
   static defaultProps = {
     className: null,
     style: {},
     theme: null,
-    animation: null
+    animation: null,
   };
 
   state = {
@@ -55,7 +56,7 @@ class ContextMenu extends Component {
     window.addEventListener('contextmenu', this.hide);
     window.addEventListener('mousedown', this.hide);
     window.addEventListener('click', this.hide);
-    window.addEventListener('scroll', this.hide);
+    window.addEventListener('scroll', this.hide, true);
     window.addEventListener('keydown', this.handleKeyboard);
   };
 
@@ -64,7 +65,7 @@ class ContextMenu extends Component {
     window.removeEventListener('contextmenu', this.hide);
     window.removeEventListener('mousedown', this.hide);
     window.removeEventListener('click', this.hide);
-    window.removeEventListener('scroll', this.hide);
+    window.removeEventListener('scroll', this.hide, true);
     window.removeEventListener('keydown', this.handleKeyboard);
   };
 
@@ -126,6 +127,9 @@ class ContextMenu extends Component {
   }
 
   getMousePosition(e) {
+    //const target = document.getElementById(id)
+    //const [clientX, clientY] = relEventOffset(e, target)
+
     const pos = {
       x: e.clientX,
       y: e.clientY
