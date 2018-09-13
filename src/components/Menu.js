@@ -11,7 +11,7 @@ const KEY = {
   ESC: 27
 };
 
-class ContextMenu extends Component {
+class Menu extends Component {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
@@ -210,4 +210,4 @@ class ContextMenu extends Component {
   }
 }
 
-export default ContextMenu;
+export default Menu;

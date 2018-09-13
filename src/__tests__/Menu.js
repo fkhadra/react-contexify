@@ -3,18 +3,18 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import ContextMenu from './../components/ContextMenu';
+import Menu from './../components/Menu';
 import Item from './../components/Item';
 import eventManager from './../util/eventManager';
 
 beforeEach(() => eventManager.eventList.clear());
 
-describe('ContextMenu', () => {
+describe('Menu', () => {
   it('Should bind event when component did mount and unbind all the event related to the component when will unmount', () => {
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
     expect(eventManager.eventList.get('display::foo').size).toBe(1);
     expect(eventManager.eventList.get('hideAll').size).toBe(1);
@@ -25,9 +25,9 @@ describe('ContextMenu', () => {
 
   it('Should render null if the context menu is not visible', () => {
     const component = shallow(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
     component.setState({ visible: true });
     expect(component.html()).not.toBeNull();
@@ -36,11 +36,11 @@ describe('ContextMenu', () => {
     expect(component.html()).toBeNull();
   });
 
-  it('Should hide ContextMenu when `hide` method is called', () => {
+  it('Should hide Menu when `hide` method is called', () => {
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
 
     component.setState({ visible: true });
@@ -52,10 +52,10 @@ describe('ContextMenu', () => {
 
   it('Should remove null Item from menu', () => {
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
         {null}
-      </ContextMenu>
+      </Menu>
     );
     component.setState({ visible: true });
     expect(toJson(component)).toMatchSnapshot();
@@ -65,9 +65,9 @@ describe('ContextMenu', () => {
     global.removeEventListener = jest.fn();
 
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
 
     component.setState({ visible: true });
@@ -79,9 +79,9 @@ describe('ContextMenu', () => {
     global.addEventListener = jest.fn();
 
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
 
     component.setState({ visible: true });
@@ -94,9 +94,9 @@ describe('ContextMenu', () => {
     global.innerHeight = 0;
 
     const component = mount(
-      <ContextMenu id="foo">
+      <Menu id="foo">
         <Item>bar</Item>
-      </ContextMenu>
+      </Menu>
     );
 
     expect(component.html()).toBeNull();

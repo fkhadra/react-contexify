@@ -1,5 +1,6 @@
-import ContextMenu from './components/ContextMenu';
+import Menu from './components/Menu';
 import withProxy from './util/withProxy';
+import contextMenu from './util/contextMenu';
 
 export { default as Item } from './components/Item';
 export { default as Separator } from './components/Separator';
@@ -9,7 +10,7 @@ export {
 export { default as IconFont } from './components/IconFont';
 export { default as Submenu } from './components/Submenu';
 
-const Ctx = withProxy(ContextMenu);
+//const Ctx = withProxy(Menu);
 const theme = {
   light: 'light',
   dark: 'dark'
@@ -21,4 +22,4 @@ const animation = {
   zoom: 'zoom'
 };
 
-export { Ctx as ContextMenu, theme, animation };
+export { Menu, theme, animation, contextMenu };

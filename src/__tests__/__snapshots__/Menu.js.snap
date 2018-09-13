@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ContextMenu Should remove null Item from menu 1`] = `
-<ContextMenu
+exports[`Menu Should remove null Item from menu 1`] = `
+<Menu
   animation={null}
   className={null}
   id="foo"
@@ -47,5 +47,5 @@ exports[`ContextMenu Should remove null Item from menu 1`] = `
       </Item>
     </div>
   </div>
-</ContextMenu>
+</Menu>
 `;
