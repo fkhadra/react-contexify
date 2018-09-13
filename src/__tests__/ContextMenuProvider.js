@@ -4,11 +4,14 @@ import { shallow, mount } from 'enzyme';
 
 import ContextMenuProvider from './../components/ContextMenuProvider';
 import eventManager from './../utils/eventManager';
+import { DISPLAY_MENU } from "../utils/actions";
+
+const menuId = 'foo';
 
 describe('ContextMenuProvider', () => {
   it('Should merge className and style', () => {
     const component = shallow(
-      <ContextMenuProvider id="foo" className="bar" style={{ width: '10px' }}>
+      <ContextMenuProvider id={menuId} className="bar" style={{ width: '10px' }}>
         <div>baz</div>
       </ContextMenuProvider>
     );
@@ -18,7 +21,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to render any node', () => {
     const component = shallow(
-      <ContextMenuProvider id="foo" component="span">
+      <ContextMenuProvider id={menuId} component="span">
         baz
       </ContextMenuProvider>
     );
@@ -28,7 +31,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to use a render props', () => {
     const component = shallow(
-      <ContextMenuProvider id="foo" render={() => <span>baz</span>}>
+      <ContextMenuProvider id={menuId} render={() => <span>baz</span>}>
         baz
       </ContextMenuProvider>
     );
@@ -37,11 +40,11 @@ describe('ContextMenuProvider', () => {
 
   it('Should emit the event to display the context menu on right click', done => {
     const component = mount(
-      <ContextMenuProvider id="foo">baz</ContextMenuProvider>
+      <ContextMenuProvider id={menuId}>baz</ContextMenuProvider>
     );
     const handleEvent = jest.fn();
 
-    eventManager.on('display::foo', () => {
+    eventManager.on(DISPLAY_MENU(menuId), () => {
       handleEvent();
       expect(handleEvent).toHaveBeenCalled();
       done();
@@ -52,13 +55,13 @@ describe('ContextMenuProvider', () => {
 
   it('Should allow to use any mouse event to display the context menu', done => {
     const component = mount(
-      <ContextMenuProvider id="foo" event="onClick">
+      <ContextMenuProvider id={menuId} event="onClick">
         baz
       </ContextMenuProvider>
     );
     const handleEvent = jest.fn();
 
-    eventManager.on('display::foo', () => {
+    eventManager.on(DISPLAY_MENU(menuId), () => {
       handleEvent();
       expect(handleEvent).toHaveBeenCalled();
       done();
@@ -69,7 +72,7 @@ describe('ContextMenuProvider', () => {
 
   it('Should be able to collect children ref', () => {
     const component = mount(
-      <ContextMenuProvider id="foo" storeRef>
+      <ContextMenuProvider id={menuId} storeRef>
         <div>foo</div>
         <div>bar</div>
       </ContextMenuProvider>

@@ -7,6 +7,7 @@ import {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import {DISPLAY_MENU} from "../utils/actions";
 import eventManager from './../utils/eventManager';
 
 class ContextMenuProvider extends Component {
@@ -38,7 +39,7 @@ class ContextMenuProvider extends Component {
     e.preventDefault();
     e.stopPropagation();
     eventManager.emit(
-      `display::${this.props.id}`,
+      DISPLAY_MENU(this.props.id),
       e.nativeEvent,
       this.childrenRefs.length === 1 ? this.childrenRefs[0] : this.childrenRefs,
       this.props.data

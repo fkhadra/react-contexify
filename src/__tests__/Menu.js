@@ -6,26 +6,29 @@ import toJson from 'enzyme-to-json';
 import Menu from './../components/Menu';
 import Item from './../components/Item';
 import eventManager from './../utils/eventManager';
+import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 
 beforeEach(() => eventManager.eventList.clear());
+
+const menuId = 'foo';
 
 describe('Menu', () => {
   it('Should bind event when component did mount and unbind all the event related to the component when will unmount', () => {
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
-    expect(eventManager.eventList.get('display::foo').size).toBe(1);
-    expect(eventManager.eventList.get('hideAll').size).toBe(1);
+    expect(eventManager.eventList.get(DISPLAY_MENU(menuId)).size).toBe(1);
+    expect(eventManager.eventList.get(HIDE_ALL).size).toBe(1);
     component.unmount();
-    expect(eventManager.eventList.get('display::foo').size).toBe(0);
-    expect(eventManager.eventList.get('hideAll').size).toBe(0);
+    expect(eventManager.eventList.get(DISPLAY_MENU(menuId)).size).toBe(0);
+    expect(eventManager.eventList.get(HIDE_ALL).size).toBe(0);
   });
 
   it('Should render null if the context menu is not visible', () => {
     const component = shallow(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
@@ -38,7 +41,7 @@ describe('Menu', () => {
 
   it('Should hide Menu when `hide` method is called', () => {
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
@@ -52,7 +55,7 @@ describe('Menu', () => {
 
   it('Should remove null Item from menu', () => {
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
         {null}
       </Menu>
@@ -65,7 +68,7 @@ describe('Menu', () => {
     global.removeEventListener = jest.fn();
 
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
@@ -79,7 +82,7 @@ describe('Menu', () => {
     global.addEventListener = jest.fn();
 
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
@@ -94,7 +97,7 @@ describe('Menu', () => {
     global.innerHeight = 0;
 
     const component = mount(
-      <Menu id="foo">
+      <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
@@ -105,7 +108,7 @@ describe('Menu', () => {
       offsetHeight: 100
     };
     eventManager.emit(
-      'display::foo',
+      DISPLAY_MENU(menuId),
       { stopPropagation() {}, clientX: 1, clientY: 1 },
       [],
       []

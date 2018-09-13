@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
+import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import styles from '../utils/styles';
 import eventManager from '../utils/eventManager';
 
@@ -41,8 +42,8 @@ class Menu extends Component {
   hideTimeout = null;
 
   componentDidMount() {
-    this.unsub.push(eventManager.on(`display::${this.props.id}`, this.show));
-    this.unsub.push(eventManager.on('hideAll', this.hide));
+    this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
+    this.unsub.push(eventManager.on(HIDE_ALL, this.hide));
   }
 
   componentWillUnmount() {
@@ -162,7 +163,7 @@ class Menu extends Component {
 
   show = (e, refsFromProvider, data) => {
     e.stopPropagation();
-    eventManager.emit('hideAll');
+    eventManager.emit(HIDE_ALL);
 
     // store for later use
     this.refsFromProvider = refsFromProvider;

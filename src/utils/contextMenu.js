@@ -1,12 +1,11 @@
 import eventManager from "./eventManager";
-import { ACTION } from "./constant";
+import { HIDE_ALL, DISPLAY_MENU } from "./constant";
 
 export default {
   show({ id, event }){
-    console.log(id, event)
-    eventManager.emit(`display::${id}`, event)
+    eventManager.emit(DISPLAY_MENU(id), event);
   },
   hideAll(){
-
+    eventManager.emit(HIDE_ALL);
   }
 }
