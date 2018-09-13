@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import styles from './styles';
-import eventManager from '../util/eventManager';
+import styles from '../utils/styles';
+import eventManager from '../utils/eventManager';
 
 const KEY = {
   ENTER: 13,

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import styles from './styles';
+import styles from '../utils/styles';
 
 const IconFont = ({ className, style, children }) => (
   <i className={cx(styles.itemIcon, className)} style={style}>

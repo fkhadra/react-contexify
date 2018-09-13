@@ -5,7 +5,7 @@ import toJson from 'enzyme-to-json';
 
 import Menu from './../components/Menu';
 import Item from './../components/Item';
-import eventManager from './../util/eventManager';
+import eventManager from './../utils/eventManager';
 
 beforeEach(() => eventManager.eventList.clear());
 

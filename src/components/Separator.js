@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './styles';
+import styles from '../utils/styles';
 
 const Separator = () => <div className={styles.separator} />;
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import ContextMenuProvider from './../components/ContextMenuProvider';
-import eventManager from './../util/eventManager';
+import eventManager from './../utils/eventManager';
 
 describe('ContextMenuProvider', () => {
   it('Should merge className and style', () => {

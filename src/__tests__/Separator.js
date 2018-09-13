@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import Separator from './../components/Separator';
-import styles from './../components/styles';
+import styles from './../utils/styles';
 
 describe('Separator', () => {
   it('Render without crash', () => {

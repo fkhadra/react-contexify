@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import withProxy from './../util/withProxy';
+import withProxy from './../utils/withProxy';
 
 beforeEach(() => (document.body.innerHTML = ''));
 

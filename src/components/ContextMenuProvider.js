@@ -7,7 +7,7 @@ import {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import eventManager from './../util/eventManager';
+import eventManager from './../utils/eventManager';
 
 class ContextMenuProvider extends Component {
   static propTypes = {

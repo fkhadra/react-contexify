@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import eventManager from './../util/eventManager';
+import eventManager from './../utils/eventManager';
 
 beforeEach(() => eventManager.eventList.clear());
 
