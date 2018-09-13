@@ -73,21 +73,16 @@ class ContextMenu extends Component {
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
   hide = e => {
-    if (
-      typeof e !== 'undefined' &&
-      e.button === 2 &&
-      e.type !== 'contextmenu'
-    ) {
-      return;
-    }
     // Safari trigger a click event when you ctrl + trackpad
+    // Firefox:  trigger a click event when right click occur
     if (
       typeof e !== 'undefined' &&
-      e.ctrlKey === true &&
+      (e.button === 2 || e.ctrlKey === true) &&
       e.type !== 'contextmenu'
     ) {
       return;
     }
+    
     this.unBindWindowEvent();
     this.setState({ visible: false });
   };
