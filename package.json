@@ -13,6 +13,7 @@
     "react-contexify"
   ],
   "scripts": {
+    "start": "npm run sass && webpack-dev-server --config ./webpack.config.dev.js",
     "test": "cross-env NODE_ENV=test jest --verbose",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint src/",
