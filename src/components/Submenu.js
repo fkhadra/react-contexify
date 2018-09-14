@@ -9,11 +9,6 @@ export default class Submenu extends Component {
     children: PropTypes.node.isRequired,
     arrow: PropTypes.node,
     nativeEvent: PropTypes.object,
-    dataFromProvider: PropTypes.any,
-    refsFromProvider: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.arrayOf(PropTypes.object)
-    ]),
     className: PropTypes.string,
     style: PropTypes.object,
     disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
@@ -22,8 +17,6 @@ export default class Submenu extends Component {
   static defaultProps = {
     arrow: '▶',
     nativeEvent: null,
-    dataFromProvider: null,
-    refsFromProvider: null,
     className: null,
     style: {},
     disabled: false
@@ -66,13 +59,11 @@ export default class Submenu extends Component {
   }
 
   getMenuItem() {
-    const { nativeEvent, refsFromProvider, dataFromProvider } = this.props;
+    const { nativeEvent } = this.props;
 
     return React.Children.map(this.props.children, item =>
       React.cloneElement(item, {
         nativeEvent,
-        refsFromProvider,
-        dataFromProvider
       })
     );
   }
@@ -89,16 +80,13 @@ export default class Submenu extends Component {
       style,
       label,
       nativeEvent,
-      refsFromProvider,
-      dataFromProvider
     } = this.props;
+    
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
               event: nativeEvent,
-              dataFromProvider,
-              ref: refsFromProvider
             })
           : disabled
     });

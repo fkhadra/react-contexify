@@ -12,12 +12,7 @@ class Item extends Component {
     nativeEvent: PropTypes.object,
     disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     onClick: PropTypes.func,
-    data: PropTypes.any,
-    dataFromProvider: PropTypes.any,
-    refsFromProvider: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.arrayOf(PropTypes.object)
-    ])
+    data: PropTypes.any
   };
 
   static defaultProps = {
@@ -27,8 +22,6 @@ class Item extends Component {
     onClick: () => {},
     nativeEvent: {},
     data: null,
-    refsFromProvider: [],
-    dataFromProvider: null
   };
 
   disabled = false;
@@ -38,9 +31,7 @@ class Item extends Component {
       ? e.stopPropagation()
       : this.props.onClick({
           event: this.props.nativeEvent,
-          ref: this.props.refsFromProvider,
-          data: this.props.data,
-          dataFromProvider: this.props.dataFromProvider
+          data: this.props.data
         });
   };
 
@@ -51,8 +42,6 @@ class Item extends Component {
       style,
       children,
       data,
-      refsFromProvider,
-      dataFromProvider,
       nativeEvent
     } = this.props;
 
@@ -60,9 +49,7 @@ class Item extends Component {
       typeof disabled === 'function'
         ? disabled({
             event: nativeEvent,
-            ref: refsFromProvider,
             data: data,
-            dataFromProvider: dataFromProvider
           })
         : disabled;
 

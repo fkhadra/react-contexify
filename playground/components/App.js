@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { ContextMenu, Item, Separator, Submenu, contextMenu } from "../../src/index";
+import { Menu, Item, Separator, Submenu, contextMenu } from "../../src/index";
 import "../../dist/ReactContexify.css";
 
 const onClick = ({ event, ref, data, dataFromProvider }) => console.log('Hello');
 const menuId = 1;
 // create your menu first
 const MyAwesomeMenu = () => (
-    <ContextMenu id={menuId}>
+    <Menu id={menuId}>
        <Item onClick={onClick}>Lorem</Item>
        <Item onClick={onClick}>Ipsum</Item>
        <Separator />
@@ -16,7 +16,7 @@ const MyAwesomeMenu = () => (
         <Item onClick={onClick}>Foo</Item>
         <Item onClick={onClick}>Bar</Item>
        </Submenu>
-    </ContextMenu>
+    </Menu>
 );
 
 

@@ -36,10 +36,8 @@ class Menu extends Component {
     nativeEvent: null
   };
 
-  menu = null;
-  refsFromProvider = null;
+  menuRef = null;
   unsub = [];
-  hideTimeout = null;
 
   componentDidMount() {
     this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
@@ -96,12 +94,12 @@ class Menu extends Component {
   };
 
   setRef = ref => {
-    this.menu = ref;
+    this.menuRef = ref;
   };
 
   setMenuPosition() {
     const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
-    const { offsetWidth: menuWidth, offsetHeight: menuHeight } = this.menu;
+    const { offsetWidth: menuWidth, offsetHeight: menuHeight } = this.menuRef;
     let { x, y } = this.state;
 
     if (x + menuWidth > windowWidth) {
@@ -155,20 +153,15 @@ class Menu extends Component {
     return React.Children.map(children, item =>
       React.cloneElement(item, {
         nativeEvent: this.state.nativeEvent,
-        refsFromProvider: this.refsFromProvider,
-        dataFromProvider: this.dataFromProvider
       })
     );
   }
 
-  show = (e, refsFromProvider, data) => {
+  show = (e) => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
     // store for later use
-    this.refsFromProvider = refsFromProvider;
-    this.dataFromProvider = data;
-
     const { x, y } = this.getMousePosition(e);
 
     this.setState(
