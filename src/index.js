@@ -1,6 +1,6 @@
 export { default as Menu } from './components/Menu';
 //import withProxy from './util/withProxy';
-export { default as contextMenu } from './util/contextMenu';
+export { default as contextMenu } from './utils/contextMenu';
 
 export { default as Item } from './components/Item';
 export { default as Separator } from './components/Separator';

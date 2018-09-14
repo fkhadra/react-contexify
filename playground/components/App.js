@@ -9,11 +9,13 @@ const MyAwesomeMenu = () => (
     <Menu id={menuId}>
        <Item onClick={onClick}>Lorem</Item>
        <Item onClick={onClick}>Ipsum</Item>
+       {null}
        <Separator />
        <Item disabled>Dolor</Item>
        <Separator />
        <Submenu label="Foobar">
         <Item onClick={onClick}>Foo</Item>
+        {null}
         <Item onClick={onClick}>Bar</Item>
        </Submenu>
     </Menu>
