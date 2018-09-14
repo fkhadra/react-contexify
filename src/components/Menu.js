@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
+import cloneChildren from './cloneChildren';
+
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import styles from '../utils/styles';
 import eventManager from '../utils/eventManager';
@@ -81,7 +83,7 @@ class Menu extends Component {
     ) {
       return;
     }
-    
+
     this.unBindWindowEvent();
     this.setState({ visible: false });
   };
@@ -145,19 +147,7 @@ class Menu extends Component {
     return pos;
   }
 
-  getMenuItem() {
-    const children = React.Children.toArray(this.props.children).filter(child =>
-      Boolean(child)
-    );
-
-    return React.Children.map(children, item =>
-      React.cloneElement(item, {
-        nativeEvent: this.state.nativeEvent,
-      })
-    );
-  }
-
-  show = (e) => {
+  show = e => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
@@ -176,7 +166,7 @@ class Menu extends Component {
   };
 
   render() {
-    const { theme, animation, style, className } = this.props;
+    const { theme, animation, style, className, children } = this.props;
     const cssClasses = cx(styles.menu, className, {
       [styles.theme + theme]: theme !== null,
       [styles.animationWillEnter + animation]: animation !== null
@@ -197,7 +187,9 @@ class Menu extends Component {
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <div>{this.getMenuItem()}</div>
+          <div>
+            {cloneChildren(children, { nativeEvent: this.state.nativeEvent })}
+          </div>
         </div>
       )
     );

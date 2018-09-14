@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+
+import cloneChildren from './cloneChildren';
 import styles from '../utils/styles';
 
 export default class Submenu extends Component {
@@ -58,16 +60,6 @@ export default class Submenu extends Component {
     });
   }
 
-  getMenuItem() {
-    const { nativeEvent } = this.props;
-
-    return React.Children.map(this.props.children, item =>
-      React.cloneElement(item, {
-        nativeEvent,
-      })
-    );
-  }
-
   handleClick(e) {
     e.stopPropagation();
   }
@@ -80,16 +72,18 @@ export default class Submenu extends Component {
       style,
       label,
       nativeEvent,
+      children
     } = this.props;
-    
+
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-              event: nativeEvent,
-            })
+            event: nativeEvent
+          })
           : disabled
     });
+    
     const submenuStyle = {
       ...style,
       ...this.state.style
@@ -102,7 +96,9 @@ export default class Submenu extends Component {
           <span className={styles.submenuArrow}>{arrow}</span>
         </div>
         <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
-          {this.getMenuItem()}
+          {cloneChildren(children, {
+            nativeEvent
+          })}
         </div>
       </div>
     );
