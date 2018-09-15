@@ -35,7 +35,8 @@ class Menu extends Component {
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: null
+    nativeEvent: null,
+    propsFromTrigger: {}
   };
 
   menuRef = null;
@@ -147,11 +148,10 @@ class Menu extends Component {
     return pos;
   }
 
-  show = e => {
+  show = (e, props) => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
-    // store for later use
     const { x, y } = this.getMousePosition(e);
 
     this.setState(
@@ -159,7 +159,8 @@ class Menu extends Component {
         visible: true,
         x,
         y,
-        nativeEvent: e
+        nativeEvent: e,
+        propsFromTrigger: props
       },
       this.setMenuPosition
     );
@@ -167,19 +168,21 @@ class Menu extends Component {
 
   render() {
     const { theme, animation, style, className, children } = this.props;
+    const { visible, nativeEvent, propsFromTrigger, x, y } = this.state;
+
     const cssClasses = cx(styles.menu, className, {
       [styles.theme + theme]: theme !== null,
       [styles.animationWillEnter + animation]: animation !== null
     });
     const menuStyle = {
       ...style,
-      left: this.state.x,
-      top: this.state.y + 1,
+      left: x,
+      top: y + 1,
       opacity: 1
     };
 
     return (
-      this.state.visible && (
+      visible && (
         <div
           className={cssClasses}
           style={menuStyle}
@@ -188,7 +191,7 @@ class Menu extends Component {
           onMouseLeave={this.onMouseLeave}
         >
           <div>
-            {cloneChildren(children, { nativeEvent: this.state.nativeEvent })}
+            {cloneChildren(children, { nativeEvent, propsFromTrigger })}
           </div>
         </div>
       )

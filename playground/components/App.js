@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Item, Separator, Submenu, contextMenu } from "../../src/index";
 import "../../dist/ReactContexify.css";
 
-const onClick = ({ event, ref, data, dataFromProvider }) => console.log('Hello');
+const onClick = (payload) => console.log(payload);
 const menuId = 1;
 // create your menu first
 const MyAwesomeMenu = () => (
@@ -27,7 +27,11 @@ class App extends Component {
     console.log('click')
     contextMenu.show({
       id: menuId,
-      event: e.nativeEvent
+      event: e.nativeEvent,
+      props: {
+        foo:'bar',
+        baz: 123
+      }
     })
   }
 

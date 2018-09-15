@@ -10,9 +10,9 @@ class Item extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     nativeEvent: PropTypes.object,
+    propsFromTrigger: PropTypes.object,
     disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    onClick: PropTypes.func,
-    data: PropTypes.any
+    onClick: PropTypes.func
   };
 
   static defaultProps = {
@@ -21,7 +21,7 @@ class Item extends Component {
     disabled: false,
     onClick: () => {},
     nativeEvent: {},
-    data: null,
+    propsFromTrigger: {}
   };
 
   disabled = false;
@@ -31,7 +31,7 @@ class Item extends Component {
       ? e.stopPropagation()
       : this.props.onClick({
           event: this.props.nativeEvent,
-          data: this.props.data
+          props: this.props.propsFromTrigger
         });
   };
 
@@ -41,15 +41,15 @@ class Item extends Component {
       disabled,
       style,
       children,
-      data,
-      nativeEvent
+      nativeEvent,
+      propsFromTrigger
     } = this.props;
 
     this.disabled =
       typeof disabled === 'function'
         ? disabled({
             event: nativeEvent,
-            data: data,
+            props: propsFromTrigger,
           })
         : disabled;
 
