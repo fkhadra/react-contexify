@@ -109,9 +109,74 @@ describe('Menu', () => {
     };
     eventManager.emit(
       DISPLAY_MENU(menuId),
-      { stopPropagation() {}, clientX: 1, clientY: 1 },
+      { stopPropagation() { }, clientX: 1, clientY: 1 },
       {}
     );
     expect(component.html()).not.toBeNull();
   });
+
+  it('Should have the same behavior accross different browser', () => {
+    global.innerWidth = 0;
+    global.innerHeight = 0;
+
+    const component = mount(
+      <Menu id={menuId}>
+        <Item>bar</Item>
+      </Menu>
+    );
+
+    expect(component.html()).toBeNull();
+    component.instance().menu = {
+      offsetWidth: 100,
+      offsetHeight: 100
+    };
+
+    eventManager.emit(
+      DISPLAY_MENU(menuId),
+      { stopPropagation() { }, clientX: 1, clientY: 1 },
+      {}
+    );
+
+    expect(component.state('visible')).toBe(true);
+
+    // Test for Firefox
+    eventManager.emit(HIDE_ALL, {
+      button: 2,
+      type: 'click'
+    });
+
+    expect(component.state('visible')).toBe(true);
+
+    // Test for Safari
+    eventManager.emit(HIDE_ALL, {
+      ctrlKey: true,
+      type: 'click'
+    });
+
+    expect(component.state('visible')).toBe(true);
+  });
+
+  it('Should hide menu when `enter` or `escape` is pressed down', () => {
+    const windowEvent = {};
+    window.addEventListener = jest.fn((event, cb) => {
+      windowEvent[event] = cb;
+    });
+
+    const component = mount(
+      <Menu id={menuId}>
+        <Item>bar</Item>
+      </Menu>
+    );
+    component.setState({ visible: true });
+    component.instance().bindWindowEvent();
+
+    windowEvent.keydown({ keyCode: 13 })
+    expect(component.state('visible')).toBe(false);
+
+    component.setState({ visible: true });
+
+    windowEvent.keydown({ keyCode: 27 })
+    expect(component.state('visible')).toBe(false);
+  })
+
 });
