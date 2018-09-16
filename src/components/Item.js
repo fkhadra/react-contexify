@@ -11,50 +11,53 @@ class Item extends Component {
     style: PropTypes.object,
     nativeEvent: PropTypes.object,
     propsFromTrigger: PropTypes.object,
-    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    onClick: PropTypes.func
+    disable: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    onClick: PropTypes.func,
+    data: PropTypes.object
   };
 
   static defaultProps = {
     className: null,
     style: {},
-    disabled: false,
+    disable: false,
     onClick: () => {},
     nativeEvent: {},
-    propsFromTrigger: {}
+    propsFromTrigger: {},
+    data: {}
   };
 
-  disabled = false;
+  isDisabled = false;
 
   handleClick = e => {
-    this.disabled
+    this.isDisabled
       ? e.stopPropagation()
       : this.props.onClick({
           event: this.props.nativeEvent,
-          props: this.props.propsFromTrigger
+          props: { ...this.props.propsFromTrigger, ...this.props.data }
         });
   };
 
   render() {
     const {
       className,
-      disabled,
+      disable,
       style,
       children,
       nativeEvent,
-      propsFromTrigger
+      propsFromTrigger,
+      data
     } = this.props;
 
-    this.disabled =
-      typeof disabled === 'function'
-        ? disabled({
+    this.isDisabled =
+      typeof disable === 'function'
+        ? disable({
             event: nativeEvent,
-            props: propsFromTrigger,
+            props: { ...propsFromTrigger, ...data }
           })
-        : disabled;
+        : disable;
 
     const cssClasses = cx(styles.item, className, {
-      [`${styles.itemDisabled}`]: this.disabled
+      [`${styles.itemDisabled}`]: this.isDisabled
     });
 
     return (
