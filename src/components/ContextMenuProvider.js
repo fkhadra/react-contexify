@@ -7,7 +7,7 @@ import {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import {DISPLAY_MENU} from "../utils/actions";
+import { DISPLAY_MENU } from '../utils/actions';
 import eventManager from './../utils/eventManager';
 
 class ContextMenuProvider extends Component {
@@ -38,15 +38,17 @@ class ContextMenuProvider extends Component {
   handleEvent = e => {
     e.preventDefault();
     e.stopPropagation();
-    eventManager.emit(
-      DISPLAY_MENU(this.props.id),
-      e.nativeEvent,
-      this.childrenRefs.length === 1 ? this.childrenRefs[0] : this.childrenRefs,
-      this.props.data
-    );
+    eventManager.emit(DISPLAY_MENU(this.props.id), e.nativeEvent, {
+      ref:
+        this.childrenRefs.length === 1
+          ? this.childrenRefs[0]
+          : this.childrenRefs,
+      ...this.props.data
+    });
   };
 
   getChildren() {
+    // remove all the props specific to the provider
     const {
       id,
       component,
@@ -69,9 +71,9 @@ class ContextMenuProvider extends Component {
       child =>
         isValidElement(child)
           ? cloneElement(child, {
-              ...rest,
-              ...(storeRef ? { ref: this.setChildRef } : {})
-            })
+            ...rest,
+            ...(storeRef ? { ref: this.setChildRef } : {})
+          })
           : child
     );
   }
