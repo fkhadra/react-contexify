@@ -19,13 +19,11 @@ describe('Menu Item', () => {
     expect(click).toHaveBeenCalled();
   });
 
-  it('Should pass an object when clicked', done => {
+  it('Should pass an event and props when clicked', done => {
     const onClick = obj => {
       expect(Object.keys(obj)).toEqual([
         'event',
-        'ref',
-        'data',
-        'dataFromProvider'
+        'props'
       ]);
       done();
     };
@@ -34,9 +32,7 @@ describe('Menu Item', () => {
       <Item
         onClick={onClick}
         event={{ foo: 'bar' }}
-        refsFromProvider={[{ baz: 'baz' }]}
-        dataFromProvider="dataFromProvider"
-        data="data"
+        data={{ foo: 'bar' }}
       >
         foo
       </Item>
@@ -48,7 +44,7 @@ describe('Menu Item', () => {
   it('Should prevent click when disabled', () => {
     const click = jest.fn();
     const component = shallow(
-      <Item onClick={click} disabled>
+      <Item onClick={click} disable>
         foo
       </Item>
     );
@@ -67,7 +63,7 @@ describe('Menu Item', () => {
       return true;
     };
 
-    shallow(<Item disabled={disabled}>foo</Item>);
+    shallow(<Item disable={disabled}>foo</Item>);
     expect(mock).toHaveBeenCalled();
   });
 });

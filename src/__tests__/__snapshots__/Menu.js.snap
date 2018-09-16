@@ -23,13 +23,12 @@ exports[`Menu Should remove null Item from menu 1`] = `
     <div>
       <Item
         className={null}
-        data={null}
-        dataFromProvider={null}
-        disabled={false}
+        data={Object {}}
+        disable={false}
         key=".$.0"
         nativeEvent={null}
         onClick={[Function]}
-        refsFromProvider={null}
+        propsFromTrigger={Object {}}
         style={Object {}}
       >
         <div

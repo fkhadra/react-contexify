@@ -19,7 +19,7 @@ describe('ContextMenuProvider', () => {
     expect(component.html()).toContain('style');
   });
 
-  it('Should be able to render any node', () => {
+  it('Should be able to render any HtmlElement as component', () => {
     const component = shallow(
       <ContextMenuProvider id={menuId} component="span">
         baz
@@ -38,7 +38,7 @@ describe('ContextMenuProvider', () => {
     expect(component.html()).toContain('<span>baz</span>');
   });
 
-  it('Should emit the event to display the context menu on right click', done => {
+  it('Should trigger the contextMenu on right click by default', done => {
     const component = mount(
       <ContextMenuProvider id={menuId}>baz</ContextMenuProvider>
     );

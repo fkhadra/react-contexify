@@ -4,11 +4,9 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
 <Submenu
   arrow="🦄"
   className={null}
-  dataFromProvider={null}
   disabled={false}
   label="bar"
   nativeEvent={null}
-  refsFromProvider={null}
   style={Object {}}
 >
   <div
@@ -37,10 +35,8 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
       }
     >
       <Children
-        dataFromProvider={null}
-        key=".0"
+        key=".$.0"
         nativeEvent={null}
-        refsFromProvider={null}
       >
         <div>
           foo
@@ -55,11 +51,9 @@ exports[`Submenu Should not go offscreen 1`] = `
 <Submenu
   arrow="▶"
   className={null}
-  dataFromProvider={null}
   disabled={false}
   label="bar"
   nativeEvent={null}
-  refsFromProvider={null}
   style={Object {}}
 >
   <div
@@ -88,10 +82,8 @@ exports[`Submenu Should not go offscreen 1`] = `
       }
     >
       <Children
-        dataFromProvider={null}
-        key=".0"
+        key=".$.0"
         nativeEvent={null}
-        refsFromProvider={null}
       >
         <div>
           foo
@@ -106,11 +98,9 @@ exports[`Submenu Should render without crash 💥 1`] = `
 <Submenu
   arrow="▶"
   className={null}
-  dataFromProvider={null}
   disabled={false}
   label="bar"
   nativeEvent={null}
-  refsFromProvider={null}
   style={Object {}}
 >
   <div
@@ -139,10 +129,8 @@ exports[`Submenu Should render without crash 💥 1`] = `
       }
     >
       <Children
-        dataFromProvider={null}
-        key=".0"
+        key=".$.0"
         nativeEvent={null}
-        refsFromProvider={null}
       >
         <div>
           foo

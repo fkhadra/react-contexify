@@ -110,8 +110,7 @@ describe('Menu', () => {
     eventManager.emit(
       DISPLAY_MENU(menuId),
       { stopPropagation() {}, clientX: 1, clientY: 1 },
-      [],
-      []
+      {}
     );
     expect(component.html()).not.toBeNull();
   });
