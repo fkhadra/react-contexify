@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import cloneChildren from './cloneChildren';
+import cloneItem from './cloneItem';
 import styles from '../utils/styles';
 
 export default class Submenu extends Component {
@@ -96,7 +96,7 @@ export default class Submenu extends Component {
           <span className={styles.submenuArrow}>{arrow}</span>
         </div>
         <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
-          {cloneChildren(children, {
+          {cloneItem(children, {
             nativeEvent
           })}
         </div>

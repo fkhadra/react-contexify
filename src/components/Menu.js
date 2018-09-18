@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import cloneChildren from './cloneChildren';
+import cloneItem from './cloneItem';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import styles from '../utils/styles';
@@ -195,7 +195,7 @@ class Menu extends Component {
           onMouseLeave={this.onMouseLeave}
         >
           <div>
-            {cloneChildren(children, { nativeEvent, propsFromTrigger })}
+            {cloneItem(children, { nativeEvent, propsFromTrigger })}
           </div>
         </div>
       )
