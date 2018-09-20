@@ -21,12 +21,27 @@ const MyAwesomeMenu = () => (
     </Menu>
 );
 
+const MyAwesomeMenu2 = () => (
+  <Menu id={2}>
+     <Item onClick={onClick} data={{ xxx:'var' }} disable={() => true}>Lorem</Item>
+     <Item onClick={onClick}>Ipsum</Item>
+     {null}
+     <Separator />
+     <Item disabled>Dolor</Item>
+     <Separator />
+     <Submenu label="Foobar">
+      <Item onClick={onClick}>Foo</Item>
+      {null}
+      <Item onClick={onClick}>Bar</Item>
+     </Submenu>
+  </Menu>
+);
+
 
 class App extends Component {
   handleClick = e => {
-    console.log('click')
     contextMenu.show({
-      id: menuId,
+      id: e.type === 'click' ? menuId : 2,
       event: e.nativeEvent,
       props: {
         foo:'bar',
@@ -37,11 +52,12 @@ class App extends Component {
 
   render() {
     return (
-      <main>
-        <div style={{ border: '1px solid red', width: '200px', height: '200px' }} onClick={this.handleClick}>
+      <main style={{marginTop: '200px', transform: 'translate(0)'}}>
+        <div style={{ border: '1px solid red', width: '200px', height: '200px' }} onClick={this.handleClick} onContextMenu={this.handleClick}>
           yolo
         </div>
         <MyAwesomeMenu />
+        <MyAwesomeMenu2 />
       </main>
     );
   }
