@@ -10,3 +10,4 @@ jsdomSetup.js
 .sass-cache/
 setupTests.js
 coverage/
+playground/
