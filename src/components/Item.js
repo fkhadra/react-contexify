@@ -67,7 +67,7 @@ class Item extends Component {
         onClick={this.handleClick}
         role="presentation"
       >
-        <div className={styles.itemContent}>{children}</div>
+        <div className={this.props.customize ? '' : styles.itemContent}>{children}</div>
       </div>
     );
   }

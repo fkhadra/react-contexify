@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Titillium+Web);
+/* @import url(https://fonts.googleapis.com/css?family=Titillium+Web);
 body {
     margin: 0;
     padding: 0;
@@ -189,4 +189,26 @@ label{
     .github-corner .octo-arm {
         animation: octocat-wave 560ms ease-in-out
     }
+}
+
+ */
+
+ table.grid{
+    width: 200px;
+}
+
+
+table.grid tr{
+    height: 15px;
+}
+
+table.grid td{
+    border: 1px solid #000000;
+}
+
+table.grid td:hover{
+    background: red;
+}
+*{
+    box-sizing: border-box; 
 }
