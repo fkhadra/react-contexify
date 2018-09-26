@@ -5,18 +5,17 @@ export default ({ event, handleEvent }) => {
   for (let index = 0; index < 10; index++) {
     table.push(
       <tr key={index}>
-        <td {...{ [`${event}`]: handleEvent }} />
-        <td {...{ [`${event}`]: handleEvent }} />
-        <td {...{ [`${event}`]: handleEvent }} />
-        <td {...{ [`${event}`]: handleEvent }} />
-        <td {...{ [`${event}`]: handleEvent }} />
+        {[...Array(5).keys()].map(k => <td key={k} {...{ [`${event}`]: handleEvent }} />)}
       </tr>
     );
   }
 
   return (
+    <div>
+      This is a table
     <table className="grid">
       <tbody>{table}</tbody>
     </table>
+    </div>
   );
 };

@@ -12,7 +12,7 @@ import '../../dist/ReactContexify.css';
 import Table from './Table';
 import Select from './Select';
 
-const selectorPayload = {
+const selector = {
   events: ['onContextMenu', 'onClick', 'onDoubleClick'],
   themes: ['none', ...Object.values(theme)],
   animations: ['none', ...Object.values(animation)]
@@ -25,17 +25,13 @@ const square = {
   height: 100
 };
 
-const Foo = () => <div>FOO</div>;
-
-const onClick = payload => console.log(payload);
 const menuId = 1;
 // create your menu first
-const MyAwesomeMenu = ({ theme, animation }) => (
+const MyAwesomeMenu = ({ theme, animation, onClick }) => (
   <Menu id={menuId} theme={theme} animation={animation}>
-    <Item onClick={onClick}>
-      <Foo />
-    </Item>
+    <Item onClick={onClick}>Foo</Item>
     <Item onClick={onClick}>Ipsum</Item>
+    <Item disabled>Sit</Item>
     {null}
     <Separator />
     <Item disabled>Dolor</Item>
@@ -49,9 +45,10 @@ const MyAwesomeMenu = ({ theme, animation }) => (
 
 class App extends Component {
   state = {
-    event: selectorPayload.events[0],
-    theme: selectorPayload.themes[0],
-    animation: selectorPayload.animations[0]
+    event: selector.events[0],
+    theme: selector.themes[0],
+    animation: selector.animations[0],
+    payload: {}
   };
   canvasRef = null;
 
@@ -59,8 +56,17 @@ class App extends Component {
     const ctx = this.canvasRef.getContext('2d');
     ctx.fillRect(square.x, square.y, square.width, square.height);
     ctx.font = '16px arial';
-    ctx.fillStyle = 'white';
-    ctx.fillText("I'm a canvas", 55, 80);
+    ctx.fillStyle = 'black';
+    ctx.fillText("only the black box", 10, 20);
+    ctx.fillText("trigger the event", 10, 40);
+  }
+
+  handleMenuItem = (payload) => {
+    const { clientX, clientY } = payload.event;
+    this.setState({ payload: {
+      event: { clientX, clientY },
+      props: payload.props
+    }})
   }
 
   handleClick = e => {
@@ -82,7 +88,10 @@ class App extends Component {
 
     contextMenu.show({
       id: menuId,
-      event: e
+      event: e,
+      props: {
+        now: Date.now()
+      }
     });
   };
 
@@ -95,13 +104,14 @@ class App extends Component {
   render() {
     return (
       <main>
+        <div className="settings-container">
         <ul>
           <li>
             <label htmlFor="event">Event:</label>
             <Select
               name="event"
               value={this.state.event}
-              data={selectorPayload.events}
+              data={selector.events}
               onChange={this.handleSelector}
             />
           </li>
@@ -110,7 +120,7 @@ class App extends Component {
             <Select
               name="theme"
               value={this.state.theme}
-              data={selectorPayload.themes}
+              data={selector.themes}
               onChange={this.handleSelector}
             />
           </li>
@@ -119,37 +129,42 @@ class App extends Component {
             <Select
               name="animation"
               value={this.state.animation}
-              data={selectorPayload.animations}
+              data={selector.animations}
               onChange={this.handleSelector}
             />
           </li>
         </ul>
-        <div
-          {...{ [`${this.state.event}`]: this.handleClick }}
-          style={{
-            border: '1px solid red',
-            backgroundColor: 'blue',
-            width: '200px',
-            height: '200px',
-            color: 'white',
-            textAlign: 'center'
-          }}
-        >
-          Just a div
+        <pre>
+          {JSON.stringify(this.state.payload, null, 2)}
+        </pre>
         </div>
-        <hr />
-        <canvas
-          {...{ [`${this.state.event}`]: this.handleClick }}
-          ref={ref => (this.canvasRef = ref)}
-          width="200"
-          height="200"
-          style={{ border: '1px solid red' }}
-        >
-          this is a canvas
-        </canvas>
-        <hr />
-        <Table event={this.state.event} handleEvent={this.handleClick} />
-        <MyAwesomeMenu {...this.state} />
+        <hr/>
+        <div className="boxes-container">
+          <div
+            className="box"
+            {...{ [`${this.state.event}`]: this.handleClick }}
+          >
+           event is triggered everywhere in the box
+          </div>
+          <hr />
+          <div>
+           <div>This is a canvas</div> 
+          <canvas
+            {...{ [`${this.state.event}`]: this.handleClick }}
+            ref={ref => (this.canvasRef = ref)}
+            width="200"
+            height="200"
+            style={{ border: '1px solid red' }}
+          >
+            this is a canvas
+          </canvas>
+
+          </div>
+          <hr />
+          <Table event={this.state.event} handleEvent={this.handleClick} />
+        </div>
+
+        <MyAwesomeMenu {...this.state} onClick={this.handleMenuItem}/>
       </main>
     );
   }
