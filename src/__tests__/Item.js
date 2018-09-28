@@ -44,7 +44,7 @@ describe('Menu Item', () => {
   it('Should prevent click when disabled', () => {
     const click = jest.fn();
     const component = shallow(
-      <Item onClick={click} disable>
+      <Item onClick={click} disabled>
         foo
       </Item>
     );
@@ -63,7 +63,7 @@ describe('Menu Item', () => {
       return true;
     };
 
-    shallow(<Item disable={disabled}>foo</Item>);
+    shallow(<Item disabled={disabled}>foo</Item>);
     expect(mock).toHaveBeenCalled();
   });
 });

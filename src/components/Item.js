@@ -11,7 +11,7 @@ class Item extends Component {
     style: PropTypes.object,
     nativeEvent: PropTypes.object,
     propsFromTrigger: PropTypes.object,
-    disable: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     onClick: PropTypes.func,
     data: PropTypes.object
   };
@@ -19,14 +19,29 @@ class Item extends Component {
   static defaultProps = {
     className: null,
     style: {},
-    disable: false,
+    disabled: false,
     onClick: () => {},
     nativeEvent: {},
     propsFromTrigger: {},
     data: {}
   };
 
-  isDisabled = false;
+  constructor(props){
+    super(props);
+    const {
+      disabled,
+      nativeEvent,
+      propsFromTrigger,
+      data
+    } = this.props;
+    this.isDisabled =
+      typeof disabled === 'function'
+        ? disabled({
+            event: nativeEvent,
+            props: { ...propsFromTrigger, ...data }
+          })
+        : disabled;
+  }
 
   handleClick = e => {
     this.isDisabled
@@ -40,21 +55,9 @@ class Item extends Component {
   render() {
     const {
       className,
-      disable,
       style,
       children,
-      nativeEvent,
-      propsFromTrigger,
-      data
     } = this.props;
-
-    this.isDisabled =
-      typeof disable === 'function'
-        ? disable({
-            event: nativeEvent,
-            props: { ...propsFromTrigger, ...data }
-          })
-        : disable;
 
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]: this.isDisabled
