@@ -3,8 +3,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import Submenu from './../components/Submenu';
-import styles from './../utils/styles';
+import Submenu from '../../components/Submenu';
+import styles from '../../utils/styles';
 
 const Children = () => <div>foo</div>;
 describe('Submenu', () => {

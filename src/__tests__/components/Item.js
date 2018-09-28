@@ -2,7 +2,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Item from './../components/Item';
+import Item from '../../components/Item';
 
 describe('Menu Item', () => {
   it('Should render without crashing', () => {

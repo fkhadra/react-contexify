@@ -2,9 +2,9 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import ContextMenuProvider from './../components/ContextMenuProvider';
-import eventManager from './../utils/eventManager';
-import { DISPLAY_MENU } from "../utils/actions";
+import ContextMenuProvider from '../../components/ContextMenuProvider';
+import eventManager from '../../utils/eventManager';
+import { DISPLAY_MENU } from "../../utils/actions";
 
 const menuId = 'foo';
 

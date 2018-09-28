@@ -3,10 +3,10 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import Menu from './../components/Menu';
-import Item from './../components/Item';
-import eventManager from './../utils/eventManager';
-import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
+import Menu from '../../components/Menu';
+import Item from '../../components/Item';
+import eventManager from '../../utils/eventManager';
+import { HIDE_ALL, DISPLAY_MENU } from '../../utils/actions';
 
 beforeEach(() => eventManager.eventList.clear());
 

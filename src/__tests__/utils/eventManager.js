@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import eventManager from './../utils/eventManager';
+import eventManager from '../../utils/eventManager';
 
 beforeEach(() => eventManager.eventList.clear());
 
@@ -17,7 +17,7 @@ describe('Event Manager', () => {
 
   it('Should be able to dispatch event', done => {
     const mock = jest.fn();
-    eventManager.on('foo', () => {
+    eventManager.on('foo', () => {  
       mock();
       expect(mock).toHaveBeenCalled();
       done();
