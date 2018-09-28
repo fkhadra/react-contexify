@@ -4,6 +4,7 @@ import {
   Item,
   Separator,
   Submenu,
+  IconFont,
   contextMenu,
   theme,
   animation
@@ -29,7 +30,7 @@ const menuId = 1;
 // create your menu first
 const MyAwesomeMenu = ({ theme, animation, onClick }) => (
   <Menu id={menuId} theme={theme} animation={animation}>
-    <Item onClick={onClick}>Foo</Item>
+    <Item onClick={onClick}><span role="role">💩</span>Foo</Item>
     <Item onClick={onClick}>Ipsum</Item>
     <Item disabled>Sit</Item>
     {null}

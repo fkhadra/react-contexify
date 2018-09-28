@@ -6,6 +6,7 @@
   box-sizing: border-box;
   box-shadow: rgba(0, 0, 0, .3) 0 10px 20px, rgb(238, 238, 238) 0 0 0 1px;
   padding: 5px 0;
+  min-width: 180px;
 
   & &__submenu{
     position: absolute;
@@ -49,7 +50,6 @@
       opacity: .5;
     }
     &__data {
-      min-width: 140px;
       padding: 6px 12px;
       display: flex;
       text-align: left;
@@ -60,6 +60,7 @@
     &__icon {
       font-size: 20px;
       margin-right: 5px;
+      font-style: normal;
     }
   }
 }

@@ -10,7 +10,8 @@
           box-sizing: border-box;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 10px 20px, #eeeeee 0 0 0 1px;
           box-shadow: rgba(0, 0, 0, 0.3) 0 10px 20px, #eeeeee 0 0 0 1px;
-  padding: 5px 0; }
+  padding: 5px 0;
+  min-width: 180px; }
   .react-contexify .react-contexify__submenu {
     position: absolute;
     top: 0;
@@ -42,7 +43,6 @@
       cursor: default;
       opacity: .5; }
     .react-contexify__item__data {
-      min-width: 140px;
       padding: 6px 12px;
       display: -webkit-box;
       display: -ms-flexbox;
@@ -53,7 +53,8 @@
       position: relative; }
     .react-contexify__item__icon {
       font-size: 20px;
-      margin-right: 5px; }
+      margin-right: 5px;
+      font-style: normal; }
 
 .react-contexify__theme--dark {
   padding: 6px 0;
