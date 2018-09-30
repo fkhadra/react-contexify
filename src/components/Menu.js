@@ -20,10 +20,23 @@ const KEY = {
 
 class Menu extends Component {
   static propTypes = {
+    /**
+     * Unique id to identify the menu
+     */
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
+    /**
+     * Add optional css classes
+     */
     className: PropTypes.string,
+    /**
+     * Add optional style
+     */
     style: PropTypes.object,
+    /**
+     * Theme is appended to `react-contexify__theme--${given theme}`
+     * Built-in theme are light and dark
+     */
     theme: PropTypes.string,
     animation: PropTypes.string
   };
