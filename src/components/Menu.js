@@ -24,20 +24,31 @@ class Menu extends Component {
      * Unique id to identify the menu
      */
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+
+    /**
+     * Any valid node that can be rendered
+     */
     children: PropTypes.node.isRequired,
     /**
-     * Add optional css classes
+     * Append given css classes
      */
     className: PropTypes.string,
     /**
-     * Add optional style
+     * Append given inline style
      */
     style: PropTypes.object,
     /**
-     * Theme is appended to `react-contexify__theme--${given theme}`
-     * Built-in theme are light and dark
+     * Theme is appended to `react-contexify__theme--${given theme}`.
+     * 
+     * Built-in theme are `light` and `dark`
      */
     theme: PropTypes.string,
+
+    /**
+     * Animation is appended to `.react-contexify__will-enter--${given animation}`
+     * 
+     * Built-in animations are fade, flip, pop, zoom
+     */
     animation: PropTypes.string
   };
 
@@ -215,5 +226,17 @@ class Menu extends Component {
     );
   }
 }
+
+Menu.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  foo: PropTypes.string,
+  bar: PropTypes.object,
+};
+Menu.defaultProps = {
+  foo: 'abc',
+  bar: 'xyz'
+}
+
+
 
 export default Menu;
