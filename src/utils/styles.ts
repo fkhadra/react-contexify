@@ -1,7 +1,7 @@
 /*
 * css classes mapping
 * */
-export default {
+export const styles = {
   menu: 'react-contexify',
   submenu: 'react-contexify react-contexify__submenu',
   submenuArrow: 'react-contexify__submenu-arrow',
