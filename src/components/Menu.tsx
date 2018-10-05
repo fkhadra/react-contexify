@@ -56,7 +56,7 @@ interface MenuState {
   x: number;
   y: number;
   visible: boolean;
-  nativeEvent: MouseEvent | TouchEvent;
+  nativeEvent: TriggerEvent;
   propsFromTrigger: object;
 }
 
@@ -69,8 +69,8 @@ class Menu extends Component<MenuProps, MenuState> {
     propsFromTrigger: {}
   };
 
-  private menuRef!: HTMLDivElement;
-  private unsub: (() => boolean)[] = [];
+  menuRef!: HTMLDivElement;
+  unsub: (() => boolean)[] = [];
 
   componentDidMount() {
     this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
@@ -104,7 +104,7 @@ class Menu extends Component<MenuProps, MenuState> {
 
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
-  hide = (event: Event) => {
+  hide = (event?: Event) => {
     // Safari trigger a click event when you ctrl + trackpad
     // Firefox:  trigger a click event when right click occur
     const e = event as KeyboardEvent & MouseEvent;
@@ -160,11 +160,11 @@ class Menu extends Component<MenuProps, MenuState> {
       x: e.clientX,
       y: e.clientY
     };
-
+    
     if (
       e.type === 'touchend' &&
-      (pos.x === null || pos.y === null) &&
-      (e.changedTouches !== null && e.changedTouches.length > 0)
+      (!pos.x || !pos.y) &&
+      (e.changedTouches && e.changedTouches.length > 0)
     ) {
       pos.x = e.changedTouches[0].clientX;
       pos.y = e.changedTouches[0].clientY;
@@ -204,8 +204,8 @@ class Menu extends Component<MenuProps, MenuState> {
     const { visible, nativeEvent, propsFromTrigger, x, y } = this.state;
 
     const cssClasses = cx(styles.menu, className, {
-      [styles.theme + theme]: theme !== null,
-      [styles.animationWillEnter + animation]: animation !== null
+      [styles.theme + theme]: theme,
+      [styles.animationWillEnter + animation]: animation
     });
     const menuStyle = {
       ...style,
@@ -235,4 +235,4 @@ class Menu extends Component<MenuProps, MenuState> {
   }
 }
 
-export default Menu;
+export {Menu};
