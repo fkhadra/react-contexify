@@ -3,11 +3,9 @@
 exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
 <Submenu
   arrow="🦄"
-  className={null}
   disabled={false}
   label="bar"
-  nativeEvent={null}
-  style={Object {}}
+  nativeEvent={Object {}}
 >
   <div
     className="react-contexify__item"
@@ -29,6 +27,7 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
       style={
         Object {
           "bottom": 0,
+          "left": "100%",
           "right": "100%",
           "top": "initial",
         }
@@ -36,7 +35,7 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
     >
       <Children
         key=".$.0"
-        nativeEvent={null}
+        nativeEvent={Object {}}
       >
         <div>
           foo
@@ -50,11 +49,9 @@ exports[`Submenu Should accept a custom arrow ➡️ 1`] = `
 exports[`Submenu Should not go offscreen 1`] = `
 <Submenu
   arrow="▶"
-  className={null}
   disabled={false}
   label="bar"
-  nativeEvent={null}
-  style={Object {}}
+  nativeEvent={Object {}}
 >
   <div
     className="react-contexify__item"
@@ -76,6 +73,7 @@ exports[`Submenu Should not go offscreen 1`] = `
       style={
         Object {
           "bottom": 0,
+          "left": "100%",
           "right": "100%",
           "top": "initial",
         }
@@ -83,7 +81,7 @@ exports[`Submenu Should not go offscreen 1`] = `
     >
       <Children
         key=".$.0"
-        nativeEvent={null}
+        nativeEvent={Object {}}
       >
         <div>
           foo
@@ -97,11 +95,9 @@ exports[`Submenu Should not go offscreen 1`] = `
 exports[`Submenu Should render without crash 💥 1`] = `
 <Submenu
   arrow="▶"
-  className={null}
   disabled={false}
   label="bar"
-  nativeEvent={null}
-  style={Object {}}
+  nativeEvent={Object {}}
 >
   <div
     className="react-contexify__item"
@@ -130,7 +126,7 @@ exports[`Submenu Should render without crash 💥 1`] = `
     >
       <Children
         key=".$.0"
-        nativeEvent={null}
+        nativeEvent={Object {}}
       >
         <div>
           foo

@@ -160,7 +160,7 @@ class Menu extends Component<MenuProps, MenuState> {
       x: e.clientX,
       y: e.clientY
     };
-    
+
     if (
       e.type === 'touchend' &&
       (!pos.x || !pos.y) &&
@@ -170,11 +170,11 @@ class Menu extends Component<MenuProps, MenuState> {
       pos.y = e.changedTouches[0].clientY;
     }
 
-    if (pos.x === null || pos.x < 0) {
+    if (!pos.x || pos.x < 0) {
       pos.x = 0;
     }
 
-    if (pos.y === null || pos.y < 0) {
+    if (!pos.y || pos.y < 0) {
       pos.y = 0;
     }
 
@@ -235,4 +235,4 @@ class Menu extends Component<MenuProps, MenuState> {
   }
 }
 
-export {Menu};
+export { Menu };

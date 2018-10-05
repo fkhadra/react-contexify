@@ -9,7 +9,8 @@
     "jsx": "react",
     "strict": true,
     "strictNullChecks": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true
   },
   "include": [
     "./src/**/*"

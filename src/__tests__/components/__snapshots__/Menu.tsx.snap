@@ -2,11 +2,7 @@
 
 exports[`Menu Should remove null Item from menu 1`] = `
 <Menu
-  animation={null}
-  className={null}
   id="foo"
-  style={Object {}}
-  theme={null}
 >
   <div
     className="react-contexify"
@@ -22,20 +18,16 @@ exports[`Menu Should remove null Item from menu 1`] = `
   >
     <div>
       <Item
-        className={null}
-        data={Object {}}
         disabled={false}
         key=".$.0"
-        nativeEvent={null}
+        nativeEvent={Object {}}
         onClick={[Function]}
         propsFromTrigger={Object {}}
-        style={Object {}}
       >
         <div
           className="react-contexify__item"
           onClick={[Function]}
           role="presentation"
-          style={Object {}}
         >
           <div
             className="react-contexify__item__data"

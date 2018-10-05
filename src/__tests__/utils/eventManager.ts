@@ -1,5 +1,4 @@
-/* eslint-env jest */
-import eventManager from '../../utils/eventManager';
+import { eventManager } from '../../utils/eventManager';
 
 beforeEach(() => eventManager.eventList.clear());
 
@@ -12,7 +11,7 @@ describe('Event Manager', () => {
   it('Should be able to subscribe for the same event', () => {
     eventManager.on('foo', () => {});
     eventManager.on('foo', () => {});
-    expect(eventManager.eventList.get('foo').size).toBe(2);
+    expect(eventManager.eventList.get('foo')!.size).toBe(2);
   });
 
   it('Should be able to dispatch event', done => {
@@ -39,8 +38,8 @@ describe('Event Manager', () => {
 
   it('Should be able to unsubscribe', () => {
     const unsub = eventManager.on('foo', () => {});
-    expect(eventManager.eventList.get('foo').size).toBe(1);
+    expect(eventManager.eventList.get('foo')!.size).toBe(1);
     unsub();
-    expect(eventManager.eventList.get('foo').size).toBe(0);
+    expect(eventManager.eventList.get('foo')!.size).toBe(0);
   });
 });
