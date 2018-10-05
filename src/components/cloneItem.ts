@@ -1,8 +1,9 @@
 import { Children, cloneElement, ReactNode, ReactElement } from 'react';
+import { TriggerEvent } from '../types';
 
 export function cloneItem(
   children: ReactNode,
-  props: { nativeEvent: MouseEvent | TouchEvent; propsFromTrigger?: any }
+  props: { nativeEvent: TriggerEvent; propsFromTrigger?: any }
 ) {
   return Children.map(
     // remove null item

@@ -10,7 +10,7 @@ interface SubMenuProps {
   children: ReactNode;
   className?: string;
   style?: object;
-  nativeEvent: MouseEvent | TouchEvent;
+  nativeEvent: TriggerEvent;
   arrow: ReactNode;
   disabled: boolean | ((args: EventHandlerCallback) => boolean);
 }
