@@ -1,13 +1,14 @@
 /* global: window */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactNode, SyntheticEvent } from 'react';
+//import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import cloneItem from './cloneItem';
+import { cloneItem } from './cloneItem';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
-import styles from '../utils/styles';
-import eventManager from '../utils/eventManager';
+import { styles } from '../utils/styles';
+import { eventManager } from '../utils/eventManager';
+import { TriggerEvent } from '../types/index';
 
 const KEY = {
   ENTER: 13,
@@ -18,57 +19,58 @@ const KEY = {
   ARROW_RIGHT: 39
 };
 
-class Menu extends Component {
-  static propTypes = {
-    /**
-     * Unique id to identify the menu
-     */
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+interface MenuProps {
+  /**
+   * Unique id to identify the menu
+   */
+  id: string | number;
 
-    /**
-     * Any valid node that can be rendered
-     */
-    children: PropTypes.node.isRequired,
-    /**
-     * Append given css classes
-     */
-    className: PropTypes.string,
-    /**
-     * Append given inline style
-     */
-    style: PropTypes.object,
-    /**
-     * Theme is appended to `react-contexify__theme--${given theme}`.
-     * 
-     * Built-in theme are `light` and `dark`
-     */
-    theme: PropTypes.string,
+  /**
+   * Any valid node that can be rendered
+   */
+  children: ReactNode;
+  /**
+   * Append given css classes
+   */
+  className?: string;
+  /**
+   * Append given inline style
+   */
+  style?: object;
+  /**
+   * Theme is appended to `react-contexify__theme--${given theme}`.
+   *
+   * Built-in theme are `light` and `dark`
+   */
+  theme?: string;
 
-    /**
-     * Animation is appended to `.react-contexify__will-enter--${given animation}`
-     * 
-     * Built-in animations are fade, flip, pop, zoom
-     */
-    animation: PropTypes.string
-  };
+  /**
+   * Animation is appended to `.react-contexify__will-enter--${given animation}`
+   *
+   * Built-in animations are fade, flip, pop, zoom
+   */
+  animation?: string;
+}
 
-  static defaultProps = {
-    className: null,
-    style: {},
-    theme: null,
-    animation: null
-  };
+interface MenuState {
+  x: number;
+  y: number;
+  visible: boolean;
+  nativeEvent: MouseEvent | TouchEvent;
+  propsFromTrigger: object;
+}
 
+class Menu extends Component<MenuProps, MenuState> {
   state = {
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: null,
+    nativeEvent: {} as TriggerEvent,
     propsFromTrigger: {}
   };
 
-  menuRef = null;
-  unsub = [];
+  private menuRef!: HTMLDivElement;
+  private unsub: (() => boolean)[] = [];
 
   componentDidMount() {
     this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
@@ -102,9 +104,11 @@ class Menu extends Component {
 
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
-  hide = e => {
+  hide = (event: Event) => {
     // Safari trigger a click event when you ctrl + trackpad
     // Firefox:  trigger a click event when right click occur
+    const e = event as KeyboardEvent & MouseEvent;
+
     if (
       typeof e !== 'undefined' &&
       (e.button === 2 || e.ctrlKey === true) &&
@@ -117,14 +121,14 @@ class Menu extends Component {
     this.setState({ visible: false });
   };
 
-  handleKeyboard = e => {
+  handleKeyboard = (e: KeyboardEvent) => {
     if (e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
       this.unBindWindowEvent();
       this.setState({ visible: false });
     }
   };
 
-  setRef = ref => {
+  setRef = (ref: HTMLDivElement) => {
     this.menuRef = ref;
   };
 
@@ -150,7 +154,8 @@ class Menu extends Component {
     );
   }
 
-  getMousePosition(e) {
+  getMousePosition(event: Event) {
+    const e = event as MouseEvent & TouchEvent;
     const pos = {
       x: e.clientX,
       y: e.clientY
@@ -176,7 +181,7 @@ class Menu extends Component {
     return pos;
   }
 
-  show = (e, props) => {
+  show = (e: TriggerEvent, props: object) => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
@@ -219,24 +224,15 @@ class Menu extends Component {
           onMouseLeave={this.onMouseLeave}
         >
           <div>
-            {cloneItem(children, { nativeEvent, propsFromTrigger })}
+            {cloneItem(children, {
+              nativeEvent,
+              propsFromTrigger
+            })}
           </div>
         </div>
       )
     );
   }
 }
-
-Menu.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  foo: PropTypes.string,
-  bar: PropTypes.object,
-};
-Menu.defaultProps = {
-  foo: 'abc',
-  bar: 'xyz'
-}
-
-
 
 export default Menu;

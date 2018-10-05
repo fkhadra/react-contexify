@@ -28,7 +28,8 @@
     "sass": "node-sass scss/main.scss dist/ReactContexify.css",
     "postsass": "postcss dist/ReactContexify.css --use autoprefixer -m -o dist/ReactContexify.css",
     "style": "npm run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents",
-    "docz": "docz dev"
+    "docz": "docz dev",
+    "ts": "tsc"
   },
   "repository": {
     "type": "git",

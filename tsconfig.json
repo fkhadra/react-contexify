@@ -8,13 +8,15 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "strict": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*"
   ],
   "exclude": [
     "./node_modules",
-    "dist"
+    "dist",
+    "./src/types/**/*"
   ]
 }

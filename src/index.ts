@@ -4,9 +4,9 @@ export { default as contextMenu } from './utils/contextMenu';
 
 export { default as Item } from './components/Item';
 export { default as Separator } from './components/Separator';
-export {
-  default as ContextMenuProvider
-} from './components/ContextMenuProvider';
+// export {
+//   default as ContextMenuProvider
+// } from './components/ContextMenuProvider';
 export { default as IconFont } from './components/IconFont';
 export { default as Submenu } from './components/Submenu';
 
