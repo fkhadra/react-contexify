@@ -10,7 +10,8 @@
     "strict": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true
   },
   "include": [
     "./src/**/*"
@@ -19,5 +20,5 @@
     "./node_modules",
     "dist",
     "./src/types/**/*"
-  ]
+    ]
 }
