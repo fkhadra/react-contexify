@@ -1,4 +1,4 @@
-type Callback = (...args:any) => void;
+type Callback = (...args: any) => void;
 type EventId = number | string;
 
 interface EventManager {
@@ -26,6 +26,6 @@ const eventManager: EventManager = {
 
     return true;
   }
-}
+};
 
 export { eventManager };

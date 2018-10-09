@@ -1,6 +1,18 @@
 import { eventManager } from './eventManager';
 import { HIDE_ALL, DISPLAY_MENU } from './actions';
-import { ContextMenu } from '../types/index';
+import { TriggerEvent } from '../types';
+import { SyntheticEvent } from 'react';
+
+export interface ContextMenu {
+  show: (
+    params: {
+      id: string | number;
+      event: TriggerEvent & SyntheticEvent;
+      props?: object;
+    }
+  ) => void;
+  hideAll: () => void;
+}
 
 const contextMenu: ContextMenu = {
   show({ id, event, props }) {

@@ -3,7 +3,7 @@ import { TriggerEvent } from '../types';
 
 export function cloneItem(
   children: ReactNode,
-  props: { nativeEvent: TriggerEvent; propsFromTrigger?: any }
+  props: { nativeEvent: TriggerEvent; propsFromTrigger?: object }
 ) {
   return Children.map(
     // remove null item

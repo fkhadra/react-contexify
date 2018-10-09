@@ -2,10 +2,12 @@ import React, { SFC, ReactNode } from 'react';
 import cx from 'classnames';
 
 import { styles } from '../utils/styles';
+import { StyleProps } from '../types';
 
-interface IconFontProps {
-  className?: string;
-  style?: object;
+export interface IconFontProps extends StyleProps {
+  /**
+   * Any valid node that can be rendered
+   */
   children?: ReactNode;
 }
 

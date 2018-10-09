@@ -1,17 +1,26 @@
-import { SyntheticEvent } from 'react';
-
-export type MenuId = string | number;
-
+import { CSSProperties } from 'react';
 export type TriggerEvent = MouseEvent | TouchEvent;
 
-export interface ContextMenu {
-  show: (
-    params: { id: MenuId; event: SyntheticEvent; props: any }
-  ) => void;
-  hideAll: () => void;
+export interface EventHandlerCallback {
+  /**
+   * The event that triggered the context menu
+   */
+  event: TriggerEvent;
+
+  /**
+   * Any props supplied
+   */
+  props?: object;
 }
 
-export interface EventHandlerCallback {
-  event: TriggerEvent;
-  props?: object;
+export interface StyleProps {
+  /**
+   * Append given css classes
+   */
+  className?: string;
+
+  /**
+   * Append given inline style
+   */
+  style?: CSSProperties;
 }

@@ -3,22 +3,45 @@ import React, { Component, ReactNode } from 'react';
 import cx from 'classnames';
 
 import { styles } from '../utils/styles';
-import { EventHandlerCallback, TriggerEvent } from '../types/index';
+import { EventHandlerCallback, TriggerEvent, StyleProps } from '../types';
 
-interface Props {
+export interface ItemProps extends StyleProps {
+  /**
+   * Any valid node that can be rendered
+   */
   children: ReactNode;
-  nativeEvent?: TriggerEvent;
-  className?: string;
-  style?: object;
-  propsFromTrigger?: object;
+
+  /**
+   * Passed to the `Item` onClick callback. Accessible via `props`
+   */
   data?: object;
+
+  /**
+   * Disable or not the `Item`. If a function is used, a boolean must be returned
+   */
   disabled: boolean | ((args: EventHandlerCallback) => boolean);
+
+  /**
+   * Callback when the current `Item` is clicked. The callback give you access to the current event and also the data passed
+   * to the `Item`.
+   * `({ event, props }) => ...`
+   */
   onClick: (args: EventHandlerCallback) => any;
+
+  /**
+   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
+   */
+  nativeEvent?: TriggerEvent;
+
+  /**
+   * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`
+   */
+  propsFromTrigger?: object;
 }
 
-const noop = () => { };
+const noop = () => {};
 
-class Item extends Component<Props> {
+class Item extends Component<ItemProps> {
   static defaultProps = {
     disabled: false,
     onClick: noop
@@ -26,16 +49,16 @@ class Item extends Component<Props> {
 
   private isDisabled: boolean;
 
-  public constructor(props: Props) {
+  public constructor(props: ItemProps) {
     super(props);
     const { disabled, nativeEvent, propsFromTrigger, data } = this.props;
 
     this.isDisabled =
       typeof disabled === 'function'
         ? disabled({
-          event: nativeEvent as TriggerEvent,
-          props: { ...propsFromTrigger, ...data }
-        })
+            event: nativeEvent as TriggerEvent,
+            props: { ...propsFromTrigger, ...data }
+          })
         : disabled;
   }
 
@@ -43,9 +66,9 @@ class Item extends Component<Props> {
     this.isDisabled
       ? e.stopPropagation()
       : this.props.onClick({
-        event: this.props.nativeEvent as TriggerEvent,
-        props: { ...this.props.propsFromTrigger, ...this.props.data }
-      });
+          event: this.props.nativeEvent as TriggerEvent,
+          props: { ...this.props.propsFromTrigger, ...this.props.data }
+        });
   };
 
   public render() {

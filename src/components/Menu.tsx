@@ -8,7 +8,7 @@ import { cloneItem } from './cloneItem';
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
 import { eventManager } from '../utils/eventManager';
-import { TriggerEvent } from '../types/index';
+import { TriggerEvent, StyleProps } from '../types';
 
 const KEY = {
   ENTER: 13,
@@ -19,9 +19,9 @@ const KEY = {
   ARROW_RIGHT: 39
 };
 
-interface MenuProps {
+export interface MenuProps extends StyleProps {
   /**
-   * Unique id to identify the menu
+   * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
   id: string | number;
 
@@ -29,14 +29,6 @@ interface MenuProps {
    * Any valid node that can be rendered
    */
   children: ReactNode;
-  /**
-   * Append given css classes
-   */
-  className?: string;
-  /**
-   * Append given inline style
-   */
-  style?: object;
   /**
    * Theme is appended to `react-contexify__theme--${given theme}`.
    *

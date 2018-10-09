@@ -3,15 +3,32 @@ import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
 import { styles } from '../utils/styles';
-import { EventHandlerCallback, TriggerEvent } from '../types/index';
+import { EventHandlerCallback, TriggerEvent, StyleProps } from '../types';
 
-interface SubMenuProps {
+export interface SubMenuProps extends StyleProps {
+  /**
+   * Any valid node that can be rendered
+   */
   label: ReactNode;
+
+  /**
+   * Any valid node that can be rendered
+   */
   children: ReactNode;
-  className?: string;
-  style?: object;
+
+  /**
+   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
+   */
   nativeEvent: TriggerEvent;
+
+  /**
+   * Render a custom arrow
+   */
   arrow: ReactNode;
+
+  /**
+   * Disable or not the `Submenu`. If a function is used, a boolean must be returned
+   */
   disabled: boolean | ((args: EventHandlerCallback) => boolean);
 }
 
@@ -82,8 +99,8 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-            event: nativeEvent
-          })
+              event: nativeEvent
+            })
           : disabled
     });
 

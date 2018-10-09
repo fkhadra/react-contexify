@@ -3,8 +3,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import {Submenu} from '../../components/Submenu';
-import {styles} from '../../utils/styles';
+import { Submenu } from '../../components/Submenu';
+import { styles } from '../../utils/styles';
 
 const Children = () => <div>foo</div>;
 describe('Submenu', () => {
@@ -20,10 +20,11 @@ describe('Submenu', () => {
   it('Should not go offscreen', () => {
     (window as any).innerWidth = 100;
     (window as any).innerHeight = 100;
-    Element.prototype.getBoundingClientRect = () => ({
-      right: 200,
-      bottom: 200,
-    } as ClientRect);
+    Element.prototype.getBoundingClientRect = () =>
+      ({
+        right: 200,
+        bottom: 200
+      } as ClientRect);
     const component = mount(
       <Submenu label="bar">
         <Children />

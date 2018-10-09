@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { Item } from '../../components/Item';
-import { EventHandlerCallback, TriggerEvent } from "../../types";
+import { EventHandlerCallback, TriggerEvent } from '../../types';
 
 describe('Menu Item', () => {
   it('Should render without crashing', () => {
@@ -22,17 +22,14 @@ describe('Menu Item', () => {
 
   it('Should pass an event and props when clicked', done => {
     const onClick = (obj: EventHandlerCallback) => {
-      expect(Object.keys(obj)).toEqual([
-        'event',
-        'props'
-      ]);
+      expect(Object.keys(obj)).toEqual(['event', 'props']);
       done();
     };
 
     const component = shallow(
       <Item
         onClick={onClick}
-        nativeEvent={ {} as TriggerEvent }
+        nativeEvent={{} as TriggerEvent}
         data={{ foo: 'bar' }}
       >
         foo
@@ -52,7 +49,7 @@ describe('Menu Item', () => {
 
     expect(click).not.toHaveBeenCalled();
     component.simulate('click', {
-      stopPropagation() { }
+      stopPropagation() {}
     });
     expect(click).not.toHaveBeenCalled();
   });

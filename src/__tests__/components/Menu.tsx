@@ -143,7 +143,7 @@ describe('Menu', () => {
     expect(position).toMatchObject({ x: 12, y: 12 });
   });
 
-  it("Should set a default position if not able to determine one", () => {
+  it('Should set a default position if not able to determine one', () => {
     let position = {} as {
       x: number;
       y: number;
@@ -156,16 +156,20 @@ describe('Menu', () => {
     );
     const instance = component.instance() as Menu;
 
-    position = instance.getMousePosition(new MouseEvent('click', {
-      clientX: -1,
-      clientY: -1
-    }));
+    position = instance.getMousePosition(
+      new MouseEvent('click', {
+        clientX: -1,
+        clientY: -1
+      })
+    );
     expect(position).toMatchObject({ x: 0, y: 0 });
 
-    position = instance.getMousePosition(new MouseEvent('click', {
-      clientX: undefined,
-      clientY: undefined
-    }));
+    position = instance.getMousePosition(
+      new MouseEvent('click', {
+        clientX: undefined,
+        clientY: undefined
+      })
+    );
     expect(position).toMatchObject({ x: 0, y: 0 });
   });
 
