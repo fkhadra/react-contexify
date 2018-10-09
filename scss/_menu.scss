@@ -35,7 +35,7 @@
     cursor: pointer;
     position: relative;
 
-    &:not(&--disabled):hover > &__data {
+    &:not(&--disabled):hover > &__content {
       color: white;
       background-color: #4393e6;
     }
@@ -49,7 +49,7 @@
       cursor: default;
       opacity: .5;
     }
-    &__data {
+    &__content {
       padding: 6px 12px;
       display: flex;
       text-align: left;

@@ -7,12 +7,12 @@
   }
   .react-contexify__item {
 
-    &:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
+    &:not(.react-contexify__item--disabled):hover > .react-contexify__item__content {
       color: #4393e6;
       background-color: #E0EEFD;
     }
 
-    &__data {
+    &__content {
       color: #666;
     }
     &__icon {
