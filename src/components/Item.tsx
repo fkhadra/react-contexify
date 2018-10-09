@@ -47,9 +47,9 @@ class Item extends Component<ItemProps> {
     onClick: noop
   };
 
-  private isDisabled: boolean;
+  isDisabled: boolean;
 
-  public constructor(props: ItemProps) {
+  constructor(props: ItemProps) {
     super(props);
     const { disabled, nativeEvent, propsFromTrigger, data } = this.props;
 
@@ -62,7 +62,7 @@ class Item extends Component<ItemProps> {
         : disabled;
   }
 
-  private handleClick = (e: React.MouseEvent) => {
+  handleClick = (e: React.MouseEvent) => {
     this.isDisabled
       ? e.stopPropagation()
       : this.props.onClick({
@@ -71,7 +71,7 @@ class Item extends Component<ItemProps> {
         });
   };
 
-  public render() {
+  render() {
     const { className, style, children } = this.props;
 
     const cssClasses = cx(styles.item, className, {

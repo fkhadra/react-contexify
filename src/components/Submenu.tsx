@@ -52,7 +52,7 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
     bottom: 'initial'
   };
 
-  private menu!: HTMLElement;
+  menu!: HTMLElement;
 
   setRef = (ref: HTMLDivElement) => {
     this.menu = ref;
