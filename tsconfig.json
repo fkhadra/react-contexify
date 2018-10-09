@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib/",
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["es2015", "dom"],
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "strict": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "declaration": true
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./node_modules",
+    "dist",
+    "./src/types/**/*"
+    ]
+}

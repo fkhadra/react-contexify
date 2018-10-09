@@ -1,11 +1,10 @@
-/* eslint-env jest */
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
-import Menu from '../../components/Menu';
-import Item from '../../components/Item';
-import eventManager from '../../utils/eventManager';
+import { Menu } from '../../components/Menu';
+import { Item } from '../../components/Item';
+import { eventManager } from '../../utils/eventManager';
 import { HIDE_ALL, DISPLAY_MENU } from '../../utils/actions';
 
 beforeEach(() => eventManager.eventList.clear());
@@ -19,11 +18,11 @@ describe('Menu', () => {
         <Item>bar</Item>
       </Menu>
     );
-    expect(eventManager.eventList.get(DISPLAY_MENU(menuId)).size).toBe(1);
-    expect(eventManager.eventList.get(HIDE_ALL).size).toBe(1);
+    expect(eventManager.eventList.get(DISPLAY_MENU(menuId))!.size).toBe(1);
+    expect(eventManager.eventList.get(HIDE_ALL)!.size).toBe(1);
     component.unmount();
-    expect(eventManager.eventList.get(DISPLAY_MENU(menuId)).size).toBe(0);
-    expect(eventManager.eventList.get(HIDE_ALL).size).toBe(0);
+    expect(eventManager.eventList.get(DISPLAY_MENU(menuId))!.size).toBe(0);
+    expect(eventManager.eventList.get(HIDE_ALL)!.size).toBe(0);
   });
 
   it('Should render null if the context menu is not visible', () => {
@@ -47,7 +46,8 @@ describe('Menu', () => {
     );
 
     component.setState({ visible: true });
-    component.instance().hide();
+    const instance = component.instance() as Menu;
+    instance.hide();
 
     expect(component.state('visible')).toBe(false);
     expect(component.html()).toBeNull();
@@ -65,7 +65,7 @@ describe('Menu', () => {
   });
 
   it('Should remove the mousedown event on window object when mouse enter the context menu', () => {
-    global.removeEventListener = jest.fn();
+    window.removeEventListener = jest.fn();
 
     const component = mount(
       <Menu id={menuId}>
@@ -75,11 +75,11 @@ describe('Menu', () => {
 
     component.setState({ visible: true });
     component.simulate('mouseenter');
-    expect(global.removeEventListener).toHaveBeenCalled();
+    expect(window.removeEventListener).toHaveBeenCalled();
   });
 
   it('Should add the mousedown event on window object when mouse leave the context menu', () => {
-    global.addEventListener = jest.fn();
+    window.addEventListener = jest.fn();
 
     const component = mount(
       <Menu id={menuId}>
@@ -89,36 +89,91 @@ describe('Menu', () => {
 
     component.setState({ visible: true });
     component.simulate('mouseleave');
-    expect(global.addEventListener).toHaveBeenCalled();
+    expect(window.addEventListener).toHaveBeenCalled();
   });
 
   it('Should display the menu when corresponding event is emitted', () => {
-    global.innerWidth = 0;
-    global.innerHeight = 0;
-
     const component = mount(
       <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
     );
-
     expect(component.html()).toBeNull();
-    component.instance().menu = {
-      offsetWidth: 100,
-      offsetHeight: 100
-    };
+
     eventManager.emit(
       DISPLAY_MENU(menuId),
-      { stopPropagation() { }, clientX: 1, clientY: 1 },
+      { stopPropagation() {}, clientX: 1, clientY: 1 },
       {}
     );
+
     expect(component.html()).not.toBeNull();
   });
 
-  it('Should have the same behavior accross different browser', () => {
-    global.innerWidth = 0;
-    global.innerHeight = 0;
+  it('Should be able to handle MouseEvent and TouchEvent', () => {
+    let position = {} as {
+      x: number;
+      y: number;
+    };
 
+    const component = mount(
+      <Menu id={menuId}>
+        <Item>bar</Item>
+      </Menu>
+    );
+    const instance = component.instance() as Menu;
+
+    const mouseEvent = new MouseEvent('click', {
+      clientX: 10,
+      clientY: 10
+    });
+
+    const touchInit = {
+      clientX: 12,
+      clientY: 12
+    } as Touch;
+
+    const touchEvent = new TouchEvent('touchend', {
+      changedTouches: [touchInit]
+    });
+
+    position = instance.getMousePosition(mouseEvent);
+    expect(position).toMatchObject({ x: 10, y: 10 });
+
+    position = instance.getMousePosition(touchEvent);
+    expect(position).toMatchObject({ x: 12, y: 12 });
+  });
+
+  it('Should set a default position if not able to determine one', () => {
+    let position = {} as {
+      x: number;
+      y: number;
+    };
+
+    const component = mount(
+      <Menu id={menuId}>
+        <Item>bar</Item>
+      </Menu>
+    );
+    const instance = component.instance() as Menu;
+
+    position = instance.getMousePosition(
+      new MouseEvent('click', {
+        clientX: -1,
+        clientY: -1
+      })
+    );
+    expect(position).toMatchObject({ x: 0, y: 0 });
+
+    position = instance.getMousePosition(
+      new MouseEvent('click', {
+        clientX: undefined,
+        clientY: undefined
+      })
+    );
+    expect(position).toMatchObject({ x: 0, y: 0 });
+  });
+
+  it('Should have the same behavior accross different browser', () => {
     const component = mount(
       <Menu id={menuId}>
         <Item>bar</Item>
@@ -126,14 +181,10 @@ describe('Menu', () => {
     );
 
     expect(component.html()).toBeNull();
-    component.instance().menu = {
-      offsetWidth: 100,
-      offsetHeight: 100
-    };
 
     eventManager.emit(
       DISPLAY_MENU(menuId),
-      { stopPropagation() { }, clientX: 1, clientY: 1 },
+      { stopPropagation() {}, clientX: 1, clientY: 1 },
       {}
     );
 
@@ -157,7 +208,10 @@ describe('Menu', () => {
   });
 
   it('Should hide menu when `enter` or `escape` is pressed down', () => {
-    const windowEvent = {};
+    const windowEvent: {
+      [key: string]: (arg: any) => any;
+    } = {};
+    // mock to simulate keyboard events
     window.addEventListener = jest.fn((event, cb) => {
       windowEvent[event] = cb;
     });
@@ -168,15 +222,15 @@ describe('Menu', () => {
       </Menu>
     );
     component.setState({ visible: true });
-    component.instance().bindWindowEvent();
+    const instance = component.instance() as Menu;
+    instance.bindWindowEvent();
 
-    windowEvent.keydown({ keyCode: 13 })
+    windowEvent.keydown({ keyCode: 13 });
     expect(component.state('visible')).toBe(false);
 
     component.setState({ visible: true });
 
-    windowEvent.keydown({ keyCode: 27 })
+    windowEvent.keydown({ keyCode: 27 });
     expect(component.state('visible')).toBe(false);
-  })
-
+  });
 });

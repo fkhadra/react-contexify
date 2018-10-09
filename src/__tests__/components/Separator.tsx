@@ -1,13 +1,14 @@
-/* eslint-env jest */
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Separator from '../../components/Separator';
-import styles from '../../utils/styles';
+import { Separator } from '../../components/Separator';
+import { styles } from '../../utils/styles';
 
 describe('Separator', () => {
   it('Render without crash', () => {
     const component = shallow(<Separator />);
+    console.log(component);
+
     expect(component.contains(<div className={styles.separator} />)).toBe(true);
   });
 });

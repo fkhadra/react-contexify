@@ -1,45 +1,67 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactNode, SyntheticEvent } from 'react';
 import cx from 'classnames';
 
-import cloneItem from './cloneItem';
-import styles from '../utils/styles';
+import { cloneItem } from './cloneItem';
+import { styles } from '../utils/styles';
+import { EventHandlerCallback, TriggerEvent, StyleProps } from '../types';
 
-export default class Submenu extends Component {
-  static propTypes = {
-    label: PropTypes.node.isRequired,
-    children: PropTypes.node.isRequired,
-    arrow: PropTypes.node,
-    nativeEvent: PropTypes.object,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
-  };
+export interface SubMenuProps extends StyleProps {
+  /**
+   * Any valid node that can be rendered
+   */
+  label: ReactNode;
 
+  /**
+   * Any valid node that can be rendered
+   */
+  children: ReactNode;
+
+  /**
+   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
+   */
+  nativeEvent: TriggerEvent;
+
+  /**
+   * Render a custom arrow
+   */
+  arrow: ReactNode;
+
+  /**
+   * Disable or not the `Submenu`. If a function is used, a boolean must be returned
+   */
+  disabled: boolean | ((args: EventHandlerCallback) => boolean);
+}
+
+interface SubMenuState {
+  left?: string | number;
+  right?: string | number;
+  top?: string | number;
+  bottom?: string | number;
+}
+
+class Submenu extends Component<SubMenuProps, SubMenuState> {
   static defaultProps = {
     arrow: '▶',
-    nativeEvent: null,
-    className: null,
-    style: {},
-    disabled: false
+    disabled: false,
+    nativeEvent: {} as TriggerEvent
   };
 
   state = {
-    style: {
-      left: '100%',
-      top: 0,
-      bottom: 'initial'
-    }
+    left: '100%',
+    top: 0,
+    bottom: 'initial'
   };
 
-  setRef = ref => {
+  private menu!: HTMLElement;
+
+  setRef = (ref: HTMLDivElement) => {
     this.menu = ref;
   };
 
   componentDidMount() {
     const { innerWidth, innerHeight } = window;
     const rect = this.menu.getBoundingClientRect();
-    const style = {};
+    const style: SubMenuState = {};
 
     if (rect.right < innerWidth) {
       style.left = '100%';
@@ -55,12 +77,10 @@ export default class Submenu extends Component {
       style.top = 0;
     }
 
-    this.setState({
-      style: style
-    });
+    this.setState(style);
   }
 
-  handleClick(e) {
+  handleClick(e: SyntheticEvent) {
     e.stopPropagation();
   }
 
@@ -79,14 +99,14 @@ export default class Submenu extends Component {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-            event: nativeEvent
-          })
+              event: nativeEvent
+            })
           : disabled
     });
-    
+
     const submenuStyle = {
       ...style,
-      ...this.state.style
+      ...this.state
     };
 
     return (
@@ -104,3 +124,5 @@ export default class Submenu extends Component {
     );
   }
 }
+
+export { Submenu };

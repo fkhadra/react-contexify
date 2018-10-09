@@ -4,7 +4,6 @@ import {
   Item,
   Separator,
   Submenu,
-  IconFont,
   contextMenu,
   theme,
   animation
@@ -12,11 +11,12 @@ import {
 import '../../dist/ReactContexify.css';
 import Table from './Table';
 import Select from './Select';
+import { Theme } from '../..';
 
 const selector = {
   events: ['onContextMenu', 'onClick', 'onDoubleClick'],
-  themes: ['none', ...Object.values(theme)],
-  animations: ['none', ...Object.values(animation)]
+  themes: ['none', ...Object.keys(theme).map((k: keyof Theme) => theme[k])],
+  animations: ['none', ...Object.keys(animation).map(k => animation[k])]
 };
 
 const square = {

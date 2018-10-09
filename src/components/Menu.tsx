@@ -1,13 +1,14 @@
 /* global: window */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactNode, SyntheticEvent } from 'react';
+//import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import cloneItem from './cloneItem';
+import { cloneItem } from './cloneItem';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
-import styles from '../utils/styles';
-import eventManager from '../utils/eventManager';
+import { styles } from '../utils/styles';
+import { eventManager } from '../utils/eventManager';
+import { TriggerEvent, StyleProps } from '../types';
 
 const KEY = {
   ENTER: 13,
@@ -18,33 +19,50 @@ const KEY = {
   ARROW_RIGHT: 39
 };
 
-class Menu extends Component {
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    children: PropTypes.node.isRequired,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    theme: PropTypes.string,
-    animation: PropTypes.string
-  };
+export interface MenuProps extends StyleProps {
+  /**
+   * Unique id to identify the menu. Use to Trigger the corresponding menu
+   */
+  id: string | number;
 
-  static defaultProps = {
-    className: null,
-    style: {},
-    theme: null,
-    animation: null
-  };
+  /**
+   * Any valid node that can be rendered
+   */
+  children: ReactNode;
+  /**
+   * Theme is appended to `react-contexify__theme--${given theme}`.
+   *
+   * Built-in theme are `light` and `dark`
+   */
+  theme?: string;
 
+  /**
+   * Animation is appended to `.react-contexify__will-enter--${given animation}`
+   *
+   * Built-in animations are fade, flip, pop, zoom
+   */
+  animation?: string;
+}
+
+interface MenuState {
+  x: number;
+  y: number;
+  visible: boolean;
+  nativeEvent: TriggerEvent;
+  propsFromTrigger: object;
+}
+
+class Menu extends Component<MenuProps, MenuState> {
   state = {
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: null,
+    nativeEvent: {} as TriggerEvent,
     propsFromTrigger: {}
   };
 
-  menuRef = null;
-  unsub = [];
+  menuRef!: HTMLDivElement;
+  unsub: (() => boolean)[] = [];
 
   componentDidMount() {
     this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
@@ -78,9 +96,11 @@ class Menu extends Component {
 
   onMouseLeave = () => window.addEventListener('mousedown', this.hide);
 
-  hide = e => {
+  hide = (event?: Event) => {
     // Safari trigger a click event when you ctrl + trackpad
     // Firefox:  trigger a click event when right click occur
+    const e = event as KeyboardEvent & MouseEvent;
+
     if (
       typeof e !== 'undefined' &&
       (e.button === 2 || e.ctrlKey === true) &&
@@ -93,14 +113,14 @@ class Menu extends Component {
     this.setState({ visible: false });
   };
 
-  handleKeyboard = e => {
+  handleKeyboard = (e: KeyboardEvent) => {
     if (e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
       this.unBindWindowEvent();
       this.setState({ visible: false });
     }
   };
 
-  setRef = ref => {
+  setRef = (ref: HTMLDivElement) => {
     this.menuRef = ref;
   };
 
@@ -126,7 +146,8 @@ class Menu extends Component {
     );
   }
 
-  getMousePosition(e) {
+  getMousePosition(event: Event) {
+    const e = event as MouseEvent & TouchEvent;
     const pos = {
       x: e.clientX,
       y: e.clientY
@@ -134,25 +155,25 @@ class Menu extends Component {
 
     if (
       e.type === 'touchend' &&
-      (pos.x === null || pos.y === null) &&
-      (e.changedTouches !== null && e.changedTouches.length > 0)
+      (!pos.x || !pos.y) &&
+      (e.changedTouches && e.changedTouches.length > 0)
     ) {
       pos.x = e.changedTouches[0].clientX;
       pos.y = e.changedTouches[0].clientY;
     }
 
-    if (pos.x === null || pos.x < 0) {
+    if (!pos.x || pos.x < 0) {
       pos.x = 0;
     }
 
-    if (pos.y === null || pos.y < 0) {
+    if (!pos.y || pos.y < 0) {
       pos.y = 0;
     }
 
     return pos;
   }
 
-  show = (e, props) => {
+  show = (e: TriggerEvent, props: object) => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
@@ -175,8 +196,8 @@ class Menu extends Component {
     const { visible, nativeEvent, propsFromTrigger, x, y } = this.state;
 
     const cssClasses = cx(styles.menu, className, {
-      [styles.theme + theme]: theme !== null,
-      [styles.animationWillEnter + animation]: animation !== null
+      [styles.theme + theme]: theme,
+      [styles.animationWillEnter + animation]: animation
     });
     const menuStyle = {
       ...style,
@@ -195,7 +216,10 @@ class Menu extends Component {
           onMouseLeave={this.onMouseLeave}
         >
           <div>
-            {cloneItem(children, { nativeEvent, propsFromTrigger })}
+            {cloneItem(children, {
+              nativeEvent,
+              propsFromTrigger
+            })}
           </div>
         </div>
       )
@@ -203,4 +227,4 @@ class Menu extends Component {
   }
 }
 
-export default Menu;
+export { Menu };

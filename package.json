@@ -2,7 +2,7 @@
   "name": "react-contexify",
   "version": "3.0.3",
   "main": "lib/index.js",
-  "typings": "./index.d.ts",
+  "typings": "./lib/index.d.ts",
   "description": "Add contextmenu to your react component with ease",
   "keywords": [
     "react",
@@ -16,12 +16,12 @@
     "start": "npm run sass && webpack-dev-server --config ./webpack.config.dev.js",
     "test": "cross-env NODE_ENV=test jest --verbose",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "lint": "eslint src/",
-    "lint:fix": "eslint --fix src/",
-    "prettier-all": "prettier --single-quote --write 'src/**/*.js'",
-    "prebuild": "npm run lint && npm run test",
+    "prettier:base": "prettier --parser typescript --single-quote",
+    "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\"",
+    "prebuild": "npm run prettier:write && npm run test",
     "build": "npm run build:es && npm run build:umd && npm run style",
-    "build:es": "npm run clean:es && cross-env NODE_ENV=production babel --ignore=src/__tests__ src -d lib",
+    "build:es": "npm run clean:es && cross-env NODE_ENV=production tsc",
     "build:umd": "npm run clean:umd && cross-env NODE_ENV=production webpack",
     "clean:es": "rimraf lib/*",
     "clean:umd": "rimraf dist/*",
@@ -39,20 +39,13 @@
     "url": "https://github.com/fkhadra/react-contexify/issues"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.6",
+    "@types/enzyme": "^3.1.14",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/jest": "^23.3.3",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.8",
     "autoprefixer": "^7.2.5",
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
-    "@babel/plugin-transform-object-assign": "^7.0.0",
-    "@babel/plugin-transform-spread": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "@types/react": "^16.4.12",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^9.0.0",
-    "babel-jest": "^23.4.2",
-    "babel-loader": "^8.0.0",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
@@ -61,12 +54,6 @@
     "enzyme": "^3.5.0",
     "enzyme-adapter-react-16": "^1.3.0",
     "enzyme-to-json": "^3.3.4",
-    "eslint": "^5.4.0",
-    "eslint-config-react-app": "^2.1.0",
-    "eslint-plugin-flowtype": "^2.50.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.11.1",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.5.0",
     "jest-cli": "^23.5.0",
@@ -81,6 +68,9 @@
     "regenerator-runtime": "^0.12.1",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.0",
+    "ts-jest": "^23.10.3",
+    "ts-loader": "^5.2.1",
+    "typescript": "^3.1.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.7"
@@ -92,12 +82,5 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.6.0"
-  },
-  "jest": {
-    "verbose": true,
-    "setupFiles": [
-      "raf/polyfill",
-      "<rootDir>/setupTests.js"
-    ]
   }
 }
