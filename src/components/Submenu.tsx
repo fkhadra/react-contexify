@@ -1,4 +1,5 @@
 import React, { Component, ReactNode, SyntheticEvent } from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
@@ -40,6 +41,15 @@ interface SubMenuState {
 }
 
 class Submenu extends Component<SubMenuProps, SubMenuState> {
+  static propTypes = {
+    label: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired,
+    nativeEvent: PropTypes.object,
+    arrow: PropTypes.node,
+    disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    className: PropTypes.string,
+    style: PropTypes.object
+  };
   static defaultProps = {
     arrow: '▶',
     disabled: false,

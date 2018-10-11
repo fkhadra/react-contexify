@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-//import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { styles } from '../utils/styles';
@@ -42,6 +42,17 @@ export interface ItemProps extends StyleProps {
 const noop = () => {};
 
 class Item extends Component<ItemProps> {
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    data: PropTypes.object,
+    disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    onClick: PropTypes.func,
+    nativeEvent: PropTypes.object,
+    propsFromTrigger: PropTypes.object,
+    className: PropTypes.string,
+    style: PropTypes.object
+  };
+
   static defaultProps = {
     disabled: false,
     onClick: noop

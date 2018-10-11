@@ -1,6 +1,6 @@
 /* global: window */
 import React, { Component, ReactNode, SyntheticEvent } from 'react';
-//import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
@@ -53,6 +53,15 @@ interface MenuState {
 }
 
 class Menu extends Component<MenuProps, MenuState> {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    children: PropTypes.node.isRequired,
+    theme: PropTypes.string,
+    animation: PropTypes.string,
+    className: PropTypes.string,
+    style: PropTypes.object
+  };
+
   state = {
     x: 0,
     y: 0,

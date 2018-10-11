@@ -1,4 +1,5 @@
-import React, { SFC, ReactNode } from 'react';
+import React, { SFC, ReactNode, CSSProperties } from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { styles } from '../utils/styles';
@@ -13,8 +14,15 @@ export interface IconFontProps extends StyleProps {
 
 const IconFont: SFC<IconFontProps> = ({ className, style, children }) => (
   <i className={cx(styles.itemIcon, className)} style={style}>
-    {children}
+    {children || ''}
   </i>
 );
+
+IconFont.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
+  style: PropTypes.object
+} as any;
+// Hack till the typedef is fixed.
 
 export { IconFont };
