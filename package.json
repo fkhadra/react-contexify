@@ -62,6 +62,7 @@
     "prettier": "^1.14.2",
     "raf": "^3.4.0",
     "react": "^16.4.2",
+    "react-contexify": "file:/Users/gugu/works/react-contexify",
     "react-dom": "^16.4.2",
     "react-test-renderer": "^16.4.2",
     "regenerator-runtime": "^0.12.1",

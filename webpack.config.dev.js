@@ -17,7 +17,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader'
+        loader: 'ts-loader',
+        options: {
+          configFile: 'tsconfig.dev.json'
+        }
       },
       {
         test: /\.scss$/,
