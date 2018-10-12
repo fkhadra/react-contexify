@@ -1,22 +1,24 @@
-/* eslint-disable */
 const webpack = require('webpack');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'production',
   devtool: 'source-map',
-  entry: './src/index.js',
+  entry: './src/index.ts',
   output: {
     path: __dirname + "/dist",
     filename: 'ReactContexify.js',
     libraryTarget: 'umd',
     library: 'ReactContexify'
   },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js"]
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'ts-loader'
       }
     ]
   },

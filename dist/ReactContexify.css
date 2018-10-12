@@ -33,7 +33,7 @@
   .react-contexify__item {
     cursor: pointer;
     position: relative; }
-    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
+    .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__content {
       color: white;
       background-color: #4393e6; }
     .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__submenu {
@@ -42,7 +42,7 @@
     .react-contexify__item--disabled {
       cursor: default;
       opacity: .5; }
-    .react-contexify__item__data {
+    .react-contexify__item__content {
       padding: 6px 12px;
       display: -webkit-box;
       display: -ms-flexbox;
@@ -65,7 +65,7 @@
     background-color: rgba(40, 40, 40, 0.98); }
   .react-contexify__theme--dark .react-contexify__separator {
     background-color: #eee; }
-  .react-contexify__theme--dark .react-contexify__item__data {
+  .react-contexify__theme--dark .react-contexify__item__content {
     color: #ffffff; }
   .react-contexify__theme--dark .react-contexify__item__icon {
     margin-right: 8px;
@@ -78,10 +78,10 @@
           box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2), 0 0 0 1px #eee; }
   .react-contexify__theme--light .react-contexify__separator {
     background-color: #eee; }
-  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__data {
+  .react-contexify__theme--light .react-contexify__item:not(.react-contexify__item--disabled):hover > .react-contexify__item__content {
     color: #4393e6;
     background-color: #E0EEFD; }
-  .react-contexify__theme--light .react-contexify__item__data {
+  .react-contexify__theme--light .react-contexify__item__content {
     color: #666; }
   .react-contexify__theme--light .react-contexify__item__icon {
     margin-right: 8px;
