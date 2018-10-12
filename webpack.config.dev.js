@@ -35,7 +35,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'playground/index.html',
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     host: 'localhost',
