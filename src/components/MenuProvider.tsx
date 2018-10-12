@@ -3,14 +3,57 @@ import {
   createElement,
   Children,
   cloneElement,
-  isValidElement
+  isValidElement,
+  ReactNode,
+  SyntheticEvent,
+  ReactElement
 } from 'react';
 import PropTypes from 'prop-types';
 
 import { DISPLAY_MENU } from '../utils/actions';
-import eventManager from './../utils/eventManager';
+import { eventManager } from '../utils/eventManager';
+import { MenuId, StyleProps } from '../types';
 
-class ContextMenuProvider extends Component {
+export interface MenuProviderProps extends StyleProps {
+  /**
+   * Unique id to identify the menu. Use to Trigger the corresponding menu
+   */
+  id: MenuId;
+
+  /**
+   * Any valid node that can be rendered
+   */
+  children: ReactNode;
+
+  /**
+   * Any valid node that can be rendered or a function returning a valid react node
+   */
+  component: ReactNode | ((args?: any) => ReactNode);
+
+  /**
+   * Render props
+   */
+  render?: (args?: any) => ReactNode;
+
+  /**
+   * Any react event
+   * `onClick`, `onContextMenu`, ...
+   */
+  event: string;
+
+  /**
+   * Store children ref
+   * `default: true`
+   */
+  storeRef: boolean;
+
+  /**
+   * Any valid object, data are passed to the menu item callback
+   */
+  data?: object;
+}
+
+class MenuProvider extends Component<MenuProviderProps> {
   static propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     children: PropTypes.node.isRequired,
@@ -20,24 +63,19 @@ class ContextMenuProvider extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     storeRef: PropTypes.bool,
-    data: PropTypes.any
+    data: PropTypes.object
   };
 
   static defaultProps = {
     component: 'div',
-    render: null,
     event: 'onContextMenu',
-    className: null,
-    style: {},
-    storeRef: true,
-    data: null
+    storeRef: true
   };
 
-  childrenRefs = [];
+  childrenRefs = [] as HTMLElement[];
 
-  handleEvent = e => {
+  handleEvent = (e: SyntheticEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     eventManager.emit(DISPLAY_MENU(this.props.id), e.nativeEvent, {
       ref:
         this.childrenRefs.length === 1
@@ -46,6 +84,9 @@ class ContextMenuProvider extends Component {
       ...this.props.data
     });
   };
+
+  setChildRef = (ref: HTMLElement) =>
+    ref === null || this.childrenRefs.push(ref);
 
   getChildren() {
     // remove all the props specific to the provider
@@ -64,16 +105,14 @@ class ContextMenuProvider extends Component {
     // reset refs
     this.childrenRefs = [];
 
-    this.setChildRef = ref => ref === null || this.childrenRefs.push(ref);
-
     return Children.map(
       children,
       child =>
         isValidElement(child)
-          ? cloneElement(child, {
-            ...rest,
-            ...(storeRef ? { ref: this.setChildRef } : {})
-          })
+          ? cloneElement(child as ReactElement<any>, {
+              ...rest,
+              ...(storeRef ? { ref: this.setChildRef } : {})
+            })
           : child
     );
   }
@@ -90,8 +129,8 @@ class ContextMenuProvider extends Component {
       return render({ ...attributes, children: this.getChildren() });
     }
 
-    return createElement(component, attributes, this.getChildren());
+    return createElement(component as any, attributes, this.getChildren());
   }
 }
 
-export default ContextMenuProvider;
+export { MenuProvider };

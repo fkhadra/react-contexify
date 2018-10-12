@@ -9,7 +9,7 @@ import { Portal } from './Portal';
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
 import { eventManager } from '../utils/eventManager';
-import { TriggerEvent, StyleProps } from '../types';
+import { TriggerEvent, StyleProps, MenuId } from '../types';
 
 const KEY = {
   ENTER: 13,
@@ -24,7 +24,7 @@ export interface MenuProps extends StyleProps {
   /**
    * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
-  id: string | number;
+  id: MenuId;
 
   /**
    * Any valid node that can be rendered

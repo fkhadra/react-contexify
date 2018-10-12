@@ -1,6 +1,11 @@
 import { CSSProperties } from 'react';
 export type TriggerEvent = MouseEvent | TouchEvent;
 
+/**
+ * Unique id to identify the menu. Use to Trigger the corresponding menu
+ */
+export type MenuId = string | number;
+
 export interface EventHandlerCallback {
   /**
    * The event that triggered the context menu
