@@ -1,9 +1,10 @@
 /* global: window */
-import React, { Component, ReactNode, SyntheticEvent } from 'react';
+import React, { Component, ReactNode } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
+import { Portal } from './Portal';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
@@ -216,22 +217,24 @@ class Menu extends Component<MenuProps, MenuState> {
     };
 
     return (
-      visible && (
-        <div
-          className={cssClasses}
-          style={menuStyle}
-          ref={this.setRef}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
-        >
-          <div>
-            {cloneItem(children, {
-              nativeEvent,
-              propsFromTrigger
-            })}
+      <Portal>
+        {visible && (
+          <div
+            className={cssClasses}
+            style={menuStyle}
+            ref={this.setRef}
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+          >
+            <div>
+              {cloneItem(children, {
+                nativeEvent,
+                propsFromTrigger
+              })}
+            </div>
           </div>
-        </div>
-      )
+        )}
+      </Portal>
     );
   }
 }

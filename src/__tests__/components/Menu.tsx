@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import { Menu } from '../../components/Menu';
@@ -26,7 +26,7 @@ describe('Menu', () => {
   });
 
   it('Should render null if the context menu is not visible', () => {
-    const component = shallow(
+    const component = mount(
       <Menu id={menuId}>
         <Item>bar</Item>
       </Menu>
