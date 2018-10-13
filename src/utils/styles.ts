@@ -15,12 +15,26 @@ export const styles = {
   animationWillLeave: 'react-contexify__will-leave--'
 };
 
-export const theme = {
+// I could use enum instead for both interfaces
+
+export interface BuiltInTheme {
+  light: string;
+  dark: string;
+}
+
+export interface BuiltInAnimation {
+  fade: string;
+  flip: string;
+  pop: string;
+  zoom: string;
+}
+
+export const theme: BuiltInTheme = {
   light: 'light',
   dark: 'dark'
 };
 
-export const animation = {
+export const animation: BuiltInAnimation = {
   fade: 'fade',
   flip: 'flip',
   pop: 'pop',

@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
 import { styles } from '../utils/styles';
-import { EventHandlerCallback, TriggerEvent, StyleProps } from '../types';
+import { MenuItemEventHandler, TriggerEvent, StyleProps } from '../types';
 
 export interface SubMenuProps extends StyleProps {
   /**
@@ -30,7 +30,7 @@ export interface SubMenuProps extends StyleProps {
   /**
    * Disable or not the `Submenu`. If a function is used, a boolean must be returned
    */
-  disabled: boolean | ((args: EventHandlerCallback) => boolean);
+  disabled: boolean | ((args: MenuItemEventHandler) => boolean);
 }
 
 interface SubMenuState {
