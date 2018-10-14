@@ -25,6 +25,7 @@ $delay: 0.4s;
 }
 
 .react-contexify__will-enter--zoom {
+  transform-origin: top left;
   animation: react-contexify__zoomIn $delay;
 }
 

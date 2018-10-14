@@ -156,8 +156,7 @@ class Menu extends Component<MenuProps, MenuState> {
     );
   }
 
-  getMousePosition(event: Event) {
-    const e = event as MouseEvent & TouchEvent;
+  getMousePosition(e: TriggerEvent) {
     const pos = {
       x: e.clientX,
       y: e.clientY
