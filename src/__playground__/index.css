@@ -31,8 +31,7 @@ main {
   max-width: 1180px;
   margin: auto;
 }
-.settings-container {
-}
+
 .boxes-container{
     display: flex;
 }

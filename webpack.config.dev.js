@@ -1,12 +1,13 @@
-/* eslint-disable */
 const webpack = require('webpack');
+const { join } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const playgroundBasedir = join(__dirname, 'src/__playground__');
 
 module.exports = {
   mode: 'development',
-  entry: './playground/index.tsx',
+  entry: join(playgroundBasedir, 'index.tsx'),
   output: {
-    path: __dirname + "/playground",
+    path: playgroundBasedir,
     filename: 'ReactContexify.js',
   },
   resolve: {
@@ -19,11 +20,13 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'ts-loader',
         options: {
-          configFile: 'tsconfig.dev.json'
+          compilerOptions: {
+            noUnusedLocals: false
+          }
         }
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
           {
             loader: 'style-loader'
@@ -40,7 +43,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'playground/index.html',
+      template: join(playgroundBasedir, 'index.html'),
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
