@@ -6,6 +6,7 @@ import { Menu } from '../../components/Menu';
 import { Item } from '../../components/Item';
 import { eventManager } from '../../utils/eventManager';
 import { HIDE_ALL, DISPLAY_MENU } from '../../utils/actions';
+import { TriggerEvent } from '../../types';
 
 beforeEach(() => eventManager.eventList.clear());
 
@@ -125,7 +126,7 @@ describe('Menu', () => {
     const mouseEvent = new MouseEvent('click', {
       clientX: 10,
       clientY: 10
-    });
+    }) as TriggerEvent;
 
     const touchInit = {
       clientX: 12,
@@ -134,7 +135,7 @@ describe('Menu', () => {
 
     const touchEvent = new TouchEvent('touchend', {
       changedTouches: [touchInit]
-    });
+    }) as TriggerEvent;
 
     position = instance.getMousePosition(mouseEvent);
     expect(position).toMatchObject({ x: 10, y: 10 });
@@ -160,7 +161,7 @@ describe('Menu', () => {
       new MouseEvent('click', {
         clientX: -1,
         clientY: -1
-      })
+      }) as TriggerEvent
     );
     expect(position).toMatchObject({ x: 0, y: 0 });
 
@@ -168,7 +169,7 @@ describe('Menu', () => {
       new MouseEvent('click', {
         clientX: undefined,
         clientY: undefined
-      })
+      }) as TriggerEvent
     );
     expect(position).toMatchObject({ x: 0, y: 0 });
   });

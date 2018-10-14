@@ -1,9 +1,8 @@
-/* eslint-env jest */
 import React from 'react';
 import { shallow } from 'enzyme';
 
 import { Item } from '../../components/Item';
-import { EventHandlerCallback, TriggerEvent } from '../../types';
+import { MenuItemEventHandler, TriggerEvent } from '../../types';
 
 describe('Menu Item', () => {
   it('Should render without crashing', () => {
@@ -21,7 +20,7 @@ describe('Menu Item', () => {
   });
 
   it('Should pass an event and props when clicked', done => {
-    const onClick = (obj: EventHandlerCallback) => {
+    const onClick = (obj: MenuItemEventHandler) => {
       expect(Object.keys(obj)).toEqual(['event', 'props']);
       done();
     };
