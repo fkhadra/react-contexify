@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 
 /**
- * 
+ *
  */
 export type TriggerEvent = MouseEvent & TouchEvent;
 

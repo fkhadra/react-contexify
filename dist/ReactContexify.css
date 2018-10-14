@@ -165,6 +165,8 @@
     opacity: 0; } }
 
 .react-contexify__will-enter--zoom {
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
   -webkit-animation: react-contexify__zoomIn 0.4s;
           animation: react-contexify__zoomIn 0.4s; }
 

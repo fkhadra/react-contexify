@@ -62,7 +62,6 @@
     "prettier": "^1.14.2",
     "raf": "^3.4.0",
     "react": "^16.4.2",
-    "react-contexify": "file:/Users/gugu/works/react-contexify",
     "react-dom": "^16.4.2",
     "react-test-renderer": "^16.4.2",
     "regenerator-runtime": "^0.12.1",
@@ -77,11 +76,11 @@
     "webpack-dev-server": "^3.1.7"
   },
   "peerDependencies": {
-    "react": ">=15.0.0",
-    "react-dom": ">=15.0.0"
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "prop-types": "^15.6.0"
+    "classnames": "^2.2.6",
+    "prop-types": "^15.6.2"
   }
 }

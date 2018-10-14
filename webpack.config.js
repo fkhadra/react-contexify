@@ -25,8 +25,7 @@ module.exports = {
   externals: [
     'react',
     'react-dom',
-    'prop-types',
-    'react-transition-group'
+    'prop-types'
   ],
   plugins: [
     new webpack.DefinePlugin({
