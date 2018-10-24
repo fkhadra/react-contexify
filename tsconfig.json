@@ -21,6 +21,7 @@
     "node_modules",
     "dist",
     "./src/types/**/*",
-    "./src/__tests__/**/*"
+    "./src/__tests__/**/*",
+    "./src/__playground__/**/*"
     ]
 }

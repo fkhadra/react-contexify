@@ -157,20 +157,16 @@ describe('Menu', () => {
     );
     const instance = component.instance() as Menu;
 
-    position = instance.getMousePosition(
-      new MouseEvent('click', {
-        clientX: -1,
-        clientY: -1
-      }) as TriggerEvent
-    );
+    position = instance.getMousePosition(new MouseEvent('click', {
+      clientX: -1,
+      clientY: -1
+    }) as TriggerEvent);
     expect(position).toMatchObject({ x: 0, y: 0 });
 
-    position = instance.getMousePosition(
-      new MouseEvent('click', {
-        clientX: undefined,
-        clientY: undefined
-      }) as TriggerEvent
-    );
+    position = instance.getMousePosition(new MouseEvent('click', {
+      clientX: undefined,
+      clientY: undefined
+    }) as TriggerEvent);
     expect(position).toMatchObject({ x: 0, y: 0 });
   });
 
