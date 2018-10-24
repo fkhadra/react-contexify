@@ -2,6 +2,18 @@
 
 A declarative context menu for React 😲 !
 
+# ⚠️ TRY THE V4 NOW [HERE](https://fkhadra.github.io/react-contexify/).
+If you still view the old version, open the console and clear your service worker
+
+```js
+ns().then(function(registrations) {
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+ for(let registration of registrations) {
+  registration.unregister()
+} })
+```
+
+
 ![readme-ctx](https://user-images.githubusercontent.com/5574267/29753912-43c54008-8b7b-11e7-9627-258fde1ffddd.gif)
 
 - [Demo](#demo)
