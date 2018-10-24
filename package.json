@@ -1,6 +1,6 @@
 {
   "name": "react-contexify",
-  "version": "3.0.3",
+  "version": "4.0.0-rc1",
   "main": "lib/index.js",
   "typings": "./lib/index.d.ts",
   "description": "Add contextmenu to your react component with ease",
