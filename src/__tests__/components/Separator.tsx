@@ -7,8 +7,6 @@ import { styles } from '../../utils/styles';
 describe('Separator', () => {
   it('Render without crash', () => {
     const component = shallow(<Separator />);
-    console.log(component);
-
     expect(component.contains(<div className={styles.separator} />)).toBe(true);
   });
 });
