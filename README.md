@@ -2,18 +2,6 @@
 
 ![Build Status](https://travis-ci.org/fkhadra/react-contexify.svg?branch=master) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]() [![Coverage Status](https://coveralls.io/repos/github/fkhadra/react-contexify/badge.svg?branch=master)](https://coveralls.io/github/fkhadra/react-contexify?branch=master)
 
-# ⚠️ TRY THE V4 NOW [HERE](https://fkhadra.github.io/react-contexify/).
-If you still view the old version, open the console and clear your service worker
-
-```js
-ns().then(function(registrations) {
-navigator.serviceWorker.getRegistrations().then(function(registrations) {
- for(let registration of registrations) {
-  registration.unregister()
-} })
-```
-
-
 ![readme-ctx](https://user-images.githubusercontent.com/5574267/29753912-43c54008-8b7b-11e7-9627-258fde1ffddd.gif)
 
 ## Documentation
