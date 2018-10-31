@@ -1,0 +1,34 @@
+$delay: 0.4s;
+
+@keyframes react-contexify__zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% { opacity: 1; }
+}
+
+@keyframes react-contexify__zoomOut {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.react-contexify__will-enter--zoom {
+  transform-origin: top left;
+  animation: react-contexify__zoomIn $delay;
+}
+
+.react-contexify__will-leave--zoom {
+  animation: react-contexify__zoomOut $delay;
+}

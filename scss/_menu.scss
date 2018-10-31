@@ -1,0 +1,66 @@
+.react-contexify {
+  position: fixed;
+  opacity: 0;
+  user-select: none;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, .3) 0 10px 20px, rgb(238, 238, 238) 0 0 0 1px;
+  padding: 5px 0;
+  min-width: 180px;
+
+  & &__submenu{
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+    transition: opacity 0.275s;
+  }
+
+  &__submenu-arrow {
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    line-height: 22px;
+  }
+
+  &__separator {
+    float: left;
+    width: 100%;
+    height: 1px;
+    cursor: default;
+    margin: 4px 0;
+    background-color: rgba(0, 0, 0, .2);
+  }
+
+  &__item {
+    cursor: pointer;
+    position: relative;
+
+    &:not(&--disabled):hover > &__content {
+      color: white;
+      background-color: #4393e6;
+    }
+
+    &:not(&--disabled):hover > .react-contexify__submenu {
+      pointer-events: initial;
+      opacity: 1;
+    }
+
+    &--disabled {
+      cursor: default;
+      opacity: .5;
+    }
+    &__content {
+      padding: 6px 12px;
+      display: flex;
+      text-align: left;
+      white-space: nowrap;
+      color: #333;
+      position: relative;
+    }
+    &__icon {
+      font-size: 20px;
+      margin-right: 5px;
+      font-style: normal;
+    }
+  }
+}

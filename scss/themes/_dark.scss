@@ -1,0 +1,22 @@
+// Dark Theme ------------------------------------------------------- //
+.react-contexify__theme--dark {
+  padding: 6px 0;
+  background-color: rgba(40, 40, 40, 0.98);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, .4), 0 0 0 1px #222;
+  & .react-contexify__submenu {
+    background-color: rgba(40, 40, 40, 0.98);
+  }
+  .react-contexify__separator {
+    background-color: #eee;
+  }
+  .react-contexify__item {
+    &__content {
+      color: #ffffff;
+    }
+    &__icon {
+      margin-right: 8px;
+      width: 12px;
+      text-align: center;
+    }
+  }
+}

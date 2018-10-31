@@ -1,0 +1,46 @@
+:root {
+  --display-border: 1px solid red;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+canvas {
+  border: var(--display-border);
+}
+
+table.grid {
+  width: 200px;
+  border: var(--display-border);
+}
+
+table.grid tr {
+  height: 15px;
+}
+
+table.grid td {
+  border: 1px solid #000000;
+}
+
+table.grid td:hover {
+  background: red;
+}
+
+main {
+  max-width: 1180px;
+  margin: auto;
+}
+
+.boxes-container{
+    display: flex;
+}
+
+.box {
+  border: var(--display-border);
+  background-color: blue;
+  width: 200px;
+  height: 200px;
+  color: white;
+  text-align: center;
+}

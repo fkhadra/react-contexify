@@ -5,3 +5,6 @@ lib/
 npm-debug.log
 coverage/
 yarn-error.log*
+.DS_STORE
+.docz
+.vscode
