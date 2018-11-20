@@ -182,7 +182,7 @@ class Menu extends Component<MenuProps, MenuState> {
     return pos;
   }
 
-  show = (e: TriggerEvent, props: object) => {
+  show = (e: TriggerEvent, props: {x?: number, y?: number, [key: string]: any}) => {
     e.stopPropagation();
     eventManager.emit(HIDE_ALL);
 
@@ -191,8 +191,8 @@ class Menu extends Component<MenuProps, MenuState> {
     this.setState(
       {
         visible: true,
-        x,
-        y,
+        x: props.x || x,
+        y: props.y || y,
         nativeEvent: e,
         propsFromTrigger: props
       },
