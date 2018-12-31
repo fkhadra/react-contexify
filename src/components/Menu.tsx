@@ -30,6 +30,7 @@ export interface MenuProps extends StyleProps {
    * Any valid node that can be rendered
    */
   children: ReactNode;
+
   /**
    * Theme is appended to `react-contexify__theme--${given theme}`.
    *

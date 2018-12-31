@@ -33,3 +33,15 @@ export interface StyleProps {
    */
   style?: CSSProperties;
 }
+
+export interface InternalProps {
+  /**
+   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
+   */
+  nativeEvent?: TriggerEvent;
+
+  /**
+   * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`
+   */
+  propsFromTrigger?: object;
+}
