@@ -4,9 +4,14 @@ import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
 import { styles } from '../utils/styles';
-import { MenuItemEventHandler, TriggerEvent, StyleProps } from '../types';
+import {
+  MenuItemEventHandler,
+  TriggerEvent,
+  StyleProps,
+  InternalProps
+} from '../types';
 
-export interface SubMenuProps extends StyleProps {
+export interface SubMenuProps extends StyleProps, InternalProps {
   /**
    * Any valid node that can be rendered
    */
@@ -16,11 +21,6 @@ export interface SubMenuProps extends StyleProps {
    * Any valid node that can be rendered
    */
   children: ReactNode;
-
-  /**
-   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
-   */
-  nativeEvent: TriggerEvent;
 
   /**
    * Render a custom arrow
@@ -102,14 +102,16 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
       style,
       label,
       nativeEvent,
-      children
+      children,
+      propsFromTrigger
     } = this.props;
 
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]:
         typeof disabled === 'function'
           ? disabled({
-              event: nativeEvent
+              event: nativeEvent as TriggerEvent,
+              props: { ...propsFromTrigger }
             })
           : disabled
     });
@@ -127,7 +129,8 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
         </div>
         <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
           {cloneItem(children, {
-            nativeEvent
+            propsFromTrigger,
+            nativeEvent: nativeEvent as TriggerEvent
           })}
         </div>
       </div>

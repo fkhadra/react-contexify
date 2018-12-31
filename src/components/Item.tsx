@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import { styles } from '../utils/styles';
-import { MenuItemEventHandler, TriggerEvent, StyleProps } from '../types';
+import {
+  MenuItemEventHandler,
+  TriggerEvent,
+  StyleProps,
+  InternalProps
+} from '../types';
 
-export interface ItemProps extends StyleProps {
+export interface ItemProps extends StyleProps, InternalProps {
   /**
    * Any valid node that can be rendered
    */
@@ -27,16 +32,6 @@ export interface ItemProps extends StyleProps {
    * `({ event, props }) => ...`
    */
   onClick: (args: MenuItemEventHandler) => any;
-
-  /**
-   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
-   */
-  nativeEvent?: TriggerEvent;
-
-  /**
-   * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`
-   */
-  propsFromTrigger?: object;
 }
 
 const noop = () => {};
