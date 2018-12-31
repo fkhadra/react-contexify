@@ -75,8 +75,10 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
 
     if (rect.right < innerWidth) {
       style.left = '100%';
+      style.right = undefined;
     } else {
       style.right = '100%';
+      style.left = undefined;
     }
 
     if (rect.bottom > innerHeight) {
