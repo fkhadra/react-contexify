@@ -78,4 +78,20 @@ describe('MenuProvider', () => {
 
     expect(instance.childrenRefs.length).toBe(2);
   });
+
+  it('Should stop propagation', () => {
+    const handleEvent = jest.fn();
+
+    const component = mount(
+      <div onContextMenu={handleEvent}>
+        <MenuProvider id={menuId}>
+          <span>foo</span>
+        </MenuProvider>
+      </div>
+    );
+
+    component.find('span').simulate('contextmenu');
+
+    expect(handleEvent).toHaveBeenCalledTimes(0);
+  });
 });

@@ -76,6 +76,7 @@ class MenuProvider extends Component<MenuProviderProps> {
 
   handleEvent = (e: SyntheticEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     eventManager.emit(DISPLAY_MENU(this.props.id), e.nativeEvent, {
       ref:
         this.childrenRefs.length === 1
