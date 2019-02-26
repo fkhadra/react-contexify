@@ -106,15 +106,13 @@ class MenuProvider extends Component<MenuProviderProps> {
     // reset refs
     this.childrenRefs = [];
 
-    return Children.map(
-      children,
-      child =>
-        isValidElement(child)
-          ? cloneElement(child as ReactElement<any>, {
-              ...rest,
-              ...(storeRef ? { ref: this.setChildRef } : {})
-            })
-          : child
+    return Children.map(children, child =>
+      isValidElement(child)
+        ? cloneElement(child as ReactElement<any>, {
+            ...rest,
+            ...(storeRef ? { ref: this.setChildRef } : {})
+          })
+        : child
     );
   }
 

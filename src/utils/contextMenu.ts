@@ -4,13 +4,11 @@ import { MenuId } from '../types';
 import React, { SyntheticEvent } from 'react';
 
 export interface ContextMenu {
-  show: (
-    params: {
-      id: MenuId;
-      event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent;
-      props?: object;
-    }
-  ) => void;
+  show: (params: {
+    id: MenuId;
+    event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent;
+    props?: object;
+  }) => void;
   hideAll: () => void;
 }
 

@@ -1,6 +1,6 @@
 /*
-* css classes mapping
-* */
+ * css classes mapping
+ * */
 export const styles = {
   menu: 'react-contexify',
   submenu: 'react-contexify react-contexify__submenu',
