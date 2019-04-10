@@ -247,7 +247,7 @@ describe('Menu', () => {
 
   it('Should emit onHidden event when state changes from visible to hidden', () => {
     const onHidden = jest.fn();
-    
+
     const component = mount(
       <Menu id={menuId} onHidden={onHidden}>
         <Item>bar</Item>
