@@ -230,4 +230,33 @@ describe('Menu', () => {
     windowEvent.keydown({ keyCode: 27 });
     expect(component.state('visible')).toBe(false);
   });
+
+  it('Should emit onShown event when state changes from hidden to visible', () => {
+    const onShown = jest.fn();
+
+    const component = mount(
+      <Menu id={menuId} onShown={onShown}>
+        <Item>bar</Item>
+      </Menu>
+    );
+
+    component.setState({ visible: true });
+
+    expect(onShown).toHaveBeenCalled();
+  });
+
+  it('Should emit onHidden event when state changes from visible to hidden', () => {
+    const onHidden = jest.fn();
+    
+    const component = mount(
+      <Menu id={menuId} onHidden={onHidden}>
+        <Item>bar</Item>
+      </Menu>
+    );
+
+    component.setState({ visible: true });
+    component.setState({ visible: false });
+
+    expect(onHidden).toHaveBeenCalled();
+  });
 });

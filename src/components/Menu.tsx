@@ -44,6 +44,16 @@ export interface MenuProps extends StyleProps {
    * Built-in animations are fade, flip, pop, zoom
    */
   animation?: string;
+
+  /**
+   * Invoked when the menu is shown.
+   */
+  onShown?: () => void;
+
+  /**
+   * Invoked when the menu is hidden.
+   */
+  onHidden?: () => void;
 }
 
 interface MenuState {
@@ -69,7 +79,9 @@ class Menu extends Component<MenuProps, MenuState> {
     y: 0,
     visible: false,
     nativeEvent: {} as TriggerEvent,
-    propsFromTrigger: {}
+    propsFromTrigger: {},
+    onShown: null,
+    onHidden: null
   };
 
   menuRef!: HTMLDivElement;
@@ -83,6 +95,16 @@ class Menu extends Component<MenuProps, MenuState> {
   componentWillUnmount() {
     this.unsub.forEach(cb => cb());
     this.unBindWindowEvent();
+  }
+
+  componentDidUpdate(_: Readonly<MenuProps>, prevState: Readonly<MenuState>) {
+    if (this.state.visible !== prevState.visible) {
+      if (this.state.visible && this.props.onShown) {
+        this.props.onShown();
+      } else if (!this.state.visible && this.props.onHidden) {
+        this.props.onHidden();
+      }
+    }
   }
 
   bindWindowEvent = () => {
