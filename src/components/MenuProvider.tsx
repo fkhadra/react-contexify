@@ -94,6 +94,7 @@ class MenuProvider extends Component<MenuProviderProps> {
     const {
       id,
       component,
+      render,
       event,
       children,
       className,
