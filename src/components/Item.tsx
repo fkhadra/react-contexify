@@ -69,13 +69,13 @@ class Item extends Component<ItemProps> {
     super(props);
     const { disabled, hidden, nativeEvent, propsFromTrigger, data } = this.props;
 
-    const getBooleanPredicateValue = (predicateFunc: BooleanPredicate) => {
-      return typeof predicateFunc === 'function'
-        ? predicateFunc({
+    const getBooleanPredicateValue = (predicate: BooleanPredicate) => {
+      return typeof predicate === 'function'
+        ? predicate({
             event: nativeEvent as TriggerEvent,
             props: { ...propsFromTrigger, ...data }
           })
-        : predicateFunc;
+        : predicate;
     }
 
     this.isDisabled = getBooleanPredicateValue(disabled)
