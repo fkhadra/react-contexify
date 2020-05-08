@@ -10,6 +10,8 @@ import {
   InternalProps
 } from '../types';
 
+type BooleanPredicate = boolean | ((args: MenuItemEventHandler) => boolean)
+
 export interface ItemProps extends StyleProps, InternalProps {
   /**
    * Any valid node that can be rendered
@@ -24,12 +26,12 @@ export interface ItemProps extends StyleProps, InternalProps {
   /**
    * Disable or not the `Item`. If a function is used, a boolean must be returned
    */
-  disabled: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled: BooleanPredicate;
 
   /**
    * Hide or not the `Item`. If a function is used, a boolean must be returned
    */
-  hidden: boolean | ((args: MenuItemEventHandler) => boolean);
+  hidden: BooleanPredicate;
 
   /**
    * Callback when the current `Item` is clicked. The callback give you access to the current event and also the data passed
@@ -67,21 +69,17 @@ class Item extends Component<ItemProps> {
     super(props);
     const { disabled, hidden, nativeEvent, propsFromTrigger, data } = this.props;
 
-    this.isDisabled =
-      typeof disabled === 'function'
-        ? disabled({
+    const getBooleanPredicateValue = (predicateFunc: BooleanPredicate) => {
+      return typeof predicateFunc === 'function'
+        ? predicateFunc({
             event: nativeEvent as TriggerEvent,
             props: { ...propsFromTrigger, ...data }
           })
-        : disabled;
+        : predicateFunc;
+    }
 
-    this.isHidden =
-      typeof hidden === "function"
-        ? hidden({
-            event: nativeEvent as TriggerEvent,
-            props: { ...propsFromTrigger, ...data },
-          })
-        : hidden;
+    this.isDisabled = getBooleanPredicateValue(disabled)
+    this.isHidden = getBooleanPredicateValue(hidden)
   }
 
   handleClick = (e: React.MouseEvent) => {
