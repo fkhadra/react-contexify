@@ -53,7 +53,25 @@ describe('Menu Item', () => {
     expect(click).not.toHaveBeenCalled();
   });
 
-  it('Should allow disabled props to be a function', () => {
+  it('Should not render when hidden', () => {
+    const component = shallow(<Item hidden>foo</Item>);
+    expect(component.html()).toBeNull();
+  });
+
+  it('Should allow hidden prop to be a function', () => {
+    const mock = jest.fn();
+    const hidden = () => {
+      mock();
+      return true;
+    };
+
+    const component = shallow(<Item hidden={hidden}>foo</Item>);
+
+    expect(mock).toHaveBeenCalled();
+    expect(component.html()).toBeNull();
+  });
+
+  it('Should allow disabled prop to be a function', () => {
     const mock = jest.fn();
     const disabled = () => {
       mock();

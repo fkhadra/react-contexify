@@ -27,6 +27,11 @@ export interface ItemProps extends StyleProps, InternalProps {
   disabled: boolean | ((args: MenuItemEventHandler) => boolean);
 
   /**
+   * Hide or not the `Item`. If a function is used, a boolean must be returned
+   */
+  hidden: boolean | ((args: MenuItemEventHandler) => boolean);
+
+  /**
    * Callback when the current `Item` is clicked. The callback give you access to the current event and also the data passed
    * to the `Item`.
    * `({ event, props }) => ...`
@@ -41,6 +46,7 @@ class Item extends Component<ItemProps> {
     children: PropTypes.node.isRequired,
     data: PropTypes.object,
     disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    hidden: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onClick: PropTypes.func,
     nativeEvent: PropTypes.object,
     propsFromTrigger: PropTypes.object,
@@ -50,14 +56,16 @@ class Item extends Component<ItemProps> {
 
   static defaultProps = {
     disabled: false,
+    hidden: false,
     onClick: noop
   };
 
   isDisabled: boolean;
+  isHidden: boolean;
 
   constructor(props: ItemProps) {
     super(props);
-    const { disabled, nativeEvent, propsFromTrigger, data } = this.props;
+    const { disabled, hidden, nativeEvent, propsFromTrigger, data } = this.props;
 
     this.isDisabled =
       typeof disabled === 'function'
@@ -66,6 +74,14 @@ class Item extends Component<ItemProps> {
             props: { ...propsFromTrigger, ...data }
           })
         : disabled;
+
+    this.isHidden =
+      typeof hidden === "function"
+        ? hidden({
+            event: nativeEvent as TriggerEvent,
+            props: { ...propsFromTrigger, ...data },
+          })
+        : hidden;
   }
 
   handleClick = (e: React.MouseEvent) => {
@@ -79,6 +95,10 @@ class Item extends Component<ItemProps> {
 
   render() {
     const { className, style, children } = this.props;
+
+    if (this.isHidden) {
+      return null
+    }
 
     const cssClasses = cx(styles.item, className, {
       [`${styles.itemDisabled}`]: this.isDisabled

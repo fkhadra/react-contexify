@@ -44,6 +44,8 @@ const MyAwesomeMenu: React.SFC<{
       Foo
     </Item>
     <Item onClick={onClick}>Ipsum</Item>
+    <Item hidden>Foo</Item>
+    <Item hidden={() => true}>Bar</Item>
     <Item disabled>Sit</Item>
     {null}
     <Separator />

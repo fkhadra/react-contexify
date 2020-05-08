@@ -43,6 +43,7 @@ exports[`Menu Should remove null Item from menu 1`] = `
         <div>
           <Item
             disabled={false}
+            hidden={false}
             key=".$.0"
             nativeEvent={Object {}}
             onClick={[Function]}
