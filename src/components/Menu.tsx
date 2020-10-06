@@ -7,7 +7,7 @@ import { Portal } from './Portal';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
-import { eventManager } from '../utils/eventManager';
+import { eventManager } from '../core/eventManager';
 import { TriggerEvent, StyleProps, MenuId } from '../types';
 import { usePrevious } from '../hooks';
 
@@ -117,7 +117,6 @@ export const Menu: React.FC<MenuProps> = ({
     propsFromTrigger: {},
   });
   const nodeRef = useRef<HTMLDivElement>(null);
-  const unsub = useRef<(() => boolean)[]>([]).current;
   const didMount = useRef(false);
   const wasVisible = usePrevious(state.visible);
 
@@ -128,12 +127,12 @@ export const Menu: React.FC<MenuProps> = ({
   }, [state.visible, onHidden, onShown]);
 
   useEffect(() => {
-    unsub.push(eventManager.on(DISPLAY_MENU(id), show));
-    unsub.push(eventManager.on(HIDE_ALL, hide));
     didMount.current = true;
 
+    eventManager.on(DISPLAY_MENU(id), show).on(HIDE_ALL, hide);
+
     return () => {
-      unsub.forEach(cb => cb());
+      eventManager.off(DISPLAY_MENU(id), show).off(HIDE_ALL, hide);
     };
   }, []);
 
@@ -179,16 +178,15 @@ export const Menu: React.FC<MenuProps> = ({
     }
   }
 
-  function show(e: TriggerEvent, props: object) {
-    e.stopPropagation();
-    eventManager.emit(HIDE_ALL);
-    const { x, y } = getMousePosition(e);
+  function show({ event, props }: { event: TriggerEvent; props: object }) {
+    event.stopPropagation();
+    const { x, y } = getMousePosition(event);
 
     setState({
       visible: true,
       x,
       y,
-      nativeEvent: e,
+      nativeEvent: event,
       propsFromTrigger: props,
     });
   }

@@ -1,4 +1,4 @@
-import { eventManager } from './eventManager';
+import { eventManager } from '../core/eventManager';
 import { HIDE_ALL, DISPLAY_MENU } from './actions';
 import { MenuId } from '../types';
 import React, { SyntheticEvent } from 'react';
@@ -13,12 +13,11 @@ export interface ContextMenu {
 }
 
 const contextMenu: ContextMenu = {
-  show({ id, event, props }) {
-    eventManager.emit(
-      DISPLAY_MENU(id),
-      (event as SyntheticEvent).nativeEvent || event,
-      props
-    );
+  show({ id, event, props = {} }) {
+    eventManager.emit(HIDE_ALL).emit(DISPLAY_MENU(id), {
+      event: (event as SyntheticEvent).nativeEvent || event,
+      props,
+    });
   },
   hideAll() {
     eventManager.emit(HIDE_ALL);
