@@ -25,7 +25,7 @@ const eventManager: EventManager = {
     this.eventList.get(event)!.forEach(cb => cb.call(this, ...args));
 
     return true;
-  },
+  }
 };
 
 export { eventManager };

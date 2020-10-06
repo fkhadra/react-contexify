@@ -1,5 +1,7 @@
-import React, { SFC } from 'react';
+import React from 'react';
 
 import { styles } from '../utils/styles';
 
-export const Separator: SFC = () => <div className={styles.separator} />;
+export function Separator() {
+  return <div className={styles.separator} />;
+}

@@ -1,5 +1,4 @@
-import React, { Component, ReactNode, SyntheticEvent } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
@@ -8,7 +7,7 @@ import {
   MenuItemEventHandler,
   TriggerEvent,
   StyleProps,
-  InternalProps
+  InternalProps,
 } from '../types';
 
 export interface SubMenuProps extends StyleProps, InternalProps {
@@ -25,12 +24,12 @@ export interface SubMenuProps extends StyleProps, InternalProps {
   /**
    * Render a custom arrow
    */
-  arrow: ReactNode;
+  arrow?: ReactNode;
 
   /**
    * Disable or not the `Submenu`. If a function is used, a boolean must be returned
    */
-  disabled: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled?: boolean | ((args: MenuItemEventHandler) => boolean);
 }
 
 interface SubMenuState {
@@ -40,37 +39,26 @@ interface SubMenuState {
   bottom?: string | number;
 }
 
-class Submenu extends Component<SubMenuProps, SubMenuState> {
-  static propTypes = {
-    label: PropTypes.node.isRequired,
-    children: PropTypes.node.isRequired,
-    nativeEvent: PropTypes.object,
-    arrow: PropTypes.node,
-    disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-    className: PropTypes.string,
-    style: PropTypes.object
-  };
-  static defaultProps = {
-    arrow: '▶',
-    disabled: false,
-    nativeEvent: {} as TriggerEvent
-  };
-
-  state = {
+export const Submenu: React.FC<SubMenuProps> = ({
+  arrow = '▶',
+  children,
+  disabled = false,
+  label,
+  className,
+  nativeEvent,
+  propsFromTrigger,
+  style,
+}) => {
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<SubMenuState>({
     left: '100%',
     top: 0,
-    bottom: 'initial'
-  };
+    bottom: 'initial',
+  });
 
-  menu!: HTMLElement;
-
-  setRef = (ref: HTMLDivElement) => {
-    this.menu = ref;
-  };
-
-  componentDidMount() {
+  useEffect(() => {
     const { innerWidth, innerHeight } = window;
-    const rect = this.menu.getBoundingClientRect();
+    const rect = nodeRef.current!.getBoundingClientRect();
     const style: SubMenuState = {};
 
     if (rect.right < innerWidth) {
@@ -89,55 +77,41 @@ class Submenu extends Component<SubMenuProps, SubMenuState> {
       style.top = 0;
     }
 
-    this.setState(style);
-  }
+    setPosition(style);
+  }, []);
 
-  handleClick(e: SyntheticEvent) {
+  function handleClick(e: React.SyntheticEvent) {
     e.stopPropagation();
+    console.log('HERE');
   }
 
-  render() {
-    const {
-      arrow,
-      disabled,
-      className,
-      style,
-      label,
-      nativeEvent,
-      children,
-      propsFromTrigger
-    } = this.props;
+  const cssClasses = cx(styles.item, className, {
+    [`${styles.itemDisabled}`]:
+      typeof disabled === 'function'
+        ? disabled({
+            event: nativeEvent as TriggerEvent,
+            props: { ...propsFromTrigger },
+          })
+        : disabled,
+  });
 
-    const cssClasses = cx(styles.item, className, {
-      [`${styles.itemDisabled}`]:
-        typeof disabled === 'function'
-          ? disabled({
-              event: nativeEvent as TriggerEvent,
-              props: { ...propsFromTrigger }
-            })
-          : disabled
-    });
+  const submenuStyle = {
+    ...style,
+    ...position,
+  };
 
-    const submenuStyle = {
-      ...style,
-      ...this.state
-    };
-
-    return (
-      <div className={cssClasses} role="presentation">
-        <div className={styles.itemContent} onClick={this.handleClick}>
-          {label}
-          <span className={styles.submenuArrow}>{arrow}</span>
-        </div>
-        <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
-          {cloneItem(children, {
-            propsFromTrigger,
-            nativeEvent: nativeEvent as TriggerEvent
-          })}
-        </div>
+  return (
+    <div className={cssClasses} role="presentation">
+      <div className={styles.itemContent} onClick={handleClick}>
+        {label}
+        <span className={styles.submenuArrow}>{arrow}</span>
       </div>
-    );
-  }
-}
-
-export { Submenu };
+      <div className={styles.submenu} ref={nodeRef} style={submenuStyle}>
+        {cloneItem(children, {
+          propsFromTrigger,
+          nativeEvent: nativeEvent as TriggerEvent,
+        })}
+      </div>
+    </div>
+  );
+};

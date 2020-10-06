@@ -22,7 +22,7 @@ const contextMenu: ContextMenu = {
   },
   hideAll() {
     eventManager.emit(HIDE_ALL);
-  },
+  }
 };
 
 export { contextMenu };

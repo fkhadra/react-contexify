@@ -6,7 +6,7 @@ import {
   isValidElement,
   ReactNode,
   SyntheticEvent,
-  ReactElement,
+  ReactElement
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -63,13 +63,13 @@ class MenuProvider extends Component<MenuProviderProps> {
     className: PropTypes.string,
     style: PropTypes.object,
     storeRef: PropTypes.bool,
-    data: PropTypes.object,
+    data: PropTypes.object
   };
 
   static defaultProps = {
     component: 'div',
     event: 'onContextMenu',
-    storeRef: true,
+    storeRef: true
   };
 
   childrenRefs = [] as HTMLElement[];
@@ -82,7 +82,7 @@ class MenuProvider extends Component<MenuProviderProps> {
         this.childrenRefs.length === 1
           ? this.childrenRefs[0]
           : this.childrenRefs,
-      ...this.props.data,
+      ...this.props.data
     });
   };
 
@@ -110,7 +110,7 @@ class MenuProvider extends Component<MenuProviderProps> {
       isValidElement(child)
         ? cloneElement(child as ReactElement<any>, {
             ...rest,
-            ...(storeRef ? { ref: this.setChildRef } : {}),
+            ...(storeRef ? { ref: this.setChildRef } : {})
           })
         : child
     );
@@ -121,7 +121,7 @@ class MenuProvider extends Component<MenuProviderProps> {
     const attributes = {
       [event]: this.handleEvent,
       className,
-      style,
+      style
     };
 
     if (typeof render === 'function') {

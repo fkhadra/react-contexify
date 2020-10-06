@@ -1,28 +1,19 @@
-import { PureComponent, ReactNode } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-class Portal extends PureComponent<{ children: ReactNode }> {
-  state = {
-    canRender: false
-  };
-  container = {} as HTMLDivElement;
+export const Portal: React.FC = ({ children }) => {
+  const [canRender, setCanRender] = useState(false);
+  const node = useRef<HTMLDivElement>();
 
-  componentDidMount() {
-    this.container = document.createElement('div');
-    document.body.appendChild(this.container);
-    this.setState({
-      canRender: true
-    });
-  }
+  useEffect(() => {
+    node.current = document.createElement('div');
+    document.body.appendChild(node.current);
+    setCanRender(true);
 
-  componentWillUnmount() {
-    document.body.removeChild(this.container);
-  }
-  render() {
-    return (
-      this.state.canRender && createPortal(this.props.children, this.container)
-    );
-  }
-}
+    return () => {
+      document.body.removeChild(node.current!);
+    };
+  }, []);
 
-export { Portal };
+  return canRender ? createPortal(children, node.current!) : null;
+};
