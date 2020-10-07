@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useReducer, useRef } from 'react';
 import cx from 'classnames';
 
 import { cloneItem } from './cloneItem';
-import { Portal } from './Portal';
+import { Portal, PortalProps } from './Portal';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
@@ -11,16 +11,7 @@ import { eventManager } from '../core/eventManager';
 import { TriggerEvent, StyleProps, MenuId } from '../types';
 import { usePrevious } from '../hooks';
 
-// const KEY = {
-//   ENTER: 13,
-//   ESC: 27,
-//   ARROW_UP: 38,
-//   ARROW_DOWN: 40,
-//   ARROW_LEFT: 37,
-//   ARROW_RIGHT: 39,
-// };
-
-export interface MenuProps extends StyleProps {
+export interface MenuProps extends StyleProps, PortalProps {
   /**
    * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
@@ -106,6 +97,7 @@ export const Menu: React.FC<MenuProps> = ({
   style,
   className,
   children,
+  mountNode,
   onHidden = noop,
   onShown = noop,
 }) => {
@@ -228,7 +220,7 @@ export const Menu: React.FC<MenuProps> = ({
   };
 
   return (
-    <Portal>
+    <Portal mountNode={mountNode}>
       {visible && (
         <div
           className={cssClasses}
