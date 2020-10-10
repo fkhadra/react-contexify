@@ -1,15 +1,26 @@
 /* global: window */
-import React, { ReactNode, useEffect, useReducer, useRef } from 'react';
+import React, {
+  ReactNode,
+  useEffect,
+  useReducer,
+  useRef,
+  Children,
+  cloneElement,
+  ReactElement,
+  useState,
+} from 'react';
 import cx from 'classnames';
 
-import { cloneItem } from './cloneItem';
+// import { cloneItem } from './cloneItem';
 import { Portal, PortalProps } from './Portal';
+import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
 import { styles } from '../utils/styles';
 import { eventManager } from '../core/eventManager';
 import { TriggerEvent, StyleProps, MenuId } from '../types';
-import { usePrevious } from '../hooks';
+import { usePrevious, useRefTracker } from '../hooks';
+import { createMenuHandler } from './menuHandler';
 
 export interface MenuProps extends StyleProps, PortalProps {
   /**
@@ -111,12 +122,22 @@ export const Menu: React.FC<MenuProps> = ({
   const nodeRef = useRef<HTMLDivElement>(null);
   const didMount = useRef(false);
   const wasVisible = usePrevious(state.visible);
+  const refTracker = useRefTracker();
+  const [menuHandler] = useState(() => createMenuHandler());
 
   useEffect(() => {
     if (didMount.current && state.visible !== wasVisible) {
       state.visible ? onShown() : onHidden();
     }
   }, [state.visible, onHidden, onShown]);
+
+  useEffect(() => {
+    if (!state.visible) {
+      refTracker.clear();
+    } else {
+      menuHandler.init(Array.from(refTracker.values()));
+    }
+  }, [state.visible]);
 
   useEffect(() => {
     didMount.current = true;
@@ -155,25 +176,33 @@ export const Menu: React.FC<MenuProps> = ({
       window.addEventListener('click', hide);
       window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
-    } else {
-      window.removeEventListener('resize', hide);
-      window.removeEventListener('contextmenu', hide);
-      window.removeEventListener('click', hide);
-      window.removeEventListener('scroll', hide);
-      window.removeEventListener('keydown', handleKeyboard);
     }
   }, [state.visible]);
 
   function handleKeyboard(e: KeyboardEvent) {
-    if (e.key === 'Enter' || e.key === 'Escape') {
-      setState({ visible: false });
+    switch (e.key) {
+      case 'Enter':
+      case 'Escape':
+        setState({ visible: false });
+        break;
+      case 'ArrowUp':
+        menuHandler.moveUp();
+        break;
+      case 'ArrowDown':
+        menuHandler.moveDown();
+        break;
+      case 'ArrowRight':
+        menuHandler.openSubmenu();
+        break;
+      case 'ArrowLeft':
+        menuHandler.closeSubmenu();
+        break;
     }
   }
 
   function show({ event, props }: { event: TriggerEvent; props: object }) {
     event.stopPropagation();
     const { x, y } = getMousePosition(event);
-
     setState({
       visible: true,
       x,
@@ -195,8 +224,13 @@ export const Menu: React.FC<MenuProps> = ({
     ) {
       return;
     }
-
     setState({ visible: false });
+
+    window.removeEventListener('resize', hide);
+    window.removeEventListener('contextmenu', hide);
+    window.removeEventListener('click', hide);
+    window.removeEventListener('scroll', hide);
+    window.removeEventListener('keydown', handleKeyboard);
   }
 
   function onMouseEnter() {
@@ -221,22 +255,30 @@ export const Menu: React.FC<MenuProps> = ({
 
   return (
     <Portal mountNode={mountNode}>
-      {visible && (
-        <div
-          className={cssClasses}
-          style={menuStyle}
-          ref={nodeRef}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-        >
-          <div>
-            {cloneItem(children, {
-              nativeEvent,
-              propsFromTrigger,
-            })}
+      <RefTrackerProvider refTracker={refTracker}>
+        {visible && (
+          <div
+            className={cssClasses}
+            style={menuStyle}
+            ref={nodeRef}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+          >
+            <div>
+              {Children.map(
+                // remove null item
+                Children.toArray(children).filter(child => Boolean(child)),
+                item => {
+                  return cloneElement(item as ReactElement<any>, {
+                    nativeEvent: nativeEvent,
+                    propsFromTrigger: propsFromTrigger,
+                  });
+                }
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </RefTrackerProvider>
     </Portal>
   );
 };

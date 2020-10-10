@@ -9,6 +9,8 @@ import {
   StyleProps,
   InternalProps,
 } from '../types';
+import { RefTrackerProvider, useM } from './RefTrackerProvider';
+import { useRefTracker } from '../hooks';
 
 export interface SubMenuProps extends StyleProps, InternalProps {
   /**
@@ -49,6 +51,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
   propsFromTrigger,
   style,
 }) => {
+  const menuRefTracker = useM();
+  const refList2 = useRefTracker();
   const nodeRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<SubMenuState>({
     left: '100%',
@@ -85,6 +89,15 @@ export const Submenu: React.FC<SubMenuProps> = ({
     console.log('HERE');
   }
 
+  function trackRef(node: HTMLElement | null) {
+    if (node)
+      menuRefTracker.set(node, {
+        node,
+        isSubmenu: true,
+        submenuRefTracker: refList2,
+      });
+  }
+
   const cssClasses = cx(styles.item, className, {
     [`${styles.itemDisabled}`]:
       typeof disabled === 'function'
@@ -101,17 +114,24 @@ export const Submenu: React.FC<SubMenuProps> = ({
   };
 
   return (
-    <div className={cssClasses} role="presentation">
-      <div className={styles.itemContent} onClick={handleClick}>
-        {label}
-        <span className={styles.submenuArrow}>{arrow}</span>
+    <RefTrackerProvider refTracker={refList2}>
+      <div
+        className={cssClasses}
+        role="presentation"
+        ref={trackRef}
+        tabIndex={-1}
+      >
+        <div className={styles.itemContent} onClick={handleClick}>
+          {label}
+          <span className={styles.submenuArrow}>{arrow}</span>
+        </div>
+        <div className={styles.submenu} ref={nodeRef} style={submenuStyle}>
+          {cloneItem(children, {
+            propsFromTrigger,
+            nativeEvent: nativeEvent as TriggerEvent,
+          })}
+        </div>
       </div>
-      <div className={styles.submenu} ref={nodeRef} style={submenuStyle}>
-        {cloneItem(children, {
-          propsFromTrigger,
-          nativeEvent: nativeEvent as TriggerEvent,
-        })}
-      </div>
-    </div>
+    </RefTrackerProvider>
   );
 };
