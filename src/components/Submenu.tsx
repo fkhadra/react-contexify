@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import cx from 'classnames';
+import cx from 'clsx';
 
 import { TriggerEvent, InternalProps, BooleanPredicate } from '../types';
 import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';

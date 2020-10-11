@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import cx from 'classnames';
+import cx from 'clsx';
 
 import { Portal, PortalProps } from './Portal';
 import { RefTrackerProvider } from './RefTrackerProvider';
