@@ -1,18 +1,15 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 
-import { cloneItem } from './cloneItem';
-import { styles } from '../utils/styles';
-import {
-  MenuItemEventHandler,
-  TriggerEvent,
-  StyleProps,
-  InternalProps,
-} from '../types';
-import { RefTrackerProvider, useM } from './RefTrackerProvider';
+import { TriggerEvent, InternalProps, BooleanPredicate } from '../types';
+import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
 import { useRefTracker } from '../hooks';
+import { STYLE } from '../constants';
+import { cloneItems, getPredicateValue } from './utils';
 
-export interface SubMenuProps extends StyleProps, InternalProps {
+export interface SubMenuProps
+  extends InternalProps,
+    Omit<React.HTMLAttributes<HTMLElement>, 'hidden'> {
   /**
    * Any valid node that can be rendered
    */
@@ -29,9 +26,14 @@ export interface SubMenuProps extends StyleProps, InternalProps {
   arrow?: ReactNode;
 
   /**
-   * Disable or not the `Submenu`. If a function is used, a boolean must be returned
+   * Disable the `Submenu`. If a function is used, a boolean must be returned
    */
-  disabled?: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled?: BooleanPredicate;
+
+  /**
+   * Hide the `Submenu` and his children. If a function is used, a boolean must be returned
+   */
+  hidden?: BooleanPredicate;
 }
 
 interface SubMenuState {
@@ -45,43 +47,53 @@ export const Submenu: React.FC<SubMenuProps> = ({
   arrow = '▶',
   children,
   disabled = false,
+  hidden = false,
   label,
   className,
   nativeEvent,
   propsFromTrigger,
   style,
+  ...rest
 }) => {
-  const menuRefTracker = useM();
-  const refList2 = useRefTracker();
+  const menuRefTracker = useRefTrackerContext();
+  const refTracker = useRefTracker();
   const nodeRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<SubMenuState>({
     left: '100%',
     top: 0,
     bottom: 'initial',
   });
+  const handlerParams = {
+    event: nativeEvent!,
+    props: propsFromTrigger,
+  };
+  const isDisabled = getPredicateValue(disabled, handlerParams);
+  const isHidden = getPredicateValue(hidden, handlerParams);
 
   useEffect(() => {
-    const { innerWidth, innerHeight } = window;
-    const rect = nodeRef.current!.getBoundingClientRect();
-    const style: SubMenuState = {};
+    if (nodeRef.current) {
+      const { innerWidth, innerHeight } = window;
+      const rect = nodeRef.current.getBoundingClientRect();
+      const style: SubMenuState = {};
 
-    if (rect.right < innerWidth) {
-      style.left = '100%';
-      style.right = undefined;
-    } else {
-      style.right = '100%';
-      style.left = undefined;
+      if (rect.right < innerWidth) {
+        style.left = '100%';
+        style.right = undefined;
+      } else {
+        style.right = '100%';
+        style.left = undefined;
+      }
+
+      if (rect.bottom > innerHeight) {
+        style.bottom = 0;
+        style.top = 'initial';
+      } else {
+        style.bottom = 'initial';
+        style.top = 0;
+      }
+
+      setPosition(style);
     }
-
-    if (rect.bottom > innerHeight) {
-      style.bottom = 0;
-      style.top = 'initial';
-    } else {
-      style.bottom = 'initial';
-      style.top = 0;
-    }
-
-    setPosition(style);
   }, []);
 
   function handleClick(e: React.SyntheticEvent) {
@@ -89,22 +101,18 @@ export const Submenu: React.FC<SubMenuProps> = ({
   }
 
   function trackRef(node: HTMLElement | null) {
-    if (node)
+    if (node && !isDisabled)
       menuRefTracker.set(node, {
         node,
         isSubmenu: true,
-        submenuRefTracker: refList2,
+        submenuRefTracker: refTracker,
       });
   }
 
-  const cssClasses = cx(styles.item, className, {
-    [`${styles.itemDisabled}`]:
-      typeof disabled === 'function'
-        ? disabled({
-            event: nativeEvent as TriggerEvent,
-            props: { ...propsFromTrigger },
-          })
-        : disabled,
+  if (isHidden) return null;
+
+  const cssClasses = cx(STYLE.item, className, {
+    [`${STYLE.itemDisabled}`]: isDisabled,
   });
 
   const submenuStyle = {
@@ -113,19 +121,20 @@ export const Submenu: React.FC<SubMenuProps> = ({
   };
 
   return (
-    <RefTrackerProvider refTracker={refList2}>
+    <RefTrackerProvider refTracker={refTracker}>
       <div
-        className={cssClasses}
         role="presentation"
+        {...rest}
+        className={cssClasses}
         ref={trackRef}
         tabIndex={-1}
       >
-        <div className={styles.itemContent} onClick={handleClick}>
+        <div className={STYLE.itemContent} onClick={handleClick}>
           {label}
-          <span className={styles.submenuArrow}>{arrow}</span>
+          <span className={STYLE.submenuArrow}>{arrow}</span>
         </div>
-        <div className={styles.submenu} ref={nodeRef} style={submenuStyle}>
-          {cloneItem(children, {
+        <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
+          {cloneItems(children, {
             propsFromTrigger,
             nativeEvent: nativeEvent as TriggerEvent,
           })}

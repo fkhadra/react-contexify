@@ -4,25 +4,23 @@ import React, {
   useEffect,
   useReducer,
   useRef,
-  Children,
-  cloneElement,
-  ReactElement,
   useState,
 } from 'react';
 import cx from 'classnames';
 
-// import { cloneItem } from './cloneItem';
 import { Portal, PortalProps } from './Portal';
 import { RefTrackerProvider } from './RefTrackerProvider';
 
-import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
-import { styles } from '../utils/styles';
 import { eventManager } from '../core/eventManager';
-import { TriggerEvent, StyleProps, MenuId } from '../types';
+import { TriggerEvent, MenuId } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
-import { createMenuHandler } from './menuHandler';
+import { createMenuController } from './menuController';
+import { NOOP, STYLE, EVENT } from '../constants';
+import { cloneItems, getMousePosition } from './utils';
 
-export interface MenuProps extends StyleProps, PortalProps {
+export interface MenuProps
+  extends PortalProps,
+    Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
   /**
    * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
@@ -63,43 +61,12 @@ interface MenuState {
   y: number;
   visible: boolean;
   nativeEvent: TriggerEvent;
-  propsFromTrigger: object;
+  propsFromTrigger: any;
 }
 
 function reducer(state: MenuState, payload: Partial<MenuState>) {
   return { ...state, ...payload };
 }
-
-function getMousePosition(e: TriggerEvent) {
-  const pos = {
-    x: e.clientX,
-    y: e.clientY,
-  };
-
-  if (
-    e.type === 'touchend' &&
-    (!pos.x || !pos.y) &&
-    e.changedTouches &&
-    e.changedTouches.length > 0
-  ) {
-    pos.x = e.changedTouches[0].clientX;
-    pos.y = e.changedTouches[0].clientY;
-  }
-
-  if (!pos.x || pos.x < 0) {
-    pos.x = 0;
-  }
-
-  if (!pos.y || pos.y < 0) {
-    pos.y = 0;
-  }
-
-  return pos;
-}
-
-const noop = () => {
-  // console.log('HERE UPDATE');
-};
 
 export const Menu: React.FC<MenuProps> = ({
   id,
@@ -109,30 +76,32 @@ export const Menu: React.FC<MenuProps> = ({
   className,
   children,
   mountNode,
-  onHidden = noop,
-  onShown = noop,
+  onHidden = NOOP,
+  onShown = NOOP,
+  ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
     x: 0,
     y: 0,
     visible: false,
     nativeEvent: {} as TriggerEvent,
-    propsFromTrigger: {},
+    propsFromTrigger: null,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
   const didMount = useRef(false);
   const wasVisible = usePrevious(state.visible);
   const refTracker = useRefTracker();
-  const [menuHandler] = useState(() => createMenuHandler());
+  const [menuController] = useState(() => createMenuController());
 
   // subscribe event manager
   useEffect(() => {
     didMount.current = true;
+    const showMenu = `${EVENT.SHOW_MENU}${id}`;
 
-    eventManager.on(DISPLAY_MENU(id), show).on(HIDE_ALL, hide);
+    eventManager.on(showMenu, show).on(EVENT.HIDE_ALL, hide);
 
     return () => {
-      eventManager.off(DISPLAY_MENU(id), show).off(HIDE_ALL, hide);
+      eventManager.off(showMenu, show).off(EVENT.HIDE_ALL, hide);
     };
   }, [id]);
 
@@ -148,9 +117,9 @@ export const Menu: React.FC<MenuProps> = ({
     if (!state.visible) {
       refTracker.clear();
     } else {
-      menuHandler.init(Array.from(refTracker.values()));
+      menuController.init(Array.from(refTracker.values()));
     }
-  }, [state.visible, menuHandler, refTracker]);
+  }, [state.visible, menuController, refTracker]);
 
   // compute menu position
   useEffect(() => {
@@ -182,22 +151,22 @@ export const Menu: React.FC<MenuProps> = ({
     function handleKeyboard(e: KeyboardEvent) {
       switch (e.key) {
         case 'Enter':
-          if (!menuHandler.openSubmenu()) hide();
+          if (!menuController.openSubmenu()) hide();
           break;
         case 'Escape':
           hide();
           break;
         case 'ArrowUp':
-          menuHandler.moveUp();
+          menuController.moveUp();
           break;
         case 'ArrowDown':
-          menuHandler.moveDown();
+          menuController.moveDown();
           break;
         case 'ArrowRight':
-          menuHandler.openSubmenu();
+          menuController.openSubmenu();
           break;
         case 'ArrowLeft':
-          menuHandler.closeSubmenu();
+          menuController.closeSubmenu();
           break;
       }
     }
@@ -208,6 +177,11 @@ export const Menu: React.FC<MenuProps> = ({
       window.addEventListener('click', hide);
       window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
+
+      // This let us debug the menu in the console in dev mode
+      if (process.env.NODE_ENV !== 'development') {
+        window.addEventListener('blur', hide);
+      }
     }
 
     return () => {
@@ -216,10 +190,14 @@ export const Menu: React.FC<MenuProps> = ({
       window.removeEventListener('click', hide);
       window.removeEventListener('scroll', hide);
       window.removeEventListener('keydown', handleKeyboard);
-    };
-  }, [state.visible, menuHandler]);
 
-  function show({ event, props }: { event: TriggerEvent; props: object }) {
+      if (process.env.NODE_ENV !== 'development') {
+        window.removeEventListener('blur', hide);
+      }
+    };
+  }, [state.visible, menuController]);
+
+  function show({ event, props }: { event: TriggerEvent; props: any }) {
     event.stopPropagation();
     const { x, y } = getMousePosition(event);
 
@@ -252,9 +230,9 @@ export const Menu: React.FC<MenuProps> = ({
     setState({ visible: false });
   }
 
-  const cssClasses = cx(styles.menu, className, {
-    [styles.theme + theme]: theme,
-    [styles.animationWillEnter + animation]: animation,
+  const cssClasses = cx(STYLE.menu, className, {
+    [STYLE.theme + theme]: theme,
+    [STYLE.animationWillEnter + animation]: animation,
   });
   const { visible, nativeEvent, propsFromTrigger, x, y } = state;
   const menuStyle = {
@@ -268,19 +246,11 @@ export const Menu: React.FC<MenuProps> = ({
     <Portal mountNode={mountNode}>
       <RefTrackerProvider refTracker={refTracker}>
         {visible && (
-          <div className={cssClasses} style={menuStyle} ref={nodeRef}>
-            <div>
-              {Children.map(
-                // remove null item
-                Children.toArray(children).filter(child => Boolean(child)),
-                item => {
-                  return cloneElement(item as ReactElement<any>, {
-                    nativeEvent: nativeEvent,
-                    propsFromTrigger: propsFromTrigger,
-                  });
-                }
-              )}
-            </div>
+          <div {...rest} className={cssClasses} style={menuStyle} ref={nodeRef}>
+            {cloneItems(children, {
+              propsFromTrigger,
+              nativeEvent: nativeEvent as TriggerEvent,
+            })}
           </div>
         )}
       </RefTrackerProvider>

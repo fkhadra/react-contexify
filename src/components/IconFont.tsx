@@ -1,15 +1,15 @@
 import React from 'react';
 import cx from 'classnames';
 
-import { styles } from '../utils/styles';
-import { StyleProps } from '../types';
+import { STYLE } from '../constants';
 
-const IconFont: React.FC<StyleProps> = ({
+const IconFont: React.FC<React.HTMLAttributes<HTMLElement>> = ({
   className,
   style,
   children = '',
+  ...rest
 }) => (
-  <i className={cx(styles.itemIcon, className)} style={style}>
+  <i {...rest} className={cx(STYLE.itemIcon, className)} style={style}>
     {children}
   </i>
 );

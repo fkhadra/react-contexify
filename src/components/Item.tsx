@@ -1,73 +1,65 @@
 import React, { ReactNode } from 'react';
 import cx from 'classnames';
 
-import { styles } from '../utils/styles';
-import {
-  MenuItemEventHandler,
-  TriggerEvent,
-  StyleProps,
-  InternalProps,
-} from '../types';
-import { useM } from './RefTrackerProvider';
+import { HandlerParams, InternalProps, BooleanPredicate } from '../types';
+import { useRefTrackerContext } from './RefTrackerProvider';
+import { NOOP, STYLE } from '../constants';
+import { getPredicateValue } from './utils';
 
-export interface ItemProps extends StyleProps, InternalProps {
+export interface ItemProps
+  extends InternalProps,
+    Omit<React.HTMLAttributes<HTMLElement>, 'hidden' | 'disabled' | 'onClick'> {
   /**
    * Any valid node that can be rendered
    */
   children: ReactNode;
 
   /**
-   * Passed to the `Item` onClick callback. Accessible via `props`
+   * Passed to the `Item` onClick callback. Accessible via `data`
    */
   data?: object;
 
   /**
-   * Disable or not the `Item`. If a function is used, a boolean must be returned
+   * Disable `Item`. If a function is used, a boolean must be returned
    */
-  disabled?: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled?: BooleanPredicate;
 
   /**
-   * Callback when the current `Item` is clicked. The callback give you access to the current event and also the data passed
-   * to the `Item`.
-   * `({ event, props }) => ...`
+   * Hide the `Item`. If a function is used, a boolean must be returned
    */
-  onClick: (args: MenuItemEventHandler) => any;
-}
+  hidden?: BooleanPredicate;
 
-const noop = () => {};
+  /**
+   * Callback when the current `Item` is clicked. The callback give you access to the current `event`, the `props` and the `data` passed
+   * to the `Item`.
+   * `({ event, props, data }) => ...`
+   */
+  onClick: (args: HandlerParams) => void;
+}
 
 export const Item: React.FC<ItemProps> = ({
   children,
-  onClick = noop,
   className,
   style,
   nativeEvent,
   data,
   propsFromTrigger,
+  onClick = NOOP,
   disabled = false,
+  hidden = false,
+  ...rest
 }) => {
-  const refTracker = useM();
-  const isDisabled =
-    typeof disabled === 'function'
-      ? disabled({
-          event: nativeEvent as TriggerEvent,
-          props: { ...propsFromTrigger, ...data },
-        })
-      : disabled;
-
-  const cssClasses = cx(styles.item, className, {
-    [`${styles.itemDisabled}`]: isDisabled,
-  });
+  const refTracker = useRefTrackerContext();
+  const handlerParams = {
+    data,
+    event: nativeEvent!,
+    props: propsFromTrigger,
+  };
+  const isDisabled = getPredicateValue(disabled, handlerParams);
+  const isHidden = getPredicateValue(hidden, handlerParams);
 
   function handleClick(e: React.MouseEvent) {
-    console.log('HERE', e);
-
-    isDisabled
-      ? e.stopPropagation()
-      : onClick({
-          event: nativeEvent as TriggerEvent,
-          props: { ...propsFromTrigger, ...data },
-        });
+    isDisabled ? e.stopPropagation() : onClick(handlerParams);
   }
 
   function trackRef(node: HTMLElement | null) {
@@ -80,24 +72,28 @@ export const Item: React.FC<ItemProps> = ({
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
-      onClick({
-        event: nativeEvent as TriggerEvent,
-        props: { ...propsFromTrigger, ...data },
-      });
+      onClick(handlerParams);
     }
   }
 
+  if (isHidden) return null;
+
+  const cssClasses = cx(STYLE.item, className, {
+    [`${STYLE.itemDisabled}`]: isDisabled,
+  });
+
   return (
     <div
+      role="presentation"
+      {...rest}
       className={cssClasses}
       style={style}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      role="presentation"
       ref={trackRef}
       tabIndex={-1}
     >
-      <div className={styles.itemContent}>{children}</div>
+      <div className={STYLE.itemContent}>{children}</div>
     </div>
   );
 };
