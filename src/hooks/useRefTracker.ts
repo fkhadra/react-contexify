@@ -8,6 +8,9 @@ export interface RefTrackerValue {
 
 export type RefTracker = ReturnType<typeof useRefTracker>;
 
+/**
+ * Used to store children refs
+ */
 export function useRefTracker() {
   return useRef<Map<HTMLElement, RefTrackerValue>>(new Map()).current;
 }

@@ -1,5 +1,5 @@
 import { RefTrackerValue } from '../hooks';
-import { styles } from '../utils';
+import { STYLE } from '../constants';
 
 interface Menu<T = RefTrackerValue> {
   items: T[];
@@ -8,7 +8,10 @@ interface Menu<T = RefTrackerValue> {
   parentNode: HTMLElement;
 }
 
-export function createMenuHandler() {
+/**
+ * Used to control keyboard navigation
+ */
+export function createMenuController() {
   const menuList = new Map<HTMLElement, Menu>();
   let focusedIndex: number;
   let parentNode: HTMLElement;
@@ -80,7 +83,7 @@ export function createMenuHandler() {
         items: currentItems,
       });
 
-      currentNode.classList.add(styles.submenuOpen);
+      currentNode.classList.add(STYLE.submenuOpen);
       parentNode = currentNode;
 
       if (submenuItems.length > 0) {
@@ -107,7 +110,7 @@ export function createMenuHandler() {
         parentNode: menuParentNode,
       } = menuList.get(parentNode)!;
 
-      parentNode.classList.remove(styles.submenuOpen);
+      parentNode.classList.remove(STYLE.submenuOpen);
 
       currentItems = items;
       parentNode = menuParentNode;

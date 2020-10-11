@@ -1,10 +1,11 @@
 /*
  * css classes mapping
  * */
-export const enum styles {
+export const enum STYLE {
   menu = 'react-contexify',
   submenu = 'react-contexify react-contexify__submenu',
   submenuArrow = 'react-contexify__submenu-arrow',
+  submenuOpen = 'react-contexify__submenu--is-open',
   separator = 'react-contexify__separator',
   item = 'react-contexify__item',
   itemDisabled = 'react-contexify__item--disabled',
@@ -15,28 +16,21 @@ export const enum styles {
   animationWillLeave = 'react-contexify__will-leave--',
 }
 
-// I could use enum instead for both interfaces
-
-export interface BuiltInTheme {
-  light: string;
-  dark: string;
+export const enum EVENT {
+  HIDE_ALL = 0,
+  SHOW_MENU = 'SHOW_',
 }
 
-export interface BuiltInAnimation {
-  fade: string;
-  flip: string;
-  pop: string;
-  zoom: string;
-}
-
-export const theme: BuiltInTheme = {
+export const theme = {
   light: 'light',
   dark: 'dark',
 };
 
-export const animation: BuiltInAnimation = {
+export const animation = {
   fade: 'fade',
   flip: 'flip',
   pop: 'pop',
   zoom: 'zoom',
 };
+
+export const NOOP = () => {};

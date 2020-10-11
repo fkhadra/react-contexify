@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { styles } from '../utils/styles';
+import { STYLE } from '../constants';
 
 export function Separator() {
-  return <div className={styles.separator} />;
+  return <div className={STYLE.separator} />;
 }

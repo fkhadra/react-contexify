@@ -1,37 +1,36 @@
-import { CSSProperties } from 'react';
-
-/**
- *
- */
 export type TriggerEvent = MouseEvent & TouchEvent;
+
+export type BooleanPredicate = boolean | ((args: HandlerParams) => boolean);
 
 /**
  * Unique id to identify the menu. Use to Trigger the corresponding menu
  */
 export type MenuId = string | number;
 
-export interface MenuItemEventHandler {
+/**
+ * Used in 3 cases:
+ * - When you pass a callback to the `Item` `onClick` event
+ * - When passing a boolean predicate to `disabled`
+ * - When passing a boolean predicate to `hidden`
+ *
+ *
+ * `function onClick({ event, props, data }: ItemEvent<type of props, type of data>)`
+ */
+export interface HandlerParams<Props = any, Data = any> {
   /**
    * The event that triggered the context menu
    */
   event: TriggerEvent;
 
   /**
-   * Any props supplied
+   * Any props supplied when triggering the menu
    */
-  props?: object;
-}
-
-export interface StyleProps {
-  /**
-   * Append given css classes
-   */
-  className?: string;
+  props?: Props;
 
   /**
-   * Append given inline style
+   * Data object provided to item
    */
-  style?: CSSProperties;
+  data?: Data;
 }
 
 export interface InternalProps {
@@ -43,5 +42,5 @@ export interface InternalProps {
   /**
    * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`
    */
-  propsFromTrigger?: object;
+  propsFromTrigger?: any;
 }

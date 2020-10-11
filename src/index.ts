@@ -4,5 +4,5 @@ export { Separator } from './components/Separator';
 export { IconFont } from './components/IconFont';
 export { Submenu } from './components/Submenu';
 
-export { contextMenu } from './utils/contextMenu';
-export { theme, animation } from './utils/styles';
+export { contextMenu } from './core/contextMenu';
+export { theme, animation } from './constants';

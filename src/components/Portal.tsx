@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { isFn } from '../utils';
+import { isFn } from './utils';
 
 export interface PortalProps {
   /**

@@ -3,7 +3,10 @@ import { RefTracker } from '../hooks';
 
 const Context = createContext({} as RefTracker);
 
-export function useM() {
+/**
+ * Access parent ref tracker.
+ */
+export function useRefTrackerContext() {
   return useContext(Context);
 }
 
