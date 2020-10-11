@@ -8,6 +8,7 @@ import {
   StyleProps,
   InternalProps,
 } from '../types';
+import { useM } from './RefTrackerProvider';
 
 export interface ItemProps extends StyleProps, InternalProps {
   /**
@@ -45,6 +46,7 @@ export const Item: React.FC<ItemProps> = ({
   propsFromTrigger,
   disabled = false,
 }) => {
+  const refTracker = useM();
   const isDisabled =
     typeof disabled === 'function'
       ? disabled({
@@ -58,6 +60,8 @@ export const Item: React.FC<ItemProps> = ({
   });
 
   function handleClick(e: React.MouseEvent) {
+    console.log('HERE', e);
+
     isDisabled
       ? e.stopPropagation()
       : onClick({
@@ -66,12 +70,32 @@ export const Item: React.FC<ItemProps> = ({
         });
   }
 
+  function trackRef(node: HTMLElement | null) {
+    if (node && !isDisabled)
+      refTracker.set(node, {
+        node,
+        isSubmenu: false,
+      });
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      onClick({
+        event: nativeEvent as TriggerEvent,
+        props: { ...propsFromTrigger, ...data },
+      });
+    }
+  }
+
   return (
     <div
       className={cssClasses}
       style={style}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       role="presentation"
+      ref={trackRef}
+      tabIndex={-1}
     >
       <div className={styles.itemContent}>{children}</div>
     </div>

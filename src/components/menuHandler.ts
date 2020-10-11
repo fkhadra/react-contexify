@@ -10,13 +10,16 @@ interface Menu<T = RefTrackerValue> {
 
 export function createMenuHandler() {
   const menuList = new Map<HTMLElement, Menu>();
-  let focusedIndex = -1;
+  let focusedIndex: number;
   let parentNode: HTMLElement;
-  let isAtRoot = true;
+  let isAtRoot: boolean;
   let currentItems: RefTrackerValue[];
+  let forceCloseSubmenu = false;
 
   function init(rootMenu: RefTrackerValue[]) {
     currentItems = rootMenu;
+    focusedIndex = -1;
+    isAtRoot = true;
   }
 
   function focusSelectedItem() {
@@ -31,12 +34,25 @@ export function createMenuHandler() {
     return Array.from(currentItems[focusedIndex].submenuRefTracker!.values());
   }
 
+  function isFocused() {
+    if (focusedIndex === -1) {
+      // focus first item
+      moveDown();
+      return false;
+    }
+
+    return true;
+  }
+
   function moveDown() {
     if (focusedIndex + 1 < currentItems.length) {
       focusedIndex++;
     } else if (focusedIndex + 1 === currentItems.length) {
       focusedIndex = 0;
     }
+
+    if (forceCloseSubmenu) closeSubmenu();
+
     focusSelectedItem();
   }
 
@@ -46,11 +62,14 @@ export function createMenuHandler() {
     } else if (focusedIndex - 1 < currentItems.length) {
       focusedIndex--;
     }
+
+    if (forceCloseSubmenu) closeSubmenu();
+
     focusSelectedItem();
   }
 
   function openSubmenu() {
-    if (isSubmenuFocused()) {
+    if (isFocused() && isSubmenuFocused()) {
       const submenuItems = getSubmenuItems();
       const currentNode = currentItems[focusedIndex].node;
 
@@ -63,16 +82,24 @@ export function createMenuHandler() {
 
       currentNode.classList.add(styles.submenuOpen);
       parentNode = currentNode;
-      focusedIndex = 0;
-      currentItems = submenuItems;
+
+      if (submenuItems.length > 0) {
+        focusedIndex = 0;
+        currentItems = submenuItems;
+      } else {
+        forceCloseSubmenu = true;
+      }
+
       isAtRoot = false;
 
       focusSelectedItem();
+      return true;
     }
+    return false;
   }
 
   function closeSubmenu() {
-    if (!isAtRoot) {
+    if (isFocused() && !isAtRoot) {
       const {
         isRoot,
         items,
@@ -83,15 +110,16 @@ export function createMenuHandler() {
       parentNode.classList.remove(styles.submenuOpen);
 
       currentItems = items;
-      focusedIndex = parentFocusedIndex;
       parentNode = menuParentNode;
 
       if (isRoot) {
         isAtRoot = true;
         menuList.clear();
       }
-
-      focusSelectedItem();
+      if (!forceCloseSubmenu) {
+        focusedIndex = parentFocusedIndex;
+        focusSelectedItem();
+      }
     }
   }
 

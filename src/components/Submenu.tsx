@@ -86,7 +86,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
 
   function handleClick(e: React.SyntheticEvent) {
     e.stopPropagation();
-    console.log('HERE');
   }
 
   function trackRef(node: HTMLElement | null) {

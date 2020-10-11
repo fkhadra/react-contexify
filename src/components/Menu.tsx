@@ -98,7 +98,7 @@ function getMousePosition(e: TriggerEvent) {
 }
 
 const noop = () => {
-  console.log('HERE UPDATE');
+  // console.log('HERE UPDATE');
 };
 
 export const Menu: React.FC<MenuProps> = ({
@@ -125,20 +125,7 @@ export const Menu: React.FC<MenuProps> = ({
   const refTracker = useRefTracker();
   const [menuHandler] = useState(() => createMenuHandler());
 
-  useEffect(() => {
-    if (didMount.current && state.visible !== wasVisible) {
-      state.visible ? onShown() : onHidden();
-    }
-  }, [state.visible, onHidden, onShown]);
-
-  useEffect(() => {
-    if (!state.visible) {
-      refTracker.clear();
-    } else {
-      menuHandler.init(Array.from(refTracker.values()));
-    }
-  }, [state.visible]);
-
+  // subscribe event manager
   useEffect(() => {
     didMount.current = true;
 
@@ -147,8 +134,25 @@ export const Menu: React.FC<MenuProps> = ({
     return () => {
       eventManager.off(DISPLAY_MENU(id), show).off(HIDE_ALL, hide);
     };
-  }, []);
+  }, [id]);
 
+  // handle show/ hide callback
+  useEffect(() => {
+    if (didMount.current && state.visible !== wasVisible) {
+      state.visible ? onShown() : onHidden();
+    }
+  }, [state.visible, onHidden, onShown]);
+
+  // collect menu items for keyboard navigation
+  useEffect(() => {
+    if (!state.visible) {
+      refTracker.clear();
+    } else {
+      menuHandler.init(Array.from(refTracker.values()));
+    }
+  }, [state.visible, menuHandler, refTracker]);
+
+  // compute menu position
   useEffect(() => {
     if (state.visible) {
       const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
@@ -170,46 +174,66 @@ export const Menu: React.FC<MenuProps> = ({
         x,
         y,
       });
+    }
+  }, [state.visible]);
 
+  // subscribe dom events
+  useEffect(() => {
+    function handleKeyboard(e: KeyboardEvent) {
+      switch (e.key) {
+        case 'Enter':
+          if (!menuHandler.openSubmenu()) hide();
+          break;
+        case 'Escape':
+          hide();
+          break;
+        case 'ArrowUp':
+          menuHandler.moveUp();
+          break;
+        case 'ArrowDown':
+          menuHandler.moveDown();
+          break;
+        case 'ArrowRight':
+          menuHandler.openSubmenu();
+          break;
+        case 'ArrowLeft':
+          menuHandler.closeSubmenu();
+          break;
+      }
+    }
+
+    if (state.visible) {
       window.addEventListener('resize', hide);
       window.addEventListener('contextmenu', hide);
       window.addEventListener('click', hide);
       window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
     }
-  }, [state.visible]);
 
-  function handleKeyboard(e: KeyboardEvent) {
-    switch (e.key) {
-      case 'Enter':
-      case 'Escape':
-        setState({ visible: false });
-        break;
-      case 'ArrowUp':
-        menuHandler.moveUp();
-        break;
-      case 'ArrowDown':
-        menuHandler.moveDown();
-        break;
-      case 'ArrowRight':
-        menuHandler.openSubmenu();
-        break;
-      case 'ArrowLeft':
-        menuHandler.closeSubmenu();
-        break;
-    }
-  }
+    return () => {
+      window.removeEventListener('resize', hide);
+      window.removeEventListener('contextmenu', hide);
+      window.removeEventListener('click', hide);
+      window.removeEventListener('scroll', hide);
+      window.removeEventListener('keydown', handleKeyboard);
+    };
+  }, [state.visible, menuHandler]);
 
   function show({ event, props }: { event: TriggerEvent; props: object }) {
     event.stopPropagation();
     const { x, y } = getMousePosition(event);
-    setState({
-      visible: true,
-      x,
-      y,
-      nativeEvent: event,
-      propsFromTrigger: props,
-    });
+
+    // prevent react from batching the state update
+    // if the menu is already visible we have to recompute bounding rect based on position
+    setTimeout(() => {
+      setState({
+        visible: true,
+        x,
+        y,
+        nativeEvent: event,
+        propsFromTrigger: props,
+      });
+    }, 0);
   }
 
   function hide(event?: Event) {
@@ -224,21 +248,8 @@ export const Menu: React.FC<MenuProps> = ({
     ) {
       return;
     }
+
     setState({ visible: false });
-
-    window.removeEventListener('resize', hide);
-    window.removeEventListener('contextmenu', hide);
-    window.removeEventListener('click', hide);
-    window.removeEventListener('scroll', hide);
-    window.removeEventListener('keydown', handleKeyboard);
-  }
-
-  function onMouseEnter() {
-    window.removeEventListener('mousedown', hide);
-  }
-
-  function onMouseLeave() {
-    window.addEventListener('mousedown', hide);
   }
 
   const cssClasses = cx(styles.menu, className, {
@@ -257,13 +268,7 @@ export const Menu: React.FC<MenuProps> = ({
     <Portal mountNode={mountNode}>
       <RefTrackerProvider refTracker={refTracker}>
         {visible && (
-          <div
-            className={cssClasses}
-            style={menuStyle}
-            ref={nodeRef}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-          >
+          <div className={cssClasses} style={menuStyle} ref={nodeRef}>
             <div>
               {Children.map(
                 // remove null item
