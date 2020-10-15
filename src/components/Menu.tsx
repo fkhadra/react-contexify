@@ -96,12 +96,10 @@ export const Menu: React.FC<MenuProps> = ({
   // subscribe event manager
   useEffect(() => {
     didMount.current = true;
-    const showMenu = `${EVENT.SHOW_MENU}${id}`;
-
-    eventManager.on(showMenu, show).on(EVENT.HIDE_ALL, hide);
+    eventManager.on(id, show).on(EVENT.HIDE_ALL, hide);
 
     return () => {
-      eventManager.off(showMenu, show).off(EVENT.HIDE_ALL, hide);
+      eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
     };
   }, [id]);
 
@@ -246,7 +244,13 @@ export const Menu: React.FC<MenuProps> = ({
     <Portal mountNode={mountNode}>
       <RefTrackerProvider refTracker={refTracker}>
         {visible && (
-          <div {...rest} className={cssClasses} style={menuStyle} ref={nodeRef}>
+          <div
+            {...rest}
+            className={cssClasses}
+            style={menuStyle}
+            ref={nodeRef}
+            role="menu"
+          >
             {cloneItems(children, {
               propsFromTrigger,
               nativeEvent: nativeEvent as TriggerEvent,

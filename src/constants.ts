@@ -17,8 +17,7 @@ export const enum STYLE {
 }
 
 export const enum EVENT {
-  HIDE_ALL = 0,
-  SHOW_MENU = 'SHOW_',
+  HIDE_ALL,
 }
 
 export const theme = {

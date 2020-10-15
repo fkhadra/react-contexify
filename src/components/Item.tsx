@@ -84,7 +84,6 @@ export const Item: React.FC<ItemProps> = ({
 
   return (
     <div
-      role="presentation"
       {...rest}
       className={cssClasses}
       style={style}
@@ -92,6 +91,8 @@ export const Item: React.FC<ItemProps> = ({
       onKeyDown={handleKeyDown}
       ref={trackRef}
       tabIndex={-1}
+      role="menuitem"
+      aria-disabled={isDisabled}
     >
       <div className={STYLE.itemContent}>{children}</div>
     </div>

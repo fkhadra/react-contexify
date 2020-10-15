@@ -1,12 +1,12 @@
 import { eventManager } from './eventManager';
-import { MenuId } from '../types';
-import React, { SyntheticEvent } from 'react';
+import { MenuId, MouseOrTouchEvent } from '../types';
+import { SyntheticEvent } from 'react';
 
 import { EVENT } from '../constants';
 
 export interface ShowContextMenuParams {
   id: MenuId;
-  event: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent;
+  event: MouseOrTouchEvent;
   props?: any;
 }
 
@@ -17,15 +17,7 @@ export interface ContextMenu {
 
 const contextMenu: ContextMenu = {
   show({ id, event, props }) {
-    if (!id) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(
-          `You need to provide the id belonging to the menu in order to display it. [LINK TO DOC HERE]`
-        );
-      }
-      return;
-    }
-    eventManager.emit(EVENT.HIDE_ALL).emit(EVENT.SHOW_MENU + id, {
+    eventManager.emit(EVENT.HIDE_ALL).emit(id, {
       event: (event as SyntheticEvent).nativeEvent || event,
       props,
     });

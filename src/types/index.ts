@@ -1,5 +1,14 @@
 export type TriggerEvent = MouseEvent & TouchEvent;
 
+/**
+ * Pass the event handler. It's used to determine the position of the cursor
+ */
+export type MouseOrTouchEvent =
+  | MouseEvent
+  | TouchEvent
+  | React.MouseEvent
+  | React.TouchEvent;
+
 export type BooleanPredicate = boolean | ((args: HandlerParams) => boolean);
 
 /**

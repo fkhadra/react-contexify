@@ -123,11 +123,13 @@ export const Submenu: React.FC<SubMenuProps> = ({
   return (
     <RefTrackerProvider refTracker={refTracker}>
       <div
-        role="presentation"
         {...rest}
         className={cssClasses}
         ref={trackRef}
         tabIndex={-1}
+        role="menuitem"
+        aria-haspopup
+        aria-disabled={isDisabled}
       >
         <div className={STYLE.itemContent} onClick={handleClick}>
           {label}
