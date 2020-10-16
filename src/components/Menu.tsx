@@ -12,7 +12,7 @@ import { Portal, PortalProps } from './Portal';
 import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
-import { TriggerEvent, MenuId } from '../types';
+import { MouseOrTouchEvent, MenuId, ContextMenuParams } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
 import { NOOP, STYLE, EVENT } from '../constants';
@@ -60,7 +60,7 @@ interface MenuState {
   x: number;
   y: number;
   visible: boolean;
-  nativeEvent: TriggerEvent;
+  nativeEvent: MouseOrTouchEvent;
   propsFromTrigger: any;
 }
 
@@ -84,7 +84,7 @@ export const Menu: React.FC<MenuProps> = ({
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: {} as TriggerEvent,
+    nativeEvent: {} as MouseOrTouchEvent,
     propsFromTrigger: null,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -195,9 +195,9 @@ export const Menu: React.FC<MenuProps> = ({
     };
   }, [state.visible, menuController]);
 
-  function show({ event, props }: { event: TriggerEvent; props: any }) {
+  function show({ event, props, position }: ContextMenuParams) {
     event.stopPropagation();
-    const { x, y } = getMousePosition(event);
+    const { x, y } = position || getMousePosition(event);
 
     // prevent react from batching the state update
     // if the menu is already visible we have to recompute bounding rect based on position
@@ -253,7 +253,7 @@ export const Menu: React.FC<MenuProps> = ({
           >
             {cloneItems(children, {
               propsFromTrigger,
-              nativeEvent: nativeEvent as TriggerEvent,
+              nativeEvent: nativeEvent,
             })}
           </div>
         )}

@@ -1,14 +1,18 @@
 import { Children, cloneElement, ReactNode, ReactElement } from 'react';
 
-import { BooleanPredicate, HandlerParams, TriggerEvent } from '../types';
+import { BooleanPredicate, HandlerParams, MouseOrTouchEvent } from '../types';
 
 export function isFn(v: any): v is Function {
   return typeof v === 'function';
 }
 
+export function isTouchEvent(e: MouseOrTouchEvent): e is TouchEvent {
+  return e.type === 'touchend';
+}
+
 export function cloneItems(
   children: ReactNode,
-  props: { nativeEvent: TriggerEvent; propsFromTrigger?: object }
+  props: { nativeEvent: MouseOrTouchEvent; propsFromTrigger?: object }
 ) {
   return Children.map(
     // remove null item
@@ -17,29 +21,23 @@ export function cloneItems(
   );
 }
 
-export function getMousePosition(e: TriggerEvent) {
+export function getMousePosition(e: MouseOrTouchEvent) {
   const pos = {
-    x: e.clientX,
-    y: e.clientY,
+    x: 0,
+    y: 0,
   };
 
-  if (
-    e.type === 'touchend' &&
-    (!pos.x || !pos.y) &&
-    e.changedTouches &&
-    e.changedTouches.length > 0
-  ) {
+  if (isTouchEvent(e) && e.changedTouches && e.changedTouches.length > 0) {
     pos.x = e.changedTouches[0].clientX;
     pos.y = e.changedTouches[0].clientY;
+  } else {
+    pos.x = (e as MouseEvent).clientX;
+    pos.y = (e as MouseEvent).clientY;
   }
 
-  if (!pos.x || pos.x < 0) {
-    pos.x = 0;
-  }
+  if (!pos.x || pos.x < 0) pos.x = 0;
 
-  if (!pos.y || pos.y < 0) {
-    pos.y = 0;
-  }
+  if (!pos.y || pos.y < 0) pos.y = 0;
 
   return pos;
 }

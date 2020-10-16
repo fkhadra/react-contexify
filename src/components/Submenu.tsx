@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import cx from 'clsx';
 
-import { TriggerEvent, InternalProps, BooleanPredicate } from '../types';
+import { InternalProps, BooleanPredicate, MouseAndTouchEvent } from '../types';
 import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
 import { useRefTracker } from '../hooks';
 import { STYLE } from '../constants';
@@ -64,7 +64,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
     bottom: 'initial',
   });
   const handlerParams = {
-    event: nativeEvent!,
+    event: nativeEvent as MouseAndTouchEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);
@@ -138,7 +138,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
         <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
           {cloneItems(children, {
             propsFromTrigger,
-            nativeEvent: nativeEvent as TriggerEvent,
+            // injected by the parent
+            nativeEvent: nativeEvent!,
           })}
         </div>
       </div>

@@ -8,6 +8,10 @@ export interface ShowContextMenuParams {
   id: MenuId;
   event: MouseOrTouchEvent;
   props?: any;
+  position?: {
+    x: number;
+    y: number;
+  };
 }
 
 export interface ContextMenu {
@@ -16,10 +20,11 @@ export interface ContextMenu {
 }
 
 const contextMenu: ContextMenu = {
-  show({ id, event, props }) {
+  show({ id, event, props, position }) {
     eventManager.emit(EVENT.HIDE_ALL).emit(id, {
       event: (event as SyntheticEvent).nativeEvent || event,
       props,
+      position,
     });
   },
   hideAll() {

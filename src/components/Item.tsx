@@ -1,7 +1,12 @@
 import React, { ReactNode } from 'react';
 import cx from 'clsx';
 
-import { HandlerParams, InternalProps, BooleanPredicate } from '../types';
+import {
+  HandlerParams,
+  InternalProps,
+  BooleanPredicate,
+  MouseAndTouchEvent,
+} from '../types';
 import { useRefTrackerContext } from './RefTrackerProvider';
 import { NOOP, STYLE } from '../constants';
 import { getPredicateValue } from './utils';
@@ -52,7 +57,7 @@ export const Item: React.FC<ItemProps> = ({
   const refTracker = useRefTrackerContext();
   const handlerParams = {
     data,
-    event: nativeEvent!,
+    event: nativeEvent as MouseAndTouchEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);

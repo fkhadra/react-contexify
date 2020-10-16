@@ -1,13 +1,7 @@
-import { contextMenu, ShowContextMenuParams } from '../core';
-import { MenuId } from '../types';
+import { contextMenu } from '../core';
+import { ContextMenuParams } from '../types';
 
-export interface UseContextMenuProps {
-  id?: MenuId;
-  props?: any;
-}
-
-export type ContextMenuParams = UseContextMenuProps &
-  Pick<ShowContextMenuParams, 'event'>;
+export type UseContextMenuProps = Pick<ContextMenuParams, 'id' | 'props'>;
 
 export function useContextMenu(props: UseContextMenuProps) {
   return {
@@ -16,6 +10,7 @@ export function useContextMenu(props: UseContextMenuProps) {
         id: (props.id || params.id) as string,
         props: props.props || params.props,
         event: params.event,
+        position: params.position,
       });
     },
     hideAll() {
