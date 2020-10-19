@@ -236,7 +236,7 @@ export const Menu: React.FC<MenuProps> = ({
   const menuStyle = {
     ...style,
     left: x,
-    top: y + 1,
+    top: y,
     opacity: 1,
   };
 
