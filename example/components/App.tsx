@@ -1,186 +1,247 @@
-import React, { Component, ChangeEvent, MouseEvent } from 'react';
+import * as React from 'react';
+
+import { Select } from './Select';
+import { DATA_TEST, MENU_ID } from '../constants';
+
 import {
   Menu,
   Item,
   Separator,
   Submenu,
-  contextMenu,
-  theme,
-  animation
+  useContextMenu,
+  theme as builtInTheme,
+  animation as builtInAnimation,
 } from '../../src';
-import Table from './Table';
-import Select from './Select';
-import { BuiltInTheme } from '../../src/types';
-import { MenuItemEventHandler } from '../../types';
+import { HandlerParams } from '../../src/types';
 
 const selector = {
   events: ['onContextMenu', 'onClick', 'onDoubleClick'],
   themes: [
     'none',
-    ...Object.keys(theme).map(k => theme[k as keyof BuiltInTheme])
+    ...Object.keys(builtInTheme).map(
+      k => builtInTheme[k as keyof typeof builtInTheme]
+    ),
   ],
   animations: [
     'none',
-    ...Object.keys(animation).map(k => animation[k as keyof typeof animation])
-  ]
+    ...Object.keys(builtInAnimation).map(
+      k => builtInAnimation[k as keyof typeof builtInAnimation]
+    ),
+  ],
 };
 
-const square = {
-  x: 50,
-  y: 50,
-  width: 100,
-  height: 100
-};
-
-const menuId = 1;
-const MyAwesomeMenu: React.SFC<{
+interface SelectorState {
   theme: string;
   animation: string;
-  onClick: (p: any) => void;
-}> = ({ theme, animation, onClick }) => (
-  <Menu id={menuId} theme={theme} animation={animation}>
-    <Item onClick={onClick}>
-      <span role="role">💩</span>
-      Foo
-    </Item>
-    <Item onClick={onClick}>Ipsum</Item>
-    <Item disabled>Sit</Item>
-    {null}
-    <Separator />
-    <Item disabled>Dolor</Item>
-    <Separator />
-    <Submenu label="Foobar">
-      {null}
-      <Item onClick={onClick}>Bar</Item>
-    </Submenu>
-  </Menu>
-);
+  event: string;
+  disableItems: boolean;
+  hideItems: boolean;
+  customMountNode: boolean;
+  customPosition: boolean;
+}
 
-class App extends Component {
-  state = {
-    event: selector.events[0],
-    theme: selector.themes[0],
-    animation: selector.animations[0],
-    payload: {}
-  };
+function selectorReducer(
+  state: SelectorState,
+  nextState: Partial<SelectorState>
+) {
+  return { ...state, ...nextState };
+}
 
-  canvasRef!: HTMLCanvasElement;
+function singularize(s: string) {
+  return s.slice(0, -1);
+}
 
-  componentDidMount() {
-    const ctx = this.canvasRef.getContext('2d')!;
-    ctx.fillRect(square.x, square.y, square.width, square.height);
-    ctx.font = '16px arial';
-    ctx.fillStyle = 'black';
-    ctx.fillText('only the black box', 10, 20);
-    ctx.fillText('trigger the event', 10, 40);
-  }
-
-  handleMenuItem = (payload: MenuItemEventHandler) => {
-    const { clientX, clientY } = payload.event;
-    this.setState({
-      payload: {
-        event: { clientX, clientY },
-        props: payload.props
-      }
-    });
-  };
-
-  handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    if ((e.target as HTMLElement).tagName === 'CANVAS') {
-      const rect = this.canvasRef.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const isColliding =
-        x >= square.x &&
-        x <= square.x + square.width &&
-        y >= square.y &&
-        y <= square.y + square.height;
-
-      if (!isColliding) {
-        return;
-      }
-    }
-
-    contextMenu.show({
-      id: menuId,
-      event: e,
-      props: {
-        now: Date.now()
-      }
-    });
-  };
-
-  handleSelector = (e: ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
-
-  render() {
-    return (
-      <main>
-        <div className="settings-container">
-          <ul>
-            <li>
-              <label htmlFor="event">Event:</label>
-              <Select
-                name="event"
-                value={this.state.event}
-                data={selector.events}
-                onChange={this.handleSelector}
-              />
-            </li>
-            <li>
-              <label htmlFor="theme">Theme:</label>
-              <Select
-                name="theme"
-                value={this.state.theme}
-                data={selector.themes}
-                onChange={this.handleSelector}
-              />
-            </li>
-            <li>
-              <label htmlFor="animation">Animation:</label>
-              <Select
-                name="animation"
-                value={this.state.animation}
-                data={selector.animations}
-                onChange={this.handleSelector}
-              />
-            </li>
-          </ul>
-          <pre>{JSON.stringify(this.state.payload, null, 2)}</pre>
-        </div>
-        <hr />
-        <div className="boxes-container">
-          <div
-            className="box"
-            {...{ [`${this.state.event}`]: this.handleClick }}
-          >
-            event is triggered everywhere in the box
-          </div>
-          <hr />
-          <div>
-            <div>This is a canvas</div>
-            <canvas
-              {...{ [`${this.state.event}`]: this.handleClick }}
-              ref={(ref: HTMLCanvasElement) => (this.canvasRef = ref)}
-              width="200"
-              height="200"
-              style={{ border: '1px solid red' }}
-            >
-              this is a canvas
-            </canvas>
-          </div>
-          <hr />
-          <Table event={this.state.event} handleEvent={this.handleClick} />
-        </div>
-
-        <MyAwesomeMenu {...this.state} onClick={this.handleMenuItem} />
-      </main>
-    );
+function getDataTestSelector(key: string) {
+  switch (key) {
+    case 'animations':
+      return DATA_TEST.ANIMATION_SELECTOR;
+    case 'events':
+      return DATA_TEST.EVENT_SELECTOR;
+    case 'themes':
+      return DATA_TEST.THEME_SELECTOR;
   }
 }
 
-export default App;
+export function App() {
+  const [state, setState] = React.useReducer(selectorReducer, {
+    theme: selector.themes[0],
+    animation: selector.animations[0],
+    event: selector.events[0],
+    disableItems: false,
+    hideItems: false,
+    customMountNode: false,
+    customPosition: false,
+  });
+  const [payload, setPayload] = React.useState({
+    x: 0,
+    y: 0,
+    data: null,
+    props: null,
+  });
+  const { show } = useContextMenu({
+    id: MENU_ID,
+  });
+  const customMountNode = document.querySelector(
+    `[data-test="${DATA_TEST.MOUNT_NODE}"]`
+  );
+
+  function handleSelector({
+    target: { name, value },
+  }: React.ChangeEvent<HTMLSelectElement>) {
+    setState({
+      [singularize(name)]: value,
+    });
+  }
+
+  function handleCheckboxes(e: React.ChangeEvent<HTMLInputElement>) {
+    setState({
+      [e.target.name]: !state[e.target.name],
+    });
+  }
+
+  function handleContextMenu(e: React.MouseEvent) {
+    e.preventDefault();
+    show({
+      event: e,
+      props: {
+        key: 'value',
+      },
+      position: state.customPosition ? {
+        x: 0,
+        y: 0
+      }
+      : null
+    });
+  }
+
+  function handleItemClick(params: HandlerParams) {
+    setPayload({
+      x: params.event.clientX,
+      y: params.event.clientY,
+      data: params.data,
+      props: params.props,
+    });
+  }
+
+  return (
+    <main>
+      <section>
+        <h3>Settings</h3>
+        <ul>
+          {Object.keys(selector).map(key => (
+            <li key={key}>
+              <label htmlFor={key}>{key}</label>
+              <Select
+                name={key}
+                data-test={getDataTestSelector(key)}
+                value={state[singularize(key)]}
+                data={selector[key]}
+                onChange={handleSelector}
+              />
+            </li>
+          ))}
+          <li>
+            <label htmlFor="customMountNode">Use custom mount node</label>
+            <input
+              type="checkbox"
+              name="customMountNode"
+              checked={state.customMountNode}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_MOUNT_NODE}
+            />
+          </li>
+          <li>
+            <label htmlFor="customPosition">Use custom position</label>
+            <input
+              type="checkbox"
+              name="customPosition"
+              checked={state.customPosition}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_CUSTOM_POSITION}
+            />
+          </li>
+          <li>
+            <label htmlFor="disableItems">Disable items</label>
+            <input
+              type="checkbox"
+              name="disableItems"
+              checked={state.disableItems}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_DISABLE_ITEMS}
+            />
+          </li>
+          <li>
+            <label htmlFor="hideItems">Hide items</label>
+            <input
+              type="checkbox"
+              name="hideItems"
+              checked={state.hideItems}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_HIDE_ITEMS}
+            />
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h3>Item payload</h3>
+        <div>
+          <span>On click payload</span>
+          <span data-test="payload">{JSON.stringify(payload, null, 2)}</span>
+        </div>
+      </section>
+      <section>
+        <div
+          className="box"
+          {...{ [`${state.event}`]: handleContextMenu }}
+          data-test={DATA_TEST.CONTEXT_MENU_TRIGGER}
+        >
+          event is triggered everywhere in the box
+        </div>
+      </section>
+      <Menu
+        id={MENU_ID}
+        theme={state.theme}
+        animation={state.animation}
+        data-test={DATA_TEST.CONTEXT_MENU}
+        mountNode={state.customMountNode ? customMountNode : null}
+      >
+        <Item onClick={handleItemClick} data={{ id: 1 }}>
+          Item 1
+        </Item>
+        <Item>Item 2</Item>
+        <Item>Item 3</Item>
+        {state.disableItems && (
+          <>
+            <Item disabled data-test={DATA_TEST.DISABLED_ITEM_VIA_BOOLEAN}>
+              Disabled
+            </Item>
+            <Item
+              disabled={() => true}
+              data-test={DATA_TEST.DISABLED_ITEM_VIA_FUNCTION}
+            >
+              Disabled via function
+            </Item>
+          </>
+        )}
+        <Separator />
+        <Item>Item 4</Item>
+        {state.hideItems && (
+          <>
+            <Item hidden>Hidden</Item>
+            <Item hidden={() => true}>Hidden via function</Item>
+          </>
+        )}
+        <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU}>
+          <Item>Submenu Item 2</Item>
+          <Item>Submenu Item 3</Item>
+          <Separator />
+          <Item>Submenu Item 4</Item>
+          <Item>Submenu Item 5</Item>
+        </Submenu>
+        <Separator />
+        <Item>Item 5</Item>
+      </Menu>
+      <div data-test={DATA_TEST.MOUNT_NODE} />
+    </main>
+  );
+}

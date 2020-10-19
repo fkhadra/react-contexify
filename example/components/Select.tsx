@@ -1,18 +1,20 @@
-import React, { ChangeEvent } from 'react';
+import * as React from 'react';
 
-interface SelectProps {
+export interface SelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   name: string;
   value: string;
   data: string[];
-  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export default ({ name, value, data, onChange }: SelectProps) => (
-  <select name={name} id={name} value={value} onChange={onChange}>
-    {data.map(item => (
-      <option key={item} value={item}>
-        {item}
-      </option>
-    ))}
-  </select>
-);
+export function Select({ name, value, data, onChange, ...rest }: SelectProps) {
+  return (
+    <select name={name} id={name} value={value} onChange={onChange} {...rest}>
+      {data.map(item => (
+        <option key={item} value={item}>
+          {item}
+        </option>
+      ))}
+    </select>
+  );
+}
