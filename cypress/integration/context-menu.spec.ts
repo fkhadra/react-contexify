@@ -139,4 +139,17 @@ describe('Context menu', () => {
       `${STYLE.animationWillEnter}${animation.zoom}`
     );
   });
+
+  it('Can specify a custom position', () => {
+    cy.getByDataTest(DATA_TEST.TOGGLE_CUSTOM_POSITION).check();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).then(el => {
+      const { x, y } = el[0].getBoundingClientRect();
+
+      expect(x).to.be.eq(0, 'x match custom coordinate');
+      expect(y).to.be.eq(0, 'y match custom coordinate');
+    });
+  });
 });
