@@ -34,7 +34,6 @@ interface SelectorState {
   theme: string;
   animation: string;
   event: string;
-  disableItems: boolean;
   hideItems: boolean;
   customMountNode: boolean;
   customPosition: boolean;
@@ -67,7 +66,6 @@ export function App() {
     theme: selector.themes[0],
     animation: selector.animations[0],
     event: selector.events[0],
-    disableItems: false,
     hideItems: false,
     customMountNode: false,
     customPosition: false,
@@ -106,11 +104,12 @@ export function App() {
       props: {
         key: 'value',
       },
-      position: state.customPosition ? {
-        x: 0,
-        y: 0
-      }
-      : null
+      position: state.customPosition
+        ? {
+            x: 0,
+            y: 0,
+          }
+        : null,
     });
   }
 
@@ -161,16 +160,6 @@ export function App() {
             />
           </li>
           <li>
-            <label htmlFor="disableItems">Disable items</label>
-            <input
-              type="checkbox"
-              name="disableItems"
-              checked={state.disableItems}
-              onChange={handleCheckboxes}
-              data-test={DATA_TEST.TOGGLE_DISABLE_ITEMS}
-            />
-          </li>
-          <li>
             <label htmlFor="hideItems">Hide items</label>
             <input
               type="checkbox"
@@ -186,7 +175,7 @@ export function App() {
         <h3>Item payload</h3>
         <div>
           <span>On click payload</span>
-          <span data-test="payload">{JSON.stringify(payload, null, 2)}</span>
+          <span data-test={DATA_TEST.ONCLICK_PAYLOAD}>{JSON.stringify(payload, null, 2)}</span>
         </div>
       </section>
       <section>
@@ -205,38 +194,38 @@ export function App() {
         data-test={DATA_TEST.CONTEXT_MENU}
         mountNode={state.customMountNode ? customMountNode : null}
       >
-        <Item onClick={handleItemClick} data={{ id: 1 }}>
+        <Item
+          onClick={handleItemClick}
+          data={{ id: 1 }}
+          data-test={DATA_TEST.MENU_FIRST_ITEM}
+          hidden={state.hideItems}
+        >
           Item 1
         </Item>
-        <Item>Item 2</Item>
+        <Item
+          data-test={DATA_TEST.MENU_SECOND_ITEM}
+          hidden={() => state.hideItems}
+        >
+          Item 2
+        </Item>
         <Item>Item 3</Item>
-        {state.disableItems && (
-          <>
-            <Item disabled data-test={DATA_TEST.DISABLED_ITEM_VIA_BOOLEAN}>
-              Disabled
-            </Item>
-            <Item
-              disabled={() => true}
-              data-test={DATA_TEST.DISABLED_ITEM_VIA_FUNCTION}
-            >
-              Disabled via function
-            </Item>
-          </>
-        )}
+        <Item disabled data-test={DATA_TEST.DISABLED_ITEM_VIA_BOOLEAN}>
+          Disabled
+        </Item>
+        <Item
+          disabled={() => true}
+          data-test={DATA_TEST.DISABLED_ITEM_VIA_FUNCTION}
+        >
+          Disabled via function
+        </Item>
         <Separator />
         <Item>Item 4</Item>
-        {state.hideItems && (
-          <>
-            <Item hidden>Hidden</Item>
-            <Item hidden={() => true}>Hidden via function</Item>
-          </>
-        )}
         <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU}>
+          <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
           <Item>Submenu Item 2</Item>
-          <Item>Submenu Item 3</Item>
           <Separator />
+          <Item>Submenu Item 3</Item>
           <Item>Submenu Item 4</Item>
-          <Item>Submenu Item 5</Item>
         </Submenu>
         <Separator />
         <Item>Item 5</Item>

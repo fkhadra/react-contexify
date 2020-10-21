@@ -152,4 +152,31 @@ describe('Context menu', () => {
       expect(y).to.be.eq(0, 'y match custom coordinate');
     });
   });
+
+  it('Should not close when clicking a disabled item', () => {
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+
+    cy.getByDataTest(DATA_TEST.DISABLED_ITEM_VIA_BOOLEAN).click();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+
+    cy.getByDataTest(DATA_TEST.DISABLED_ITEM_VIA_FUNCTION).click();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+  });
+
+  it('Should not close when clicking on submenu', () => {
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+
+    cy.getByDataTest(DATA_TEST.SUBMENU).click();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+  });
+
+  it('Should close when clicking on an item', () => {
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+
+    cy.getByDataTest(DATA_TEST.MENU_FIRST_ITEM).click();
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+  });
 });
