@@ -22,7 +22,8 @@
     "cypress:open": "cypress open",
     "sass": "sass scss/main.scss dist/ReactToastify.css",
     "postsass": "postcss dist/ReactToastify.css --use autoprefixer -m -o dist/ReactContexify.css",
-    "style": "npm run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents"
+    "style": "npm run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents && npm run gen-style-injector",
+    "gen-style-injector": "node scripts/style-injector.js"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -54,7 +55,7 @@
     "react-component",
     "menu",
     "react-contextmenu",
-    "react-contexify", 
+    "react-contexify",
     "popup"
   ],
   "module": "dist/react-contexify.esm.js",
