@@ -14,7 +14,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "npm run prepare",
-    "test": "tsdx test --passWithNoTests",
+    "test": "cypress run",
+    "ci": "npm run lint && npm run build && cd example && npm start & wait-on http://localhost:1234 && npm test",
     "lint": "tsdx lint",
     "prepare": "tsdx build && npm run style",
     "size": "size-limit",
@@ -85,7 +86,8 @@
     "size-limit": "^4.6.0",
     "tsdx": "^0.14.0",
     "tslib": "^2.0.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "wait-on": "^5.2.0"
   },
   "dependencies": {
     "clsx": "^1.1.1"
