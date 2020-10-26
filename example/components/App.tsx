@@ -175,7 +175,9 @@ export function App() {
         <h3>Item payload</h3>
         <div>
           <span>On click payload</span>
-          <span data-test={DATA_TEST.ONCLICK_PAYLOAD}>{JSON.stringify(payload, null, 2)}</span>
+          <span data-test={DATA_TEST.ONCLICK_PAYLOAD}>
+            {JSON.stringify(payload, null, 2)}
+          </span>
         </div>
       </section>
       <section>
@@ -228,7 +230,7 @@ export function App() {
           <Item>Submenu Item 4</Item>
         </Submenu>
         <Separator />
-        <Item>Item 5</Item>
+        <Item data-test={DATA_TEST.MENU_LAST_ITEM}>Item 5</Item>
       </Menu>
       <div data-test={DATA_TEST.MOUNT_NODE} />
     </main>

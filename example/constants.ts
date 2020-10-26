@@ -13,8 +13,9 @@ export const enum DATA_TEST {
   DISABLED_ITEM_VIA_BOOLEAN = 'disabled-item-boolean',
   DISABLED_ITEM_VIA_FUNCTION = 'disabled-item-function',
   SUBMENU = 'submenu',
-  MENU_FIRST_ITEM = "menu-firt-item",
-  MENU_SECOND_ITEM = "menu-second-item",
-  SUBMENU_FIRST_ITEM = "submenu-firt-item",
-  ONCLICK_PAYLOAD = "item-payload"
+  MENU_FIRST_ITEM = 'menu-firt-item',
+  MENU_SECOND_ITEM = 'menu-second-item',
+  MENU_LAST_ITEM = 'menu-last-item',
+  SUBMENU_FIRST_ITEM = 'submenu-firt-item',
+  ONCLICK_PAYLOAD = 'item-payload',
 }
