@@ -89,7 +89,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
         style.top = 'initial';
       } else {
         style.bottom = 'initial';
-        style.top = 0;
       }
 
       setPosition(style);
