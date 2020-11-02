@@ -2,4 +2,7 @@ language: node_js
 node_js:
   - "14"
 script:
+  - cd example
+  - yarn
+  - cd ..
   - yarn ci
