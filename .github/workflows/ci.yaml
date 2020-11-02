@@ -16,3 +16,5 @@ jobs:
         node-version: 14
     - run: cd example && yarn
     - run: yarn ci
+      env:
+        CI: true
