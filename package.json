@@ -13,17 +13,17 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "npm run prepare",
+    "build": "yarn run prepare",
     "test": "cypress run",
-    "ci": "npm run lint && npm run build && cd example && npm start & wait-on http://localhost:1234 && npm test",
+    "ci": "yarn run lint && yarn run build && cd example && yarn start & wait-on http://localhost:1234 && yarn test",
     "lint": "tsdx lint",
-    "prepare": "tsdx build && npm run style",
+    "prepare": "tsdx build && yarn run style",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "cypress:open": "cypress open",
     "sass": "sass scss/main.scss dist/ReactToastify.css",
     "postsass": "postcss dist/ReactToastify.css --use autoprefixer -m -o dist/ReactContexify.css",
-    "style": "npm run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents && npm run gen-style-injector",
+    "style": "yarn run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents && yarn run gen-style-injector",
     "gen-style-injector": "node scripts/style-injector.js"
   },
   "peerDependencies": {
