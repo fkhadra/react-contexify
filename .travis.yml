@@ -3,6 +3,7 @@ node_js:
   - "14"
 cache:
   # Caches $HOME/.npm when npm ci is default script command
+  #
   # Caches node_modules in all other cases
   yarn: true
   directories:
