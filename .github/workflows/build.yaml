@@ -1,0 +1,27 @@
+name: React-contexify CI
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+            node-version: '14.x'
+      - name: Install example dependencies
+        run: cd example && yarn
+      - name: Install dependencies
+        run: yarn 
+      - name: Lint
+        run: yarn lint
+      - name: Cypress 
+        uses: cypress-io/github-action@v2
+        with:
+            start: yarn start:example
+            wait-on: 'http://localhost:1234'
+      
+      
