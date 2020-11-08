@@ -1,9 +1,11 @@
 import { contextMenu } from '../core';
 import { ContextMenuParams } from '../types';
 
-export type UseContextMenuProps = Pick<ContextMenuParams, 'id' | 'props'>;
+export type UseContextMenuProps = Partial<
+  Pick<ContextMenuParams, 'id' | 'props'>
+>;
 
-export function useContextMenu(props: UseContextMenuProps) {
+export function useContextMenu(props: UseContextMenuProps = {}) {
   return {
     show(params: ContextMenuParams) {
       contextMenu.show({
