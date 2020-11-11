@@ -10,7 +10,6 @@ export const enum STYLE {
   item = 'react-contexify__item',
   itemDisabled = 'react-contexify__item--disabled',
   itemContent = 'react-contexify__item__content',
-  itemIcon = 'react-contexify__item__icon',
   theme = 'react-contexify__theme--',
   animationWillEnter = 'react-contexify__will-enter--',
   animationWillLeave = 'react-contexify__will-leave--',

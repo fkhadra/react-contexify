@@ -29,6 +29,7 @@
   }
 
   &__submenu-arrow {
+    margin-left: auto;
     font-size: 12px;
   }
 
@@ -66,16 +67,10 @@
     &__content {
       padding: 6px 12px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       white-space: nowrap;
       color: #333;
       position: relative;
-    }
-    &__icon {
-      font-size: 20px;
-      margin-right: 5px;
-      font-style: normal;
     }
   }
 }
