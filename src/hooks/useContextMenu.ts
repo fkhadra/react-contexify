@@ -5,14 +5,20 @@ export type UseContextMenuProps = Partial<
   Pick<ContextMenuParams, 'id' | 'props'>
 >;
 
-export function useContextMenu(props: UseContextMenuProps = {}) {
+export function useContextMenu(props?: UseContextMenuProps) {
   return {
-    show(event: MouseOrTouchEvent, params: Omit<ContextMenuParams, 'event'>) {
+    show(event: MouseOrTouchEvent, params?: Omit<ContextMenuParams, 'event'>) {
+      if (process.env.NODE_ENV === 'development') {
+        if (!props?.id && !params?.id)
+          console.error(
+            "You need to provide an id when initializing the hook `useContextMenu({ id: 'your id' })` or when you display the menu `show(e, { id: 'your id' })`. The later is used to override the one defined during initialization."
+          );
+      }
       contextMenu.show({
-        id: (props.id || params.id) as string,
-        props: props.props || params.props,
+        id: (params?.id || props?.id) as string,
+        props: params?.props || props?.props,
         event: event,
-        position: params.position,
+        position: params?.position,
       });
     },
     hideAll() {
