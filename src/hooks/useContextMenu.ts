@@ -1,5 +1,5 @@
 import { contextMenu } from '../core';
-import { ContextMenuParams } from '../types';
+import { ContextMenuParams, MouseOrTouchEvent } from '../types';
 
 export type UseContextMenuProps = Partial<
   Pick<ContextMenuParams, 'id' | 'props'>
@@ -7,11 +7,11 @@ export type UseContextMenuProps = Partial<
 
 export function useContextMenu(props: UseContextMenuProps = {}) {
   return {
-    show(params: ContextMenuParams) {
+    show(event: MouseOrTouchEvent, params: Omit<ContextMenuParams, 'event'>) {
       contextMenu.show({
         id: (props.id || params.id) as string,
         props: props.props || params.props,
-        event: params.event,
+        event: event,
         position: params.position,
       });
     },

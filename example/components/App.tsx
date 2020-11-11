@@ -98,8 +98,7 @@ export function App() {
   }
 
   function handleContextMenu(e: React.MouseEvent) {
-    show({
-      event: e,
+    show(e, {
       props: {
         key: 'value',
       },
