@@ -98,7 +98,6 @@ export function App() {
   }
 
   function handleContextMenu(e: React.MouseEvent) {
-    e.preventDefault();
     show({
       event: e,
       props: {

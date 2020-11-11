@@ -21,6 +21,8 @@ export interface ContextMenu {
 
 const contextMenu: ContextMenu = {
   show({ id, event, props, position }) {
+    if (event.preventDefault) event.preventDefault();
+
     eventManager.emit(EVENT.HIDE_ALL).emit(id, {
       event: (event as SyntheticEvent).nativeEvent || event,
       props,
