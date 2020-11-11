@@ -39,7 +39,7 @@ export interface ItemProps
    * to the `Item`.
    * `({ event, props, data }) => ...`
    */
-  onClick: (args: HandlerParams) => void;
+  onClick?: (args: HandlerParams) => void;
 }
 
 export const Item: React.FC<ItemProps> = ({
