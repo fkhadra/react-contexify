@@ -32,11 +32,13 @@ const selector = {
 
 interface SelectorState {
   theme: string;
-  animation: string;
+  animation: string | false;
   event: string;
   hideItems: boolean;
   customMountNode: boolean;
   customPosition: boolean;
+  disableEnterAnimation: boolean;
+  disableExitAnimation: boolean;
 }
 
 function selectorReducer(
@@ -64,11 +66,13 @@ function getDataTestSelector(key: string) {
 export function App() {
   const [state, setState] = React.useReducer(selectorReducer, {
     theme: selector.themes[0],
-    animation: selector.animations[0],
+    animation: false,
     event: selector.events[0],
     hideItems: false,
     customMountNode: false,
     customPosition: false,
+    disableEnterAnimation: false,
+    disableExitAnimation: false,
   });
   const [payload, setPayload] = React.useState({
     x: 0,
@@ -87,7 +91,7 @@ export function App() {
     target: { name, value },
   }: React.ChangeEvent<HTMLSelectElement>) {
     setState({
-      [singularize(name)]: value,
+      [singularize(name)]: value === 'none' ? false : value,
     });
   }
 
@@ -120,6 +124,20 @@ export function App() {
     });
   }
 
+  function getAnimation() {
+    const { disableEnterAnimation, disableExitAnimation, animation } = state;
+    if (!animation) {
+      return false;
+    } else if (disableEnterAnimation || disableExitAnimation) {
+      return {
+        enter: disableEnterAnimation ? false : animation,
+        exit: disableExitAnimation ? false : animation,
+      };
+    }
+
+    return animation;
+  }
+
   return (
     <main>
       <section>
@@ -129,6 +147,7 @@ export function App() {
             <li key={key}>
               <label htmlFor={key}>{key}</label>
               <Select
+                id={key}
                 name={key}
                 data-test={getDataTestSelector(key)}
                 value={state[singularize(key)]}
@@ -141,6 +160,7 @@ export function App() {
             <label htmlFor="customMountNode">Use custom mount node</label>
             <input
               type="checkbox"
+              id="customMountNode"
               name="customMountNode"
               checked={state.customMountNode}
               onChange={handleCheckboxes}
@@ -151,6 +171,7 @@ export function App() {
             <label htmlFor="customPosition">Use custom position</label>
             <input
               type="checkbox"
+              id="customPosition"
               name="customPosition"
               checked={state.customPosition}
               onChange={handleCheckboxes}
@@ -160,11 +181,36 @@ export function App() {
           <li>
             <label htmlFor="hideItems">Hide items</label>
             <input
+              id="hideItems"
               type="checkbox"
               name="hideItems"
               checked={state.hideItems}
               onChange={handleCheckboxes}
               data-test={DATA_TEST.TOGGLE_HIDE_ITEMS}
+            />
+          </li>
+          <li>
+            <label htmlFor="disableEnterAnimation">
+              Disable enter animation
+            </label>
+            <input
+              id="disableEnterAnimation"
+              type="checkbox"
+              name="disableEnterAnimation"
+              checked={state.disableEnterAnimation}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_DISABLE_ENTER_ANIMATION}
+            />
+          </li>
+          <li>
+            <label htmlFor="disableExitAnimation">Disable exit animation</label>
+            <input
+              id="disableExitAnimation"
+              type="checkbox"
+              name="disableExitAnimation"
+              checked={state.disableExitAnimation}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_DISABLE_EXIT_ANIMATION}
             />
           </li>
         </ul>
@@ -190,7 +236,7 @@ export function App() {
       <Menu
         id={MENU_ID}
         theme={state.theme}
-        animation={state.animation}
+        animation={getAnimation()}
         data-test={DATA_TEST.CONTEXT_MENU}
         mountNode={state.customMountNode ? customMountNode : null}
       >

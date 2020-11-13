@@ -12,11 +12,16 @@ import { Portal, PortalProps } from './Portal';
 import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
-import { MouseOrTouchEvent, MenuId, ContextMenuParams } from '../types';
+import {
+  MouseOrTouchEvent,
+  MenuId,
+  ContextMenuParams,
+  MenuAnimation,
+} from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
 import { NOOP, STYLE, EVENT } from '../constants';
-import { cloneItems, getMousePosition } from './utils';
+import { cloneItems, getMousePosition, hasExitAnimation, isStr } from './utils';
 
 export interface MenuProps
   extends PortalProps,
@@ -39,11 +44,23 @@ export interface MenuProps
   theme?: string;
 
   /**
-   * Animation is appended to `.react-contexify__will-enter--${given animation}`
+   * Animation is appended to
+   * - `.react-contexify__will-enter--${given animation}`
+   * - `.react-contexify__will-leave--${given animation}`
    *
-   * Built-in animations are fade, flip, pop, zoom
+   * - To disable all animations you can pass `false`
+   * - To disable only the enter or the exit animation you can provide an object `{enter: false, exit: 'exitAnimation'}`
+   *
+   * - default is set to `scale`
+   *
+   * To use the built-in animation a helper in available
+   * `import { animation } from 'react-contexify`
+   *
+   * animation.fade
+   *
+   *
    */
-  animation?: string;
+  animation?: MenuAnimation;
 
   /**
    * Invoked when the menu is shown.
@@ -62,6 +79,7 @@ interface MenuState {
   visible: boolean;
   nativeEvent: MouseOrTouchEvent;
   propsFromTrigger: any;
+  willLeave: boolean;
 }
 
 function reducer(state: MenuState, payload: Partial<MenuState>) {
@@ -71,11 +89,11 @@ function reducer(state: MenuState, payload: Partial<MenuState>) {
 export const Menu: React.FC<MenuProps> = ({
   id,
   theme,
-  animation,
   style,
   className,
   children,
   mountNode,
+  animation = 'scale',
   onHidden = NOOP,
   onShown = NOOP,
   ...rest
@@ -86,6 +104,7 @@ export const Menu: React.FC<MenuProps> = ({
     visible: false,
     nativeEvent: {} as MouseOrTouchEvent,
     propsFromTrigger: null,
+    willLeave: false,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
   const didMount = useRef(false);
@@ -225,14 +244,49 @@ export const Menu: React.FC<MenuProps> = ({
       return;
     }
 
-    setState({ visible: false });
+    if (state.visible) {
+      hasExitAnimation(animation)
+        ? setState({ willLeave: true })
+        : setState({ visible: false });
+    }
   }
 
-  const cssClasses = cx(STYLE.menu, className, {
-    [STYLE.theme + theme]: theme,
-    [STYLE.animationWillEnter + animation]: animation,
-  });
-  const { visible, nativeEvent, propsFromTrigger, x, y } = state;
+  function handleAnimationEnd() {
+    if (state.willLeave && state.visible) {
+      setState({ visible: false, willLeave: false });
+    }
+  }
+
+  function computeAnimationClasses() {
+    if (!animation) return null;
+
+    if (isStr(animation)) {
+      return cx({
+        [`${STYLE.animationWillEnter}${animation}`]:
+          animation && visible && !willLeave,
+        [`${STYLE.animationWillLeave}${animation} ${STYLE.animationWillLeave}'disabled'`]:
+          animation && visible && willLeave,
+      });
+    } else if ('enter' in animation && 'exit' in animation) {
+      return cx({
+        [`${STYLE.animationWillEnter}${animation.enter}`]:
+          animation.enter && visible && !willLeave,
+        [`${STYLE.animationWillLeave}${animation.exit} ${STYLE.animationWillLeave}'disabled'`]:
+          animation.exit && visible && willLeave,
+      });
+    }
+
+    return null;
+  }
+
+  const { visible, nativeEvent, propsFromTrigger, x, y, willLeave } = state;
+  const cssClasses = cx(
+    STYLE.menu,
+    className,
+    { [`${STYLE.theme}${theme}`]: theme },
+    computeAnimationClasses()
+  );
+
   const menuStyle = {
     ...style,
     left: x,
@@ -247,6 +301,7 @@ export const Menu: React.FC<MenuProps> = ({
           <div
             {...rest}
             className={cssClasses}
+            onAnimationEnd={handleAnimationEnd}
             style={menuStyle}
             ref={nodeRef}
             role="menu"

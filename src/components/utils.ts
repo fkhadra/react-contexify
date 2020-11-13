@@ -1,9 +1,18 @@
 import { Children, cloneElement, ReactNode, ReactElement } from 'react';
 
-import { BooleanPredicate, HandlerParams, MouseOrTouchEvent } from '../types';
+import {
+  BooleanPredicate,
+  HandlerParams,
+  MenuAnimation,
+  MouseOrTouchEvent,
+} from '../types';
 
 export function isFn(v: any): v is Function {
   return typeof v === 'function';
+}
+
+export function isStr(v: any): v is String {
+  return typeof v === 'string';
 }
 
 export function isTouchEvent(e: MouseOrTouchEvent): e is TouchEvent {
@@ -47,4 +56,11 @@ export function getPredicateValue(
   payload: HandlerParams
 ) {
   return isFn(predicate) ? predicate(payload) : predicate;
+}
+
+export function hasExitAnimation(animation: MenuAnimation) {
+  return !!(
+    animation &&
+    (isStr(animation) || ('exit' in animation && animation.exit))
+  );
 }

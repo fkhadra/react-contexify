@@ -10,6 +10,8 @@ export const enum DATA_TEST {
   ANIMATION_SELECTOR = 'animation-selector',
   EVENT_SELECTOR = 'event-selector',
   TOGGLE_HIDE_ITEMS = 'hide-items',
+  TOGGLE_DISABLE_ENTER_ANIMATION = 'disable-enter-animation',
+  TOGGLE_DISABLE_EXIT_ANIMATION = 'disable-exit-animation',
   DISABLED_ITEM_VIA_BOOLEAN = 'disabled-item-boolean',
   DISABLED_ITEM_VIA_FUNCTION = 'disabled-item-function',
   SUBMENU = 'submenu',

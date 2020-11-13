@@ -62,3 +62,22 @@ export interface InternalProps {
    */
   propsFromTrigger?: any;
 }
+
+/**
+ * Animation is appended to
+ * - `.react-contexify__will-enter--${given animation}`
+ * - `.react-contexify__will-leave--${given animation}`
+ *
+ * - To disable all animations you can pass `false`
+ * - To disable only the enter or the exit animation you can provide an object `{enter: false, exit: 'exitAnimation'}`
+ * - default is set to `scale`
+ *
+ * To use the built-in animation a helper in available
+ * `import { animation } from 'react-contexify`
+ *
+ * animation.fade
+ */
+export type MenuAnimation =
+  | string
+  | false
+  | { enter: string | false; exit: string | false };

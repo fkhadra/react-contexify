@@ -1,6 +1,12 @@
 import { DATA_TEST } from '../../example/constants';
 import { STYLE, theme, animation } from '../../src/constants';
 
+const builtInAnimationClasses = Object.keys(animation).map(k => ({
+  name: k,
+  enter: `${STYLE.animationWillEnter}${animation[k]}`,
+  exit: `${STYLE.animationWillLeave}${animation[k]}`,
+}));
+
 describe('Context menu', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -104,40 +110,97 @@ describe('Context menu', () => {
   });
 
   it('Can use built-in animation', () => {
+    builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(
+        builtInAnimation.name
+      );
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'have.class',
+        builtInAnimation.enter
+      );
+      // close the menu
+      cy.get('body').type('{esc}');
+
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'have.class',
+        builtInAnimation.exit
+      );
+
+      // wait for exit animation to complete
+      cy.wait(500);
+    });
+  });
+
+  it('Can disable animation', () => {
+    cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select('none');
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
 
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-      'have.class',
-      `${STYLE.animationWillEnter}none`
-    );
+    builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'not.have.class',
+        builtInAnimation.enter
+      );
+    });
 
-    cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(animation.fade);
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-      'have.class',
-      `${STYLE.animationWillEnter}${animation.fade}`
-    );
+    cy.get('body').type('{esc}');
 
-    cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(animation.flip);
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-      'have.class',
-      `${STYLE.animationWillEnter}${animation.flip}`
-    );
+    builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'not.have.class',
+        builtInAnimation.exit
+      );
+    });
+  });
 
-    cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(animation.pop);
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-      'have.class',
-      `${STYLE.animationWillEnter}${animation.pop}`
-    );
+  it('Can disable enter animation only', () => {
+    cy.getByDataTest(DATA_TEST.TOGGLE_DISABLE_ENTER_ANIMATION).check();
 
-    cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(animation.zoom);
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-      'have.class',
-      `${STYLE.animationWillEnter}${animation.zoom}`
-    );
+    builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(
+        builtInAnimation.name
+      );
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'not.have.class',
+        builtInAnimation.enter
+      );
+      // close the menu
+      cy.get('body').type('{esc}');
+
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'have.class',
+        builtInAnimation.exit
+      );
+
+      // wait for exit animation to complete
+      cy.wait(500);
+    });
+  });
+
+  it('Can disable exit animation only', () => {
+    cy.getByDataTest(DATA_TEST.TOGGLE_DISABLE_EXIT_ANIMATION).check();
+
+    builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select(
+        builtInAnimation.name
+      );
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'have.class',
+        builtInAnimation.enter
+      );
+      // close the menu
+      cy.get('body').type('{esc}');
+
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
+        'not.have.class',
+        builtInAnimation.exit
+      );
+
+      // wait for exit animation to complete
+      cy.wait(500);
+    });
   });
 
   it('Can specify a custom position', () => {
