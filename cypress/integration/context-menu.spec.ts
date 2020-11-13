@@ -21,22 +21,6 @@ describe('Context menu', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
   });
 
-  it('Can mount on specified dom node', () => {
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
-
-    cy.getByDataTest(DATA_TEST.MOUNT_NODE).then(el => {
-      expect(el.children().length).to.eq(0);
-    });
-
-    cy.getByDataTest(DATA_TEST.TOGGLE_MOUNT_NODE).check();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-
-    cy.getByDataTest(DATA_TEST.MOUNT_NODE).then(el => {
-      expect(el.children().length).to.greaterThan(0);
-    });
-  });
-
   it('Close on Escape', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');

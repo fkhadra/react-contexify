@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import cx from 'clsx';
 
-import { Portal, PortalProps } from './Portal';
 import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
@@ -30,8 +29,7 @@ import {
 } from './utils';
 
 export interface MenuProps
-  extends PortalProps,
-    Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
   /**
    * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
@@ -103,7 +101,6 @@ export const Menu: React.FC<MenuProps> = ({
   style,
   className,
   children,
-  mountNode,
   animation = 'scale',
   onHidden = NOOP,
   onShown = NOOP,
@@ -315,24 +312,22 @@ export const Menu: React.FC<MenuProps> = ({
   };
 
   return (
-    <Portal mountNode={mountNode}>
-      <RefTrackerProvider refTracker={refTracker}>
-        {visible && (
-          <div
-            {...rest}
-            className={cssClasses}
-            onAnimationEnd={handleAnimationEnd}
-            style={menuStyle}
-            ref={nodeRef}
-            role="menu"
-          >
-            {cloneItems(children, {
-              propsFromTrigger,
-              nativeEvent: nativeEvent,
-            })}
-          </div>
-        )}
-      </RefTrackerProvider>
-    </Portal>
+    <RefTrackerProvider refTracker={refTracker}>
+      {visible && (
+        <div
+          {...rest}
+          className={cssClasses}
+          onAnimationEnd={handleAnimationEnd}
+          style={menuStyle}
+          ref={nodeRef}
+          role="menu"
+        >
+          {cloneItems(children, {
+            propsFromTrigger,
+            nativeEvent: nativeEvent,
+          })}
+        </div>
+      )}
+    </RefTrackerProvider>
   );
 };
