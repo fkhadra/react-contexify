@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import cx from 'clsx';
 
-import { InternalProps, BooleanPredicate, MouseAndTouchEvent } from '../types';
+import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
 import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
 import { useRefTracker } from '../hooks';
 import { STYLE } from '../constants';
@@ -64,7 +64,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
     bottom: 'initial',
   });
   const handlerParams = {
-    event: nativeEvent as MouseAndTouchEvent,
+    event: nativeEvent as HandlerParamsEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);

@@ -13,7 +13,7 @@ import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
 import {
-  MouseOrTouchEvent,
+  TriggerEvent,
   MenuId,
   ContextMenuParams,
   MenuAnimation,
@@ -77,7 +77,7 @@ interface MenuState {
   x: number;
   y: number;
   visible: boolean;
-  nativeEvent: MouseOrTouchEvent;
+  nativeEvent: TriggerEvent;
   propsFromTrigger: any;
   willLeave: boolean;
 }
@@ -102,7 +102,7 @@ export const Menu: React.FC<MenuProps> = ({
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: {} as MouseOrTouchEvent,
+    nativeEvent: {} as TriggerEvent,
     propsFromTrigger: null,
     willLeave: false,
   });

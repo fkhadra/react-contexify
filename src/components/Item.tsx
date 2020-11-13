@@ -5,7 +5,7 @@ import {
   HandlerParams,
   InternalProps,
   BooleanPredicate,
-  MouseAndTouchEvent,
+  HandlerParamsEvent,
 } from '../types';
 import { useRefTrackerContext } from './RefTrackerProvider';
 import { NOOP, STYLE } from '../constants';
@@ -63,7 +63,7 @@ export const Item: React.FC<ItemProps> = ({
   const refTracker = useRefTrackerContext();
   const handlerParams = {
     data,
-    event: nativeEvent as MouseAndTouchEvent,
+    event: nativeEvent as HandlerParamsEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);

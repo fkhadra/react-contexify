@@ -3,16 +3,18 @@ import { ShowContextMenuParams } from '../core';
 /**
  * The event that triggered the context menu
  */
-export type MouseAndTouchEvent = MouseEvent & TouchEvent;
+export type HandlerParamsEvent = MouseEvent & TouchEvent & KeyboardEvent;
 
 /**
  * Pass the event handler. It's used to determine the position of the cursor
  */
-export type MouseOrTouchEvent =
+export type TriggerEvent =
   | MouseEvent
   | TouchEvent
+  | KeyboardEvent
   | React.MouseEvent
-  | React.TouchEvent;
+  | React.TouchEvent
+  | React.KeyboardEvent;
 
 export interface ContextMenuParams extends Omit<ShowContextMenuParams, 'id'> {
   id?: MenuId;
@@ -38,7 +40,7 @@ export interface HandlerParams<Props = any, Data = any> {
   /**
    * The event that triggered the context menu
    */
-  event: MouseAndTouchEvent;
+  event: HandlerParamsEvent;
 
   /**
    * Any props supplied when triggering the menu
@@ -55,7 +57,7 @@ export interface InternalProps {
   /**
    * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
    */
-  nativeEvent?: MouseOrTouchEvent;
+  nativeEvent?: TriggerEvent;
 
   /**
    * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`

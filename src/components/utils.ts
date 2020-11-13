@@ -4,7 +4,7 @@ import {
   BooleanPredicate,
   HandlerParams,
   MenuAnimation,
-  MouseOrTouchEvent,
+  TriggerEvent,
 } from '../types';
 
 export function isFn(v: any): v is Function {
@@ -15,13 +15,13 @@ export function isStr(v: any): v is String {
   return typeof v === 'string';
 }
 
-export function isTouchEvent(e: MouseOrTouchEvent): e is TouchEvent {
+export function isTouchEvent(e: TriggerEvent): e is TouchEvent {
   return e.type === 'touchend';
 }
 
 export function cloneItems(
   children: ReactNode,
-  props: { nativeEvent: MouseOrTouchEvent; propsFromTrigger?: object }
+  props: { nativeEvent: TriggerEvent; propsFromTrigger?: object }
 ) {
   return Children.map(
     // remove null item
@@ -30,7 +30,7 @@ export function cloneItems(
   );
 }
 
-export function getMousePosition(e: MouseOrTouchEvent) {
+export function getMousePosition(e: TriggerEvent) {
   const pos = {
     x: 0,
     y: 0,

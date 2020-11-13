@@ -1,12 +1,12 @@
 import { eventManager } from './eventManager';
-import { MenuId, MouseOrTouchEvent } from '../types';
+import { MenuId, TriggerEvent } from '../types';
 import { SyntheticEvent } from 'react';
 
 import { EVENT } from '../constants';
 
 export interface ShowContextMenuParams {
   id: MenuId;
-  event: MouseOrTouchEvent;
+  event: TriggerEvent;
   props?: any;
   position?: {
     x: number;
