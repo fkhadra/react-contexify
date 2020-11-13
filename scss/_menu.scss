@@ -41,6 +41,10 @@
     background-color: rgba(0, 0, 0, 0.2);
   }
 
+  &__will-leave--disabled {
+    pointer-events: none;
+  }
+
   &__item {
     cursor: pointer;
     position: relative;

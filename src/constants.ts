@@ -27,8 +27,8 @@ export const theme = {
 export const animation = {
   fade: 'fade',
   flip: 'flip',
-  pop: 'pop',
-  zoom: 'zoom',
+  scale: 'scale',
+  slide: 'slide',
 };
 
 export const NOOP = () => {};

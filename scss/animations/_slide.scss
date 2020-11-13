@@ -1,0 +1,33 @@
+$delay: 0.3s;
+
+@keyframes react-contexify__slideIn {
+  from {
+    opacity: 0;
+    transform: scale3d(1, 0.3, 1);
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes react-contexify__slideOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: scale3d(1, 0.3, 1);
+  }
+}
+
+.react-contexify__will-enter--slide {
+  transform-origin: top center;
+  animation: react-contexify__slideIn $delay;
+}
+
+.react-contexify__will-leave--slide {
+  transform-origin: top center;
+  animation: react-contexify__slideOut $delay;
+}
