@@ -35,6 +35,11 @@ export interface ItemProps
   hidden?: BooleanPredicate;
 
   /**
+   * Close the menu when an Item is clicked. If a function is used, a boolean must be returned
+   */
+  closeOnClick?: BooleanPredicate;
+
+  /**
    * Callback when the current `Item` is clicked. The callback give you access to the current `event`, the `props` and the `data` passed
    * to the `Item`.
    * `({ event, props, data }) => ...`
@@ -50,6 +55,7 @@ export const Item: React.FC<ItemProps> = ({
   data,
   propsFromTrigger,
   onClick = NOOP,
+  closeOnClick = true,
   disabled = false,
   hidden = false,
   ...rest
@@ -64,7 +70,12 @@ export const Item: React.FC<ItemProps> = ({
   const isHidden = getPredicateValue(hidden, handlerParams);
 
   function handleClick(e: React.MouseEvent) {
-    isDisabled ? e.stopPropagation() : onClick(handlerParams);
+    const closeMenu = getPredicateValue(closeOnClick, handlerParams);
+    if (isDisabled || !closeMenu) {
+      e.stopPropagation();
+    }
+
+    !isDisabled && onClick(handlerParams);
   }
 
   function trackRef(node: HTMLElement | null) {
