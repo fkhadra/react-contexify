@@ -19,8 +19,8 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build && yarn run style",
     "cypress:open": "cypress open",
-    "sass": "sass scss/main.scss dist/ReactToastify.css",
-    "postsass": "postcss dist/ReactToastify.css --use autoprefixer -m -o dist/ReactContexify.css",
+    "sass": "sass scss/main.scss dist/ReactContexify.css",
+    "postsass": "postcss dist/ReactContexify.css --use autoprefixer -m -o dist/ReactContexify.css",
     "style": "yarn run sass && cssnano dist/ReactContexify.css dist/ReactContexify.min.css --no-zindex --no-reduceIdents && yarn run gen-style-injector",
     "gen-style-injector": "node scripts/style-injector.js"
   },

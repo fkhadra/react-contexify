@@ -21,7 +21,13 @@ import {
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
 import { NOOP, STYLE, EVENT } from '../constants';
-import { cloneItems, getMousePosition, hasExitAnimation, isStr } from './utils';
+import {
+  cloneItems,
+  getMousePosition,
+  hasExitAnimation,
+  isFn,
+  isStr,
+} from './utils';
 
 export interface MenuProps
   extends PortalProps,
@@ -82,8 +88,13 @@ interface MenuState {
   willLeave: boolean;
 }
 
-function reducer(state: MenuState, payload: Partial<MenuState>) {
-  return { ...state, ...payload };
+function reducer(
+  state: MenuState,
+  payload: Partial<MenuState> | ((state: MenuState) => Partial<MenuState>)
+) {
+  return isFn(payload)
+    ? { ...state, ...payload(state) }
+    : { ...state, ...payload };
 }
 
 export const Menu: React.FC<MenuProps> = ({
@@ -120,6 +131,8 @@ export const Menu: React.FC<MenuProps> = ({
     return () => {
       eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
     };
+    // hide rely on setState(dispatch), which is guaranted to be the same across render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // handle show/ hide callback
@@ -127,6 +140,8 @@ export const Menu: React.FC<MenuProps> = ({
     if (didMount.current && state.visible !== wasVisible) {
       state.visible ? onShown() : onHidden();
     }
+    // wasWisible is a ref
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible, onHidden, onShown]);
 
   // collect menu items for keyboard navigation
@@ -161,6 +176,9 @@ export const Menu: React.FC<MenuProps> = ({
         y,
       });
     }
+
+    // state.visible and state{x,y} are updated together
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible]);
 
   // subscribe dom events
@@ -213,6 +231,8 @@ export const Menu: React.FC<MenuProps> = ({
         window.removeEventListener('blur', hide);
       }
     };
+    // state.visible will let us get the right reference to `hide`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible, menuController]);
 
   function show({ event, props, position }: ContextMenuParams) {
@@ -224,6 +244,7 @@ export const Menu: React.FC<MenuProps> = ({
     setTimeout(() => {
       setState({
         visible: true,
+        willLeave: false,
         x,
         y,
         nativeEvent: event,
@@ -245,11 +266,9 @@ export const Menu: React.FC<MenuProps> = ({
       return;
     }
 
-    if (state.visible) {
-      hasExitAnimation(animation)
-        ? setState({ willLeave: true })
-        : setState({ visible: false });
-    }
+    hasExitAnimation(animation)
+      ? setState(state => ({ willLeave: state.visible }))
+      : setState(state => ({ visible: state.visible ? false : state.visible }));
   }
 
   function handleAnimationEnd() {
