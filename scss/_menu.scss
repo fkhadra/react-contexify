@@ -8,6 +8,7 @@
   border-radius: 6px;
   padding: 6px 0;
   min-width: 200px;
+  z-index: 100;
 
   &__submenu--is-open,
   &__submenu--is-open > &__item__content {
