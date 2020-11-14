@@ -81,7 +81,7 @@ interface MenuState {
   x: number;
   y: number;
   visible: boolean;
-  nativeEvent: TriggerEvent;
+  triggerEvent: TriggerEvent;
   propsFromTrigger: any;
   willLeave: boolean;
 }
@@ -110,7 +110,7 @@ export const Menu: React.FC<MenuProps> = ({
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: {} as TriggerEvent,
+    triggerEvent: {} as TriggerEvent,
     propsFromTrigger: null,
     willLeave: false,
   });
@@ -244,7 +244,7 @@ export const Menu: React.FC<MenuProps> = ({
         willLeave: false,
         x,
         y,
-        nativeEvent: event,
+        triggerEvent: event,
         propsFromTrigger: props,
       });
     }, 0);
@@ -296,7 +296,7 @@ export const Menu: React.FC<MenuProps> = ({
     return null;
   }
 
-  const { visible, nativeEvent, propsFromTrigger, x, y, willLeave } = state;
+  const { visible, triggerEvent, propsFromTrigger, x, y, willLeave } = state;
   const cssClasses = cx(
     STYLE.menu,
     className,
@@ -324,7 +324,7 @@ export const Menu: React.FC<MenuProps> = ({
         >
           {cloneItems(children, {
             propsFromTrigger,
-            nativeEvent: nativeEvent,
+            triggerEvent,
           })}
         </div>
       )}

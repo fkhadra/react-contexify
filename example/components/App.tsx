@@ -11,8 +11,8 @@ import {
   useContextMenu,
   theme as builtInTheme,
   animation as builtInAnimation,
+  ItemParams,
 } from '../../src';
-import { HandlerParams } from '../../src/types';
 
 const selector = {
   events: ['onContextMenu', 'onClick', 'onDoubleClick'],
@@ -110,10 +110,12 @@ export function App() {
     });
   }
 
-  function handleItemClick(params: HandlerParams) {
+  function handleItemClick(params: ItemParams) {
+    console.log(params.triggerEvent);
+
     setPayload({
-      x: params.event.clientX,
-      y: params.event.clientY,
+      x: params.triggerEvent.clientX,
+      y: params.triggerEvent.clientY,
       data: params.data,
       props: params.props,
     });

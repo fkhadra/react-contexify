@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import cx from 'clsx';
 
 import {
-  HandlerParams,
+  ItemParams,
   InternalProps,
   BooleanPredicate,
   HandlerParamsEvent,
@@ -35,27 +35,21 @@ export interface ItemProps
   hidden?: BooleanPredicate;
 
   /**
-   * Close the menu when an Item is clicked. If a function is used, a boolean must be returned
-   */
-  closeOnClick?: BooleanPredicate;
-
-  /**
    * Callback when the current `Item` is clicked. The callback give you access to the current `event`, the `props` and the `data` passed
    * to the `Item`.
    * `({ event, props, data }) => ...`
    */
-  onClick?: (args: HandlerParams) => void;
+  onClick?: (args: ItemParams) => void;
 }
 
 export const Item: React.FC<ItemProps> = ({
   children,
   className,
   style,
-  nativeEvent,
+  triggerEvent,
   data,
   propsFromTrigger,
   onClick = NOOP,
-  closeOnClick = true,
   disabled = false,
   hidden = false,
   ...rest
@@ -63,19 +57,19 @@ export const Item: React.FC<ItemProps> = ({
   const refTracker = useRefTrackerContext();
   const handlerParams = {
     data,
-    event: nativeEvent as HandlerParamsEvent,
+    triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
 
-  function handleClick(e: React.MouseEvent) {
-    const closeMenu = getPredicateValue(closeOnClick, handlerParams);
-    if (isDisabled || !closeMenu) {
-      e.stopPropagation();
-    }
-
-    !isDisabled && onClick(handlerParams);
+  function handleClick(e: React.MouseEvent<HTMLElement>) {
+    isDisabled
+      ? e.stopPropagation()
+      : onClick({
+          ...handlerParams,
+          event: e,
+        });
   }
 
   function trackRef(node: HTMLElement | null) {
@@ -86,9 +80,12 @@ export const Item: React.FC<ItemProps> = ({
       });
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
+  function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (e.key === 'Enter') {
-      onClick(handlerParams);
+      onClick({
+        ...handlerParams,
+        event: e,
+      });
     }
   }
 

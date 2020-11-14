@@ -50,7 +50,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
   hidden = false,
   label,
   className,
-  nativeEvent,
+  triggerEvent,
   propsFromTrigger,
   style,
   ...rest
@@ -64,7 +64,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
     bottom: 'initial',
   });
   const handlerParams = {
-    event: nativeEvent as HandlerParamsEvent,
+    triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);
@@ -138,7 +138,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
           {cloneItems(children, {
             propsFromTrigger,
             // injected by the parent
-            nativeEvent: nativeEvent!,
+            triggerEvent: triggerEvent!,
           })}
         </div>
       </div>

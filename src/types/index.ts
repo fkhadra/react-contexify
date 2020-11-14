@@ -28,19 +28,13 @@ export type BooleanPredicate = boolean | ((args: HandlerParams) => boolean);
 export type MenuId = string | number;
 
 /**
- * Used in 3 cases:
- * - When you pass a callback to the `Item` `onClick` event
- * - When passing a boolean predicate to `disabled`
- * - When passing a boolean predicate to `hidden`
- *
- *
- * `function onClick({ event, props, data }: ItemEvent<type of props, type of data>)`
+ * Used both by `PredicatParams` and `ItemParams`
  */
-export interface HandlerParams<Props = any, Data = any> {
+interface HandlerParams<Props = any, Data = any> {
   /**
    * The event that triggered the context menu
    */
-  event: HandlerParamsEvent;
+  triggerEvent: HandlerParamsEvent;
 
   /**
    * Any props supplied when triggering the menu
@@ -53,11 +47,37 @@ export interface HandlerParams<Props = any, Data = any> {
   data?: Data;
 }
 
+/**
+ * Used in 2 cases:
+ * - When passing a boolean predicate to `disabled`
+ * - When passing a boolean predicate to `hidden`
+ *
+ * @param triggerEvent The event that triggered the context menu
+ * @param props The props passed when you called `show(e, {props: yourProps})`
+ * @param data The data defined on the `Item`
+ *
+ * ```
+ * function isItemDisabled({ triggerEvent, props, data }: PredicateParams<type of props, type of data>): boolean
+ * <Item disabled={isItemDisabled} data={data}>content</Item>
+ * ```
+ */
+export type PredicateParams = HandlerParams;
+
+/**
+ * `function onClick({ event, props, data }: ItemEvent<type of props, type of data>)`
+ */
+export interface ItemParams extends HandlerParams {
+  event:
+    | React.MouseEvent<HTMLElement>
+    | React.TouchEvent<HTMLElement>
+    | React.KeyboardEvent<HTMLElement>;
+}
+
 export interface InternalProps {
   /**
-   * INTERNAL USE ONLY: `MouseEvent` or `TouchEvent`
+   * INTERNAL USE ONLY: The event that triggered the context menu
    */
-  nativeEvent?: TriggerEvent;
+  triggerEvent?: TriggerEvent;
 
   /**
    * INTERNAL USE ONLY: Passed to the Item onClick callback. Accessible via `props`

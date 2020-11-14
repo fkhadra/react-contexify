@@ -2,7 +2,7 @@ import { Children, cloneElement, ReactNode, ReactElement } from 'react';
 
 import {
   BooleanPredicate,
-  HandlerParams,
+  PredicateParams,
   MenuAnimation,
   TriggerEvent,
 } from '../types';
@@ -21,7 +21,7 @@ export function isTouchEvent(e: TriggerEvent): e is TouchEvent {
 
 export function cloneItems(
   children: ReactNode,
-  props: { nativeEvent: TriggerEvent; propsFromTrigger?: object }
+  props: { triggerEvent: TriggerEvent; propsFromTrigger?: object }
 ) {
   return Children.map(
     // remove null item
@@ -53,7 +53,7 @@ export function getMousePosition(e: TriggerEvent) {
 
 export function getPredicateValue(
   predicate: BooleanPredicate,
-  payload: HandlerParams
+  payload: PredicateParams
 ) {
   return isFn(predicate) ? predicate(payload) : predicate;
 }
