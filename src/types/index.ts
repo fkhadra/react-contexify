@@ -61,7 +61,10 @@ interface HandlerParams<Props = any, Data = any> {
  * <Item disabled={isItemDisabled} data={data}>content</Item>
  * ```
  */
-export type PredicateParams = HandlerParams;
+export type PredicateParams<Props = any, Data = any> = HandlerParams<
+  Props,
+  Data
+>;
 
 /**
  * Callback when the `Item` is clicked.
@@ -87,7 +90,8 @@ export type PredicateParams = HandlerParams;
  * <Item id="item-id" onClick={handleItemClick} data={{key: 'value'}}>Something</Item>
  * ```
  */
-export interface ItemParams extends HandlerParams {
+export interface ItemParams<Props = any, Data = any>
+  extends HandlerParams<Props, Data> {
   event:
     | React.MouseEvent<HTMLElement>
     | React.TouchEvent<HTMLElement>
