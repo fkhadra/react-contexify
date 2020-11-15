@@ -61,18 +61,16 @@ export interface MenuProps
    * `import { animation } from 'react-contexify`
    *
    * animation.fade
-   *
-   *
    */
   animation?: MenuAnimation;
 
   /**
-   * Invoked when the menu is shown.
+   * Invoked after the menu is visible.
    */
   onShown?: () => void;
 
   /**
-   * Invoked when the menu is hidden.
+   * Invoked after the menu has been hidden.
    */
   onHidden?: () => void;
 }
