@@ -50,7 +50,7 @@
     cursor: pointer;
     position: relative;
 
-    &:not(&--disabled):focus {
+    &:focus{
       outline: 0;
     }
 
