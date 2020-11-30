@@ -1,26 +1,35 @@
 /* global: window */
-import React, { Component, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
+import React, {
+  ReactNode,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import cx from 'clsx';
 
-import { cloneItem } from './cloneItem';
-import { Portal } from './Portal';
+import { RefTrackerProvider } from './RefTrackerProvider';
 
-import { HIDE_ALL, DISPLAY_MENU } from '../utils/actions';
-import { styles } from '../utils/styles';
-import { eventManager } from '../utils/eventManager';
-import { TriggerEvent, StyleProps, MenuId } from '../types';
+import { eventManager } from '../core/eventManager';
+import {
+  TriggerEvent,
+  MenuId,
+  ContextMenuParams,
+  MenuAnimation,
+} from '../types';
+import { usePrevious, useRefTracker } from '../hooks';
+import { createMenuController } from './menuController';
+import { NOOP, STYLE, EVENT } from '../constants';
+import {
+  cloneItems,
+  getMousePosition,
+  hasExitAnimation,
+  isFn,
+  isStr,
+} from './utils';
 
-const KEY = {
-  ENTER: 13,
-  ESC: 27,
-  ARROW_UP: 38,
-  ARROW_DOWN: 40,
-  ARROW_LEFT: 37,
-  ARROW_RIGHT: 39
-};
-
-export interface MenuProps extends StyleProps {
+export interface MenuProps
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
   /**
    * Unique id to identify the menu. Use to Trigger the corresponding menu
    */
@@ -39,19 +48,29 @@ export interface MenuProps extends StyleProps {
   theme?: string;
 
   /**
-   * Animation is appended to `.react-contexify__will-enter--${given animation}`
+   * Animation is appended to
+   * - `.react-contexify__will-enter--${given animation}`
+   * - `.react-contexify__will-leave--${given animation}`
    *
-   * Built-in animations are fade, flip, pop, zoom
+   * - To disable all animations you can pass `false`
+   * - To disable only the enter or the exit animation you can provide an object `{enter: false, exit: 'exitAnimation'}`
+   *
+   * - default is set to `scale`
+   *
+   * To use the built-in animation a helper in available
+   * `import { animation } from 'react-contexify`
+   *
+   * animation.fade
    */
-  animation?: string;
+  animation?: MenuAnimation;
 
   /**
-   * Invoked when the menu is shown.
+   * Invoked after the menu is visible.
    */
   onShown?: () => void;
 
   /**
-   * Invoked when the menu is hidden.
+   * Invoked after the menu has been hidden.
    */
   onHidden?: () => void;
 }
@@ -60,76 +79,176 @@ interface MenuState {
   x: number;
   y: number;
   visible: boolean;
-  nativeEvent: TriggerEvent;
-  propsFromTrigger: object;
+  triggerEvent: TriggerEvent;
+  propsFromTrigger: any;
+  willLeave: boolean;
 }
 
-class Menu extends Component<MenuProps, MenuState> {
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    children: PropTypes.node.isRequired,
-    theme: PropTypes.string,
-    animation: PropTypes.string,
-    className: PropTypes.string,
-    style: PropTypes.object
-  };
+function reducer(
+  state: MenuState,
+  payload: Partial<MenuState> | ((state: MenuState) => Partial<MenuState>)
+) {
+  return isFn(payload)
+    ? { ...state, ...payload(state) }
+    : { ...state, ...payload };
+}
 
-  state = {
+export const Menu: React.FC<MenuProps> = ({
+  id,
+  theme,
+  style,
+  className,
+  children,
+  animation = 'scale',
+  onHidden = NOOP,
+  onShown = NOOP,
+  ...rest
+}) => {
+  const [state, setState] = useReducer(reducer, {
     x: 0,
     y: 0,
     visible: false,
-    nativeEvent: {} as TriggerEvent,
-    propsFromTrigger: {},
-    onShown: null,
-    onHidden: null
-  };
+    triggerEvent: {} as TriggerEvent,
+    propsFromTrigger: null,
+    willLeave: false,
+  });
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const didMount = useRef(false);
+  const wasVisible = usePrevious(state.visible);
+  const refTracker = useRefTracker();
+  const [menuController] = useState(() => createMenuController());
 
-  menuRef!: HTMLDivElement;
-  unsub: (() => boolean)[] = [];
+  // subscribe event manager
+  useEffect(() => {
+    didMount.current = true;
+    eventManager.on(id, show).on(EVENT.HIDE_ALL, hide);
 
-  componentDidMount() {
-    this.unsub.push(eventManager.on(DISPLAY_MENU(this.props.id), this.show));
-    this.unsub.push(eventManager.on(HIDE_ALL, this.hide));
-  }
+    return () => {
+      eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
+    };
+    // hide rely on setState(dispatch), which is guaranted to be the same across render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  componentWillUnmount() {
-    this.unsub.forEach(cb => cb());
-    this.unBindWindowEvent();
-  }
+  // handle show/ hide callback
+  useEffect(() => {
+    if (didMount.current && state.visible !== wasVisible) {
+      state.visible ? onShown() : onHidden();
+    }
+    // wasWisible is a ref
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.visible, onHidden, onShown]);
 
-  componentDidUpdate(_: Readonly<MenuProps>, prevState: Readonly<MenuState>) {
-    if (this.state.visible !== prevState.visible) {
-      if (this.state.visible && this.props.onShown) {
-        this.props.onShown();
-      } else if (!this.state.visible && this.props.onHidden) {
-        this.props.onHidden();
+  // collect menu items for keyboard navigation
+  useEffect(() => {
+    if (!state.visible) {
+      refTracker.clear();
+    } else {
+      menuController.init(Array.from(refTracker.values()));
+    }
+  }, [state.visible, menuController, refTracker]);
+
+  // compute menu position
+  useEffect(() => {
+    if (state.visible) {
+      const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+      const {
+        offsetWidth: menuWidth,
+        offsetHeight: menuHeight,
+      } = nodeRef.current!;
+      let { x, y } = state;
+
+      if (x + menuWidth > windowWidth) {
+        x -= x + menuWidth - windowWidth;
+      }
+
+      if (y + menuHeight > windowHeight) {
+        y -= y + menuHeight - windowHeight;
+      }
+
+      setState({
+        x,
+        y,
+      });
+    }
+
+    // state.visible and state{x,y} are updated together
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.visible]);
+
+  // subscribe dom events
+  useEffect(() => {
+    function handleKeyboard(e: KeyboardEvent) {
+      e.preventDefault();
+      switch (e.key) {
+        case 'Enter':
+          if (!menuController.openSubmenu()) hide();
+          break;
+        case 'Escape':
+          hide();
+          break;
+        case 'ArrowUp':
+          menuController.moveUp();
+          break;
+        case 'ArrowDown':
+          menuController.moveDown();
+          break;
+        case 'ArrowRight':
+          menuController.openSubmenu();
+          break;
+        case 'ArrowLeft':
+          menuController.closeSubmenu();
+          break;
       }
     }
+
+    if (state.visible) {
+      window.addEventListener('resize', hide);
+      window.addEventListener('contextmenu', hide);
+      window.addEventListener('click', hide);
+      window.addEventListener('scroll', hide);
+      window.addEventListener('keydown', handleKeyboard);
+
+      // This let us debug the menu in the console in dev mode
+      if (process.env.NODE_ENV !== 'development') {
+        window.addEventListener('blur', hide);
+      }
+    }
+
+    return () => {
+      window.removeEventListener('resize', hide);
+      window.removeEventListener('contextmenu', hide);
+      window.removeEventListener('click', hide);
+      window.removeEventListener('scroll', hide);
+      window.removeEventListener('keydown', handleKeyboard);
+
+      if (process.env.NODE_ENV !== 'development') {
+        window.removeEventListener('blur', hide);
+      }
+    };
+    // state.visible will let us get the right reference to `hide`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.visible, menuController]);
+
+  function show({ event, props, position }: ContextMenuParams) {
+    event.stopPropagation();
+    const { x, y } = position || getMousePosition(event);
+
+    // prevent react from batching the state update
+    // if the menu is already visible we have to recompute bounding rect based on position
+    setTimeout(() => {
+      setState({
+        visible: true,
+        willLeave: false,
+        x,
+        y,
+        triggerEvent: event,
+        propsFromTrigger: props,
+      });
+    }, 0);
   }
 
-  bindWindowEvent = () => {
-    window.addEventListener('resize', this.hide);
-    window.addEventListener('contextmenu', this.hide);
-    window.addEventListener('mousedown', this.hide);
-    window.addEventListener('click', this.hide);
-    window.addEventListener('scroll', this.hide);
-    window.addEventListener('keydown', this.handleKeyboard);
-  };
-
-  unBindWindowEvent = () => {
-    window.removeEventListener('resize', this.hide);
-    window.removeEventListener('contextmenu', this.hide);
-    window.removeEventListener('mousedown', this.hide);
-    window.removeEventListener('click', this.hide);
-    window.removeEventListener('scroll', this.hide);
-    window.removeEventListener('keydown', this.handleKeyboard);
-  };
-
-  onMouseEnter = () => window.removeEventListener('mousedown', this.hide);
-
-  onMouseLeave = () => window.addEventListener('mousedown', this.hide);
-
-  hide = (event?: Event) => {
+  function hide(event?: Event) {
     // Safari trigger a click event when you ctrl + trackpad
     // Firefox:  trigger a click event when right click occur
     const e = event as KeyboardEvent & MouseEvent;
@@ -142,123 +261,71 @@ class Menu extends Component<MenuProps, MenuState> {
       return;
     }
 
-    this.unBindWindowEvent();
-    this.setState({ visible: false });
-  };
-
-  handleKeyboard = (e: KeyboardEvent) => {
-    if (e.keyCode === KEY.ENTER || e.keyCode === KEY.ESC) {
-      this.unBindWindowEvent();
-      this.setState({ visible: false });
-    }
-  };
-
-  setRef = (ref: HTMLDivElement) => {
-    this.menuRef = ref;
-  };
-
-  setMenuPosition() {
-    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
-    const { offsetWidth: menuWidth, offsetHeight: menuHeight } = this.menuRef;
-    let { x, y } = this.state;
-
-    if (x + menuWidth > windowWidth) {
-      x -= x + menuWidth - windowWidth;
-    }
-
-    if (y + menuHeight > windowHeight) {
-      y -= y + menuHeight - windowHeight;
-    }
-
-    this.setState(
-      {
-        x,
-        y
-      },
-      this.bindWindowEvent
-    );
+    hasExitAnimation(animation)
+      ? setState(state => ({ willLeave: state.visible }))
+      : setState(state => ({ visible: state.visible ? false : state.visible }));
   }
 
-  getMousePosition(e: TriggerEvent) {
-    const pos = {
-      x: e.clientX,
-      y: e.clientY
-    };
-
-    if (
-      e.type === 'touchend' &&
-      (!pos.x || !pos.y) &&
-      (e.changedTouches && e.changedTouches.length > 0)
-    ) {
-      pos.x = e.changedTouches[0].clientX;
-      pos.y = e.changedTouches[0].clientY;
+  function handleAnimationEnd() {
+    if (state.willLeave && state.visible) {
+      setState({ visible: false, willLeave: false });
     }
-
-    if (!pos.x || pos.x < 0) {
-      pos.x = 0;
-    }
-
-    if (!pos.y || pos.y < 0) {
-      pos.y = 0;
-    }
-
-    return pos;
   }
 
-  show = (e: TriggerEvent, props: object) => {
-    e.stopPropagation();
-    eventManager.emit(HIDE_ALL);
+  function computeAnimationClasses() {
+    if (!animation) return null;
 
-    const { x, y } = this.getMousePosition(e);
+    if (isStr(animation)) {
+      return cx({
+        [`${STYLE.animationWillEnter}${animation}`]:
+          animation && visible && !willLeave,
+        [`${STYLE.animationWillLeave}${animation} ${STYLE.animationWillLeave}'disabled'`]:
+          animation && visible && willLeave,
+      });
+    } else if ('enter' in animation && 'exit' in animation) {
+      return cx({
+        [`${STYLE.animationWillEnter}${animation.enter}`]:
+          animation.enter && visible && !willLeave,
+        [`${STYLE.animationWillLeave}${animation.exit} ${STYLE.animationWillLeave}'disabled'`]:
+          animation.exit && visible && willLeave,
+      });
+    }
 
-    this.setState(
-      {
-        visible: true,
-        x,
-        y,
-        nativeEvent: e,
-        propsFromTrigger: props
-      },
-      this.setMenuPosition
-    );
+    return null;
+  }
+
+  const { visible, triggerEvent, propsFromTrigger, x, y, willLeave } = state;
+  const cssClasses = cx(
+    STYLE.menu,
+    className,
+    { [`${STYLE.theme}${theme}`]: theme },
+    computeAnimationClasses()
+  );
+
+  const menuStyle = {
+    ...style,
+    left: x,
+    top: y,
+    opacity: 1,
   };
 
-  render() {
-    const { theme, animation, style, className, children } = this.props;
-    const { visible, nativeEvent, propsFromTrigger, x, y } = this.state;
-
-    const cssClasses = cx(styles.menu, className, {
-      [styles.theme + theme]: theme,
-      [styles.animationWillEnter + animation]: animation
-    });
-    const menuStyle = {
-      ...style,
-      left: x,
-      top: y + 1,
-      opacity: 1
-    };
-
-    return (
-      <Portal>
-        {visible && (
-          <div
-            className={cssClasses}
-            style={menuStyle}
-            ref={this.setRef}
-            onMouseEnter={this.onMouseEnter}
-            onMouseLeave={this.onMouseLeave}
-          >
-            <div>
-              {cloneItem(children, {
-                nativeEvent,
-                propsFromTrigger
-              })}
-            </div>
-          </div>
-        )}
-      </Portal>
-    );
-  }
-}
-
-export { Menu };
+  return (
+    <RefTrackerProvider refTracker={refTracker}>
+      {visible && (
+        <div
+          {...rest}
+          className={cssClasses}
+          onAnimationEnd={handleAnimationEnd}
+          style={menuStyle}
+          ref={nodeRef}
+          role="menu"
+        >
+          {cloneItems(children, {
+            propsFromTrigger,
+            triggerEvent,
+          })}
+        </div>
+      )}
+    </RefTrackerProvider>
+  );
+};

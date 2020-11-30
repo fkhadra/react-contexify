@@ -1,17 +1,15 @@
-import React, { Component, ReactNode, SyntheticEvent } from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import cx from 'clsx';
 
-import { cloneItem } from './cloneItem';
-import { styles } from '../utils/styles';
-import {
-  MenuItemEventHandler,
-  TriggerEvent,
-  StyleProps,
-  InternalProps
-} from '../types';
+import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
+import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
+import { useRefTracker } from '../hooks';
+import { STYLE } from '../constants';
+import { cloneItems, getPredicateValue } from './utils';
 
-export interface SubMenuProps extends StyleProps, InternalProps {
+export interface SubMenuProps
+  extends InternalProps,
+    Omit<React.HTMLAttributes<HTMLElement>, 'hidden'> {
   /**
    * Any valid node that can be rendered
    */
@@ -25,12 +23,17 @@ export interface SubMenuProps extends StyleProps, InternalProps {
   /**
    * Render a custom arrow
    */
-  arrow: ReactNode;
+  arrow?: ReactNode;
 
   /**
-   * Disable or not the `Submenu`. If a function is used, a boolean must be returned
+   * Disable the `Submenu`. If a function is used, a boolean must be returned
    */
-  disabled: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled?: BooleanPredicate;
+
+  /**
+   * Hide the `Submenu` and his children. If a function is used, a boolean must be returned
+   */
+  hidden?: BooleanPredicate;
 }
 
 interface SubMenuState {
@@ -40,104 +43,105 @@ interface SubMenuState {
   bottom?: string | number;
 }
 
-class Submenu extends Component<SubMenuProps, SubMenuState> {
-  static propTypes = {
-    label: PropTypes.node.isRequired,
-    children: PropTypes.node.isRequired,
-    nativeEvent: PropTypes.object,
-    arrow: PropTypes.node,
-    disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-    className: PropTypes.string,
-    style: PropTypes.object
-  };
-  static defaultProps = {
-    arrow: '▶',
-    disabled: false,
-    nativeEvent: {} as TriggerEvent
-  };
-
-  state = {
+export const Submenu: React.FC<SubMenuProps> = ({
+  arrow = '▶',
+  children,
+  disabled = false,
+  hidden = false,
+  label,
+  className,
+  triggerEvent,
+  propsFromTrigger,
+  style,
+  ...rest
+}) => {
+  const menuRefTracker = useRefTrackerContext();
+  const refTracker = useRefTracker();
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<SubMenuState>({
     left: '100%',
     top: 0,
-    bottom: 'initial'
+    bottom: 'initial',
+  });
+  const handlerParams = {
+    triggerEvent: triggerEvent as HandlerParamsEvent,
+    props: propsFromTrigger,
   };
+  const isDisabled = getPredicateValue(disabled, handlerParams);
+  const isHidden = getPredicateValue(hidden, handlerParams);
 
-  menu!: HTMLElement;
+  useEffect(() => {
+    if (nodeRef.current) {
+      const { innerWidth, innerHeight } = window;
+      const rect = nodeRef.current.getBoundingClientRect();
+      const style: SubMenuState = {};
 
-  setRef = (ref: HTMLDivElement) => {
-    this.menu = ref;
-  };
+      if (rect.right < innerWidth) {
+        style.left = '100%';
+        style.right = undefined;
+      } else {
+        style.right = '100%';
+        style.left = undefined;
+      }
 
-  componentDidMount() {
-    const { innerWidth, innerHeight } = window;
-    const rect = this.menu.getBoundingClientRect();
-    const style: SubMenuState = {};
+      if (rect.bottom > innerHeight) {
+        style.bottom = 0;
+        style.top = 'initial';
+      } else {
+        style.bottom = 'initial';
+      }
 
-    if (rect.right < innerWidth) {
-      style.left = '100%';
-      style.right = undefined;
-    } else {
-      style.right = '100%';
-      style.left = undefined;
+      setPosition(style);
     }
+  }, []);
 
-    if (rect.bottom > innerHeight) {
-      style.bottom = 0;
-      style.top = 'initial';
-    } else {
-      style.bottom = 'initial';
-      style.top = 0;
-    }
-
-    this.setState(style);
-  }
-
-  handleClick(e: SyntheticEvent) {
+  function handleClick(e: React.SyntheticEvent) {
     e.stopPropagation();
   }
 
-  render() {
-    const {
-      arrow,
-      disabled,
-      className,
-      style,
-      label,
-      nativeEvent,
-      children,
-      propsFromTrigger
-    } = this.props;
+  function trackRef(node: HTMLElement | null) {
+    if (node && !isDisabled)
+      menuRefTracker.set(node, {
+        node,
+        isSubmenu: true,
+        submenuRefTracker: refTracker,
+      });
+  }
 
-    const cssClasses = cx(styles.item, className, {
-      [`${styles.itemDisabled}`]:
-        typeof disabled === 'function'
-          ? disabled({
-              event: nativeEvent as TriggerEvent,
-              props: { ...propsFromTrigger }
-            })
-          : disabled
-    });
+  if (isHidden) return null;
 
-    const submenuStyle = {
-      ...style,
-      ...this.state
-    };
+  const cssClasses = cx(STYLE.item, className, {
+    [`${STYLE.itemDisabled}`]: isDisabled,
+  });
 
-    return (
-      <div className={cssClasses} role="presentation">
-        <div className={styles.itemContent} onClick={this.handleClick}>
+  const submenuStyle = {
+    ...style,
+    ...position,
+  };
+
+  return (
+    <RefTrackerProvider refTracker={refTracker}>
+      <div
+        {...rest}
+        className={cssClasses}
+        ref={trackRef}
+        tabIndex={-1}
+        role="menuitem"
+        aria-haspopup
+        aria-disabled={isDisabled}
+      >
+        <div className={STYLE.itemContent} onClick={handleClick}>
           {label}
-          <span className={styles.submenuArrow}>{arrow}</span>
+          <span className={STYLE.submenuArrow}>{arrow}</span>
         </div>
-        <div className={styles.submenu} ref={this.setRef} style={submenuStyle}>
-          {cloneItem(children, {
+        <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
+          {cloneItems(children, {
             propsFromTrigger,
-            nativeEvent: nativeEvent as TriggerEvent
+            // injected by the parent
+            triggerEvent: triggerEvent!,
           })}
         </div>
       </div>
-    );
-  }
-}
-
-export { Submenu };
+    </RefTrackerProvider>
+  );
+};

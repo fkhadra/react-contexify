@@ -8,3 +8,6 @@ yarn-error.log*
 .DS_STORE
 .docz
 .vscode
+.cache
+dist
+*.log

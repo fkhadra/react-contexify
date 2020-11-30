@@ -1,100 +1,146 @@
-import React, { Component, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
+import React, { ReactNode } from 'react';
+import cx from 'clsx';
 
-import { styles } from '../utils/styles';
 import {
-  MenuItemEventHandler,
-  TriggerEvent,
-  StyleProps,
-  InternalProps
+  ItemParams,
+  InternalProps,
+  BooleanPredicate,
+  HandlerParamsEvent,
 } from '../types';
+import { useRefTrackerContext } from './RefTrackerProvider';
+import { NOOP, STYLE } from '../constants';
+import { getPredicateValue } from './utils';
 
-export interface ItemProps extends StyleProps, InternalProps {
+export interface ItemProps
+  extends InternalProps,
+    Omit<React.HTMLAttributes<HTMLElement>, 'hidden' | 'disabled' | 'onClick'> {
   /**
    * Any valid node that can be rendered
    */
   children: ReactNode;
 
   /**
-   * Passed to the `Item` onClick callback. Accessible via `props`
+   * Passed to the `Item` onClick callback. Accessible via `data`
    */
-  data?: object;
+  data?: any;
 
   /**
-   * Disable or not the `Item`. If a function is used, a boolean must be returned
+   * Disable `Item`. If a function is used, a boolean must be returned
+   *
+   * @param props The props passed when you called `show(e, {props: yourProps})`
+   * @param data The data defined on the `Item`
+   * @param triggerEvent The event that triggered the context menu
+   *
+   *
+   * ```
+   * function isItemDisabled({ triggerEvent, props, data }: PredicateParams<type of props, type of data>): boolean
+   * <Item disabled={isItemDisabled} data={data}>content</Item>
+   * ```
    */
-  disabled: boolean | ((args: MenuItemEventHandler) => boolean);
+  disabled?: BooleanPredicate;
 
   /**
-   * Callback when the current `Item` is clicked. The callback give you access to the current event and also the data passed
-   * to the `Item`.
-   * `({ event, props }) => ...`
+   * Hide the `Item`. If a function is used, a boolean must be returned
+   *
+   * @param props The props passed when you called `show(e, {props: yourProps})`
+   * @param data The data defined on the `Item`
+   * @param triggerEvent The event that triggered the context menu
+   *
+   *
+   * ```
+   * function isItemHidden({ triggerEvent, props, data }: PredicateParams<type of props, type of data>): boolean
+   * <Item hidden={isItemHidden} data={data}>content</Item>
+   * ```
    */
-  onClick: (args: MenuItemEventHandler) => any;
+  hidden?: BooleanPredicate;
+
+  /**
+   * Callback when the `Item` is clicked.
+   *
+   * @param event The event that occured on the Item node
+   * @param props The props passed when you called `show(e, {props: yourProps})`
+   * @param data The data defined on the `Item`
+   * @param triggerEvent The event that triggered the context menu
+   *
+   * ```
+   * function handleItemClick({ triggerEvent, event, props, data }: ItemParams<type of props, type of data>){
+   *    // retrieve the id of the Item or any other dom attribute
+   *    const id = e.currentTarget.id;
+   *
+   *    // access the props and the data
+   *    console.log(props, data);
+   *
+   *    // access the coordinate of the mouse when the menu has been displayed
+   *    const {  clientX, clientY } = triggerEvent;
+   *
+   * }
+   *
+   * <Item id="item-id" onClick={handleItemClick} data={{key: 'value'}}>Something</Item>
+   * ```
+   */
+  onClick?: (args: ItemParams) => void;
 }
 
-const noop = () => {};
-
-class Item extends Component<ItemProps> {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-    data: PropTypes.object,
-    disabled: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-    onClick: PropTypes.func,
-    nativeEvent: PropTypes.object,
-    propsFromTrigger: PropTypes.object,
-    className: PropTypes.string,
-    style: PropTypes.object
+export const Item: React.FC<ItemProps> = ({
+  children,
+  className,
+  style,
+  triggerEvent,
+  data,
+  propsFromTrigger,
+  onClick = NOOP,
+  disabled = false,
+  hidden = false,
+  ...rest
+}) => {
+  const refTracker = useRefTrackerContext();
+  const handlerParams = {
+    data,
+    triggerEvent: triggerEvent as HandlerParamsEvent,
+    props: propsFromTrigger,
   };
+  const isDisabled = getPredicateValue(disabled, handlerParams);
+  const isHidden = getPredicateValue(hidden, handlerParams);
 
-  static defaultProps = {
-    disabled: false,
-    onClick: noop
-  };
-
-  isDisabled: boolean;
-
-  constructor(props: ItemProps) {
-    super(props);
-    const { disabled, nativeEvent, propsFromTrigger, data } = this.props;
-
-    this.isDisabled =
-      typeof disabled === 'function'
-        ? disabled({
-            event: nativeEvent as TriggerEvent,
-            props: { ...propsFromTrigger, ...data }
-          })
-        : disabled;
+  function handleClick(e: React.MouseEvent<HTMLElement>) {
+    (handlerParams as ItemParams).event = e;
+    isDisabled ? e.stopPropagation() : onClick(handlerParams as ItemParams);
   }
 
-  handleClick = (e: React.MouseEvent) => {
-    this.isDisabled
-      ? e.stopPropagation()
-      : this.props.onClick({
-          event: this.props.nativeEvent as TriggerEvent,
-          props: { ...this.props.propsFromTrigger, ...this.props.data }
-        });
-  };
-
-  render() {
-    const { className, style, children } = this.props;
-
-    const cssClasses = cx(styles.item, className, {
-      [`${styles.itemDisabled}`]: this.isDisabled
-    });
-
-    return (
-      <div
-        className={cssClasses}
-        style={style}
-        onClick={this.handleClick}
-        role="presentation"
-      >
-        <div className={styles.itemContent}>{children}</div>
-      </div>
-    );
+  function trackRef(node: HTMLElement | null) {
+    if (node && !isDisabled)
+      refTracker.set(node, {
+        node,
+        isSubmenu: false,
+      });
   }
-}
 
-export { Item };
+  function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key === 'Enter') {
+      (handlerParams as ItemParams).event = e;
+      onClick(handlerParams as ItemParams);
+    }
+  }
+
+  if (isHidden) return null;
+
+  const cssClasses = cx(STYLE.item, className, {
+    [`${STYLE.itemDisabled}`]: isDisabled,
+  });
+
+  return (
+    <div
+      {...rest}
+      className={cssClasses}
+      style={style}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      ref={trackRef}
+      tabIndex={-1}
+      role="menuitem"
+      aria-disabled={isDisabled}
+    >
+      <div className={STYLE.itemContent}>{children}</div>
+    </div>
+  );
+};
