@@ -159,11 +159,11 @@ export const Menu: React.FC<MenuProps> = ({
       let { x, y } = state;
 
       if (x + menuWidth > windowWidth) {
-        x -= x + menuWidth - windowWidth;
+        x -= menuWidth;
       }
 
       if (y + menuHeight > windowHeight) {
-        y -= y + menuHeight - windowHeight;
+        y = innerHeight - menuHeight;
       }
 
       setState({
