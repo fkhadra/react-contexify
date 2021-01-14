@@ -2,6 +2,7 @@ export const MENU_ID = '🦄';
 
 export const enum DATA_TEST {
   MOUNT_NODE = 'mount-node',
+  TOGGLE_MOUNT_NODE = 'toggle-mount-node',
   TOGGLE_CUSTOM_POSITION = 'toggle-custom-position',
   CONTEXT_MENU_TRIGGER = 'trigger',
   CONTEXT_MENU = 'context-menu',
