@@ -1,4 +1,4 @@
-const { readFile, writeFile } = require('fs/promises');
+const { readFile, writeFile } = require('fs').promises;
 const { resolve, join } = require('path');
 
 const distPath = resolve(__filename, '../../dist');
