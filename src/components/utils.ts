@@ -1,4 +1,5 @@
 import { Children, cloneElement, ReactNode, ReactElement } from 'react';
+import ExecutionEnvironment from 'exenv';
 
 import {
   BooleanPredicate,
@@ -64,3 +65,5 @@ export function hasExitAnimation(animation: MenuAnimation) {
     (isStr(animation) || ('exit' in animation && animation.exit))
   );
 }
+
+export const canUseDOM = ExecutionEnvironment.canUseDOM;

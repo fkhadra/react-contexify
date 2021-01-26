@@ -35,6 +35,7 @@ interface SelectorState {
   animation: string | false;
   event: string;
   hideItems: boolean;
+  customMountNode: boolean;
   customPosition: boolean;
   disableEnterAnimation: boolean;
   disableExitAnimation: boolean;
@@ -68,6 +69,7 @@ export function App() {
     animation: false,
     event: selector.events[0],
     hideItems: false,
+    customMountNode: false,
     customPosition: false,
     disableEnterAnimation: false,
     disableExitAnimation: false,
@@ -81,6 +83,9 @@ export function App() {
   const { show } = useContextMenu({
     id: MENU_ID,
   });
+  const customMountNode = document.querySelector(
+    `[data-test="${DATA_TEST.MOUNT_NODE}"]`
+  );
 
   function handleSelector({
     target: { name, value },
@@ -154,6 +159,17 @@ export function App() {
             </li>
           ))}
           <li>
+            <label htmlFor="customMountNode">Use custom mount node</label>
+            <input
+              type="checkbox"
+              id="customMountNode"
+              name="customMountNode"
+              checked={state.customMountNode}
+              onChange={handleCheckboxes}
+              data-test={DATA_TEST.TOGGLE_MOUNT_NODE}
+            />
+          </li>
+          <li>
             <label htmlFor="customPosition">Use custom position</label>
             <input
               type="checkbox"
@@ -224,6 +240,7 @@ export function App() {
         theme={state.theme}
         animation={getAnimation()}
         data-test={DATA_TEST.CONTEXT_MENU}
+        mountNode={state.customMountNode ? customMountNode : null}
       >
         <Item
           onClick={handleItemClick}
