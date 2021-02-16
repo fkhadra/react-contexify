@@ -25,7 +25,7 @@ function createEventManager<E = EventType>(): EventManager<E> {
       return this;
     },
     emit<T = any>(event: E, args: T) {
-      if (process.env.NODE !== 'production') {
+      if (process.env.NODE_ENV === 'development') {
         const currentEv = (event as unknown) as number;
 
         if (!eventList.has(event) && currentEv !== EVENT.HIDE_ALL) {
