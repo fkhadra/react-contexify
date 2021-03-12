@@ -73,6 +73,11 @@ export interface MenuProps
    * Invoked after the menu has been hidden.
    */
   onHidden?: () => void;
+
+  /**
+   * Prevents scrolling the window on when typing. Defaults to true.
+   */
+  preventDefaultOnKeydown?: boolean;
 }
 
 interface MenuState {
@@ -102,6 +107,7 @@ export const Menu: React.FC<MenuProps> = ({
   animation = 'scale',
   onHidden = NOOP,
   onShown = NOOP,
+  preventDefaultOnKeydown = true,
   ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
@@ -178,8 +184,13 @@ export const Menu: React.FC<MenuProps> = ({
 
   // subscribe dom events
   useEffect(() => {
+    function preventDefault(e: KeyboardEvent) {
+      if (preventDefaultOnKeydown) {
+        e.preventDefault();
+      }
+    }
+
     function handleKeyboard(e: KeyboardEvent) {
-      e.preventDefault();
       switch (e.key) {
         case 'Enter':
           if (!menuController.openSubmenu()) hide();
@@ -188,15 +199,19 @@ export const Menu: React.FC<MenuProps> = ({
           hide();
           break;
         case 'ArrowUp':
+          preventDefault(e);
           menuController.moveUp();
           break;
         case 'ArrowDown':
+          preventDefault(e);
           menuController.moveDown();
           break;
         case 'ArrowRight':
+          preventDefault(e);
           menuController.openSubmenu();
           break;
         case 'ArrowLeft':
+          preventDefault(e);
           menuController.closeSubmenu();
           break;
       }
@@ -263,7 +278,9 @@ export const Menu: React.FC<MenuProps> = ({
 
     hasExitAnimation(animation)
       ? setState(state => ({ willLeave: state.visible }))
-      : setState(state => ({ visible: state.visible ? false : state.visible }));
+      : setState(state => ({
+          visible: state.visible ? false : state.visible,
+        }));
   }
 
   function handleAnimationEnd() {
