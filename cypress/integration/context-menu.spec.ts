@@ -50,6 +50,14 @@ describe('Context menu', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).isWithinViewport();
   });
 
+  it('Prevent from rendering outside of the viewport if possible when menu is already visible and show is triggered and has animation', () => {
+    cy.viewport(500, 500);
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick(10, 170);
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick(11, 171, { force: true });
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).isWithinViewport();
+  });
+
   it('Can change trigger event', () => {
     cy.getByDataTest(DATA_TEST.EVENT_SELECTOR).select('onClick');
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
