@@ -65,7 +65,7 @@ function getDataTestSelector(key: string) {
 export function App() {
   const [state, setState] = React.useReducer(selectorReducer, {
     theme: selector.themes[0],
-    animation: false,
+    animation: 'scale',
     event: selector.events[0],
     hideItems: false,
     customPosition: false,
