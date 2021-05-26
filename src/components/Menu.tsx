@@ -166,15 +166,17 @@ export const Menu: React.FC<MenuProps> = ({
         y -= y + menuHeight - windowHeight;
       }
 
-      setState({
-        x,
-        y,
-      });
+      if (x !== state.x || y !== state.y) {
+        setState({
+          x,
+          y,
+        });
+      }
     }
 
     // state.visible and state{x,y} are updated together
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.visible]);
+  }, [state.visible, state.x, state.y]);
 
   // subscribe dom events
   useEffect(() => {
