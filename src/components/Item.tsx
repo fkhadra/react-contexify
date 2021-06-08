@@ -82,6 +82,7 @@ export interface ItemProps
 }
 
 export const Item: React.FC<ItemProps> = ({
+  id,
   children,
   className,
   style,
@@ -98,6 +99,7 @@ export const Item: React.FC<ItemProps> = ({
     data,
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
+    itemId: id,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
