@@ -20,7 +20,7 @@ import {
 } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
-import { NOOP, STYLE, EVENT } from '../constants';
+import { NOOP, STYLE, EVENT, hideOnEvents } from '../constants';
 import {
   cloneItems,
   getMousePosition,
@@ -205,28 +205,17 @@ export const Menu: React.FC<MenuProps> = ({
     }
 
     if (state.visible) {
-      window.addEventListener('resize', hide);
-      window.addEventListener('contextmenu', hide);
-      window.addEventListener('click', hide);
-      window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
 
-      // This let us debug the menu in the console in dev mode
-      if (process.env.NODE_ENV !== 'development') {
-        window.addEventListener('blur', hide);
-      }
+      for (let i = 0; i < hideOnEvents.length; i++)
+        window.addEventListener(hideOnEvents[i], hide);
     }
 
     return () => {
-      window.removeEventListener('resize', hide);
-      window.removeEventListener('contextmenu', hide);
-      window.removeEventListener('click', hide);
-      window.removeEventListener('scroll', hide);
       window.removeEventListener('keydown', handleKeyboard);
 
-      if (process.env.NODE_ENV !== 'development') {
-        window.removeEventListener('blur', hide);
-      }
+      for (let i = 0; i < hideOnEvents.length; i++)
+        window.removeEventListener(hideOnEvents[i], hide);
     };
     // state.visible will let us get the right reference to `hide`
     // eslint-disable-next-line react-hooks/exhaustive-deps
