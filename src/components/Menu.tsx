@@ -16,6 +16,7 @@ import {
   MenuId,
   ContextMenuParams,
   MenuAnimation,
+  Theme,
 } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
@@ -46,7 +47,7 @@ export interface MenuProps
    *
    * Built-in theme are `light` and `dark`
    */
-  theme?: string;
+  theme?: Theme;
 
   /**
    * Animation is appended to

@@ -19,16 +19,4 @@ export const enum EVENT {
   HIDE_ALL,
 }
 
-export const theme = {
-  light: 'light',
-  dark: 'dark',
-};
-
-export const animation = {
-  fade: 'fade',
-  flip: 'flip',
-  scale: 'scale',
-  slide: 'slide',
-};
-
 export const NOOP = () => {};
