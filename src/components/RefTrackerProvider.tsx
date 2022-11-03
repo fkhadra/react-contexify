@@ -12,6 +12,7 @@ export function useRefTrackerContext() {
 
 export interface RefTrackerProviderProps {
   refTracker: RefTracker;
+  children?: React.ReactNode;
 }
 
 export const RefTrackerProvider: React.FC<RefTrackerProviderProps> = props => {

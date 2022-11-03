@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
     "jsx": "react",
     "moduleResolution": "node",

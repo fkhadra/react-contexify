@@ -31,7 +31,7 @@ $ npm install --save react-contexify
 
 ```js
 import React from 'react';
-import { Menu, Item, Separator, Submenu, MenuProvider, useContextMenu } from 'react-contexify';
+import { Menu, Item, Separator, Submenu, useContextMenu } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.css';
 
 const MENU_ID = 'blahblah';

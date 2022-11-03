@@ -1,5 +1,7 @@
 import { ShowContextMenuParams } from '../core';
 
+type BuiltInOrString<T> = T | (string & {});
+
 /**
  * The event that triggered the context menu
  */
@@ -111,20 +113,26 @@ export interface InternalProps {
 }
 
 /**
+ * Theme is appended to `react-contexify__theme--${given theme}`.
+ *
+ * Built-in theme are `light` and `dark`
+ */
+export type Theme = BuiltInOrString<'light' | 'dark'>;
+
+/**
  * Animation is appended to
  * - `.react-contexify__will-enter--${given animation}`
  * - `.react-contexify__will-leave--${given animation}`
  *
  * - To disable all animations you can pass `false`
  * - To disable only the enter or the exit animation you can provide an object `{enter: false, exit: 'exitAnimation'}`
- * - default is set to `scale`
+ * - default is set to `fade`
  *
- * To use the built-in animation a helper in available
- * `import { animation } from 'react-contexify`
- *
- * animation.fade
+ * Built-in animations are `fade`, `scale`, `flip`, `slide`
  */
 export type MenuAnimation =
-  | string
+  | Animation
   | false
-  | { enter: string | false; exit: string | false };
+  | { enter: Animation | false; exit: Animation | false };
+
+type Animation = BuiltInOrString<'fade' | 'scale' | 'flip' | 'slide'>;

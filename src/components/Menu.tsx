@@ -16,10 +16,11 @@ import {
   MenuId,
   ContextMenuParams,
   MenuAnimation,
+  Theme,
 } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
-import { NOOP, STYLE, EVENT } from '../constants';
+import { NOOP, STYLE, EVENT, hideOnEvents } from '../constants';
 import {
   cloneItems,
   getMousePosition,
@@ -27,6 +28,7 @@ import {
   isFn,
   isStr,
 } from './utils';
+import { flushSync } from 'react-dom';
 
 export interface MenuProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
@@ -45,7 +47,7 @@ export interface MenuProps
    *
    * Built-in theme are `light` and `dark`
    */
-  theme?: string;
+  theme?: Theme;
 
   /**
    * Animation is appended to
@@ -155,29 +157,23 @@ export const Menu: React.FC<MenuProps> = ({
     }
   }, [state.visible, menuController, refTracker]);
 
-  // compute menu position
-  useEffect(() => {
-    if (!disableBoundariesCheck && state.visible) {
-      const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
-      const {
-        offsetWidth: menuWidth,
-        offsetHeight: menuHeight,
-      } = nodeRef.current!;
-      let { x, y } = state;
+  function checkBoundaries(x: number, y: number) {
+    if (nodeRef.current && !disableBoundariesCheck) {
+      const { innerWidth, innerHeight } = window;
+      const { offsetWidth, offsetHeight } = nodeRef.current;
 
-      if (x + menuWidth > windowWidth) {
-        x -= x + menuWidth - windowWidth;
-      }
+      if (x + offsetWidth > innerWidth) x -= x + offsetWidth - innerWidth;
 
-      if (y + menuHeight > windowHeight) {
-        y -= y + menuHeight - windowHeight;
-      }
-
-      setState({
-        x,
-        y,
-      });
+      if (y + offsetHeight > innerHeight) y -= y + offsetHeight - innerHeight;
     }
+
+    return { x, y };
+  }
+
+  // when the menu is transitioning from not visible to visible,
+  // the nodeRef is attached to the dom element this let us check the boundaries
+  useEffect(() => {
+    if (state.visible) setState(checkBoundaries(state.x, state.y));
 
     // state.visible and state{x,y} are updated together
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,28 +206,17 @@ export const Menu: React.FC<MenuProps> = ({
     }
 
     if (state.visible) {
-      window.addEventListener('resize', hide);
-      window.addEventListener('contextmenu', hide);
-      window.addEventListener('click', hide);
-      window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
 
-      // This let us debug the menu in the console in dev mode
-      if (process.env.NODE_ENV !== 'development') {
-        window.addEventListener('blur', hide);
-      }
+      for (let i = 0; i < hideOnEvents.length; i++)
+        window.addEventListener(hideOnEvents[i], hide);
     }
 
     return () => {
-      window.removeEventListener('resize', hide);
-      window.removeEventListener('contextmenu', hide);
-      window.removeEventListener('click', hide);
-      window.removeEventListener('scroll', hide);
       window.removeEventListener('keydown', handleKeyboard);
 
-      if (process.env.NODE_ENV !== 'development') {
-        window.removeEventListener('blur', hide);
-      }
+      for (let i = 0; i < hideOnEvents.length; i++)
+        window.removeEventListener(hideOnEvents[i], hide);
     };
     // state.visible will let us get the right reference to `hide`
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,11 +224,11 @@ export const Menu: React.FC<MenuProps> = ({
 
   function show({ event, props, position }: ContextMenuParams) {
     event.stopPropagation();
-    const { x, y } = position || getMousePosition(event);
+    const p = position || getMousePosition(event);
+    // check boundaries when the menu is already visible and just moving position
+    const { x, y } = checkBoundaries(p.x, p.y);
 
-    // prevent react from batching the state update
-    // if the menu is already visible we have to recompute bounding rect based on position
-    setTimeout(() => {
+    flushSync(() => {
       setState({
         visible: true,
         willLeave: false,
@@ -252,21 +237,21 @@ export const Menu: React.FC<MenuProps> = ({
         triggerEvent: event,
         propsFromTrigger: props,
       });
-    }, 0);
+    });
   }
 
-  function hide(event?: Event) {
-    // Safari trigger a click event when you ctrl + trackpad
-    // Firefox:  trigger a click event when right click occur
-    const e = event as KeyboardEvent & MouseEvent;
+  function hide(e?: Event) {
+    type SafariEvent = KeyboardEvent & MouseEvent;
 
     if (
-      typeof e !== 'undefined' &&
-      (e.button === 2 || e.ctrlKey === true) &&
+      e != null &&
+      // Safari trigger a click event when you ctrl + trackpad
+      ((e as SafariEvent).button === 2 ||
+        (e as SafariEvent).ctrlKey === true) &&
+      // Firefox trigger a click event when right click occur
       e.type !== 'contextmenu'
-    ) {
+    )
       return;
-    }
 
     hasExitAnimation(animation)
       ? setState(state => ({ willLeave: state.visible }))
@@ -275,7 +260,7 @@ export const Menu: React.FC<MenuProps> = ({
 
   function handleAnimationEnd() {
     if (state.willLeave && state.visible) {
-      setState({ visible: false, willLeave: false });
+      flushSync(() => setState({ visible: false, willLeave: false }));
     }
   }
 
