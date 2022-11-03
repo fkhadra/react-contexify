@@ -67,6 +67,12 @@ export interface MenuProps
   animation?: MenuAnimation;
 
   /**
+   * Disables menu repositioning if outside screen.
+   * This may be neeeded in some cases when using custom position.
+   */
+  disableBoundariesCheck?: boolean;
+
+  /**
    * Invoked after the menu is visible.
    */
   onShown?: () => void;
@@ -104,6 +110,7 @@ export const Menu: React.FC<MenuProps> = ({
   animation = 'scale',
   onHidden = NOOP,
   onShown = NOOP,
+  disableBoundariesCheck = false,
   ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
@@ -151,7 +158,7 @@ export const Menu: React.FC<MenuProps> = ({
   }, [state.visible, menuController, refTracker]);
 
   function checkBoundaries(x: number, y: number) {
-    if (nodeRef.current) {
+    if (nodeRef.current && !disableBoundariesCheck) {
       const { innerWidth, innerHeight } = window;
       const { offsetWidth, offsetHeight } = nodeRef.current;
 
