@@ -1,5 +1,6 @@
 import { DATA_TEST } from '../../example/constants';
-import { STYLE, theme, animation } from '../../src/constants';
+import { STYLE } from '../../src/constants';
+import { animation, theme } from '../fixtures/constant';
 
 const builtInAnimationClasses = Object.keys(animation).map(k => ({
   name: k,
@@ -118,7 +119,7 @@ describe('Context menu', () => {
 
   it('Can disable animation', () => {
     cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select('none');
-    
+
     builtInAnimationClasses.forEach(builtInAnimation => {
       cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
       cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
