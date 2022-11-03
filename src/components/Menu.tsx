@@ -27,6 +27,7 @@ import {
   isFn,
   isStr,
 } from './utils';
+import { flushSync } from 'react-dom';
 
 export interface MenuProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
@@ -236,7 +237,7 @@ export const Menu: React.FC<MenuProps> = ({
 
     // prevent react from batching the state update
     // if the menu is already visible we have to recompute bounding rect based on position
-    setTimeout(() => {
+    flushSync(() => {
       setState({
         visible: true,
         willLeave: false,
@@ -245,7 +246,7 @@ export const Menu: React.FC<MenuProps> = ({
         triggerEvent: event,
         propsFromTrigger: props,
       });
-    }, 0);
+    });
   }
 
   function hide(event?: Event) {
@@ -268,7 +269,7 @@ export const Menu: React.FC<MenuProps> = ({
 
   function handleAnimationEnd() {
     if (state.willLeave && state.visible) {
-      setState({ visible: false, willLeave: false });
+      flushSync(() => setState({ visible: false, willLeave: false }));
     }
   }
 
