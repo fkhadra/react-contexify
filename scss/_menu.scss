@@ -9,6 +9,7 @@
   --contexify-activeItem-bgColor: #3498db; 
 }
 
+
 @mixin focus-swag {
   color: var(--contexify-activeItem-color);
   background-color: var(--contexify-activeItem-bgColor);
@@ -16,8 +17,6 @@
 
 .react-contexify {
   position: fixed;
-  top: 0;
-  left: 0;
   opacity: 0;
   user-select: none;
   background-color: var(--contexify-menu-bgColor);
