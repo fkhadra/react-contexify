@@ -32,6 +32,11 @@ export type MenuId = string | number;
  */
 interface HandlerParams<Props = any, Data = any> {
   /**
+   * The id of the item when provided
+   */
+   id?:string;
+   
+  /**
    * The event that triggered the context menu
    */
   triggerEvent: HandlerParamsEvent;
@@ -92,7 +97,6 @@ export type PredicateParams<Props = any, Data = any> = HandlerParams<
  */
 export interface ItemParams<Props = any, Data = any>
   extends HandlerParams<Props, Data> {
-  itemId: string;
   event:
     | React.MouseEvent<HTMLElement>
     | React.TouchEvent<HTMLElement>
