@@ -6,6 +6,7 @@ import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
 import { useRefTracker } from '../hooks';
 import { STYLE } from '../constants';
 import { cloneItems, getPredicateValue } from './utils';
+import { Arrow } from './Arrow';
 
 export interface SubMenuProps
   extends InternalProps,
@@ -44,7 +45,7 @@ interface SubMenuState {
 }
 
 export const Submenu: React.FC<SubMenuProps> = ({
-  arrow = '▶',
+  arrow,
   children,
   disabled = false,
   hidden = false,
@@ -132,7 +133,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
       >
         <div className={STYLE.itemContent} onClick={handleClick}>
           {label}
-          <span className={STYLE.submenuArrow}>{arrow}</span>
+          <span className={STYLE.submenuArrow}>{arrow || <Arrow />}</span>
         </div>
         <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
           {cloneItems(children, {
