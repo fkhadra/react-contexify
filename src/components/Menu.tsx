@@ -12,9 +12,9 @@ import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
 import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
-import { usePrevious, useRefTracker } from '../hooks';
+import { useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
-import { NOOP, STYLE, EVENT, hideOnEvents } from '../constants';
+import { STYLE, EVENT, hideOnEvents } from '../constants';
 import {
   cloneItems,
   getMousePosition,
@@ -68,16 +68,6 @@ export interface MenuProps
   disableBoundariesCheck?: boolean;
 
   /**
-   * Invoked after the menu is visible.
-   */
-  onShown?: () => void;
-
-  /**
-   * Invoked after the menu has been hidden.
-   */
-  onHidden?: () => void;
-
-  /**
    * Prevents scrolling the window on when typing. Defaults to true.
    */
   preventDefaultOnKeydown?: boolean;
@@ -108,8 +98,6 @@ export const Menu: React.FC<MenuProps> = ({
   className,
   children,
   animation = 'scale',
-  onHidden = NOOP,
-  onShown = NOOP,
   preventDefaultOnKeydown = true,
   disableBoundariesCheck = false,
   ...rest
@@ -124,7 +112,6 @@ export const Menu: React.FC<MenuProps> = ({
   });
   const nodeRef = useRef<HTMLDivElement>(null);
   const didMount = useRef(false);
-  const wasVisible = usePrevious(state.visible);
   const refTracker = useRefTracker();
   const [menuController] = useState(() => createMenuController());
 
@@ -139,15 +126,6 @@ export const Menu: React.FC<MenuProps> = ({
     // hide rely on setState(dispatch), which is guaranted to be the same across render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  // handle show/ hide callback
-  useEffect(() => {
-    if (didMount.current && state.visible !== wasVisible) {
-      state.visible ? onShown() : onHidden();
-    }
-    // wasWisible is a ref
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.visible, onHidden, onShown]);
 
   // collect menu items for keyboard navigation
   useEffect(() => {
@@ -183,9 +161,7 @@ export const Menu: React.FC<MenuProps> = ({
   // subscribe dom events
   useEffect(() => {
     function preventDefault(e: KeyboardEvent) {
-      if (preventDefaultOnKeydown) {
-        e.preventDefault();
-      }
+      if (preventDefaultOnKeydown) e.preventDefault();
     }
 
     function handleKeyboard(e: KeyboardEvent) {
