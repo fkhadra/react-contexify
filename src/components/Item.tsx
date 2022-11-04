@@ -96,10 +96,10 @@ export const Item: React.FC<ItemProps> = ({
 }) => {
   const refTracker = useRefTrackerContext();
   const handlerParams = {
+    id,
     data,
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
-    itemId: id,
   };
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
