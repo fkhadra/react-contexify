@@ -1,5 +1,3 @@
-import { ShowContextMenuParams } from '../core';
-
 type BuiltInOrString<T> = T | (string & {});
 
 /**
@@ -17,10 +15,6 @@ export type TriggerEvent =
   | React.MouseEvent
   | React.TouchEvent
   | React.KeyboardEvent;
-
-export interface ContextMenuParams extends Omit<ShowContextMenuParams, 'id'> {
-  id?: MenuId;
-}
 
 export type BooleanPredicate = boolean | ((args: HandlerParams) => boolean);
 

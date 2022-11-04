@@ -11,13 +11,7 @@ import cx from 'clsx';
 import { RefTrackerProvider } from './RefTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
-import {
-  TriggerEvent,
-  MenuId,
-  ContextMenuParams,
-  MenuAnimation,
-  Theme,
-} from '../types';
+import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
 import { usePrevious, useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
 import { NOOP, STYLE, EVENT, hideOnEvents } from '../constants';
@@ -29,6 +23,7 @@ import {
   isStr,
 } from './utils';
 import { flushSync } from 'react-dom';
+import { ShowContextMenuParams } from '../core';
 
 export interface MenuProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
@@ -222,7 +217,7 @@ export const Menu: React.FC<MenuProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible, menuController]);
 
-  function show({ event, props, position }: ContextMenuParams) {
+  function show({ event, props, position }: ShowContextMenuParams) {
     event.stopPropagation();
     const p = position || getMousePosition(event);
     // check boundaries when the menu is already visible and just moving position
