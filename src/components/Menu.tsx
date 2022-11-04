@@ -282,8 +282,7 @@ export const Menu: React.FC<MenuProps> = ({
 
   const menuStyle = {
     ...style,
-    left: x,
-    top: y,
+    transform: `translate(${x}px, ${y}px)`,
     opacity: 1,
   };
 
