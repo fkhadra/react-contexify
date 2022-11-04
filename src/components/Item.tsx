@@ -82,6 +82,13 @@ export interface ItemProps
   onClick?: (args: ItemParams) => void;
 
   /**
+   * Useful when using form input inside the Menu
+   *
+   * default: `true`
+   */
+  closeOnClick?: boolean;
+
+  /**
    * Let you specify another event for the `onClick` handler
    *
    * default: `onClick`
@@ -100,6 +107,7 @@ export const Item: React.FC<ItemProps> = ({
   onClick = NOOP,
   disabled = false,
   hidden = false,
+  closeOnClick = true,
   handlerEvent = 'onClick',
   ...rest
 }) => {
@@ -109,13 +117,15 @@ export const Item: React.FC<ItemProps> = ({
     data,
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
-  };
+  } as ItemParams;
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {
-    (handlerParams as ItemParams).event = e;
-    isDisabled ? e.stopPropagation() : onClick(handlerParams as ItemParams);
+    handlerParams.event = e;
+
+    if (isDisabled || !closeOnClick) e.stopPropagation();
+    if (!isDisabled) onClick(handlerParams as ItemParams);
   }
 
   function trackRef(node: HTMLElement | null) {
@@ -128,7 +138,7 @@ export const Item: React.FC<ItemProps> = ({
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (e.key === 'Enter') {
-      (handlerParams as ItemParams).event = e;
+      handlerParams.event = e;
       onClick(handlerParams as ItemParams);
     }
   }
