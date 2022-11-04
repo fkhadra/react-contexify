@@ -19,16 +19,14 @@ export const enum EVENT {
   HIDE_ALL,
 }
 
-export const theme = {
-  light: 'light',
-  dark: 'dark',
-};
-
-export const animation = {
-  fade: 'fade',
-  flip: 'flip',
-  scale: 'scale',
-  slide: 'slide',
-};
-
 export const NOOP = () => {};
+
+export const hideOnEvents: (keyof GlobalEventHandlersEventMap)[] = [
+  'resize',
+  'contextmenu',
+  'click',
+  'scroll',
+
+  // comment blur in dev so you can toggle console without closing the menu
+  'blur',
+];

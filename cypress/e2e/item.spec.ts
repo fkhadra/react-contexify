@@ -33,8 +33,8 @@ describe('Menu item', () => {
     cy.getByDataTest(DATA_TEST.TOGGLE_HIDE_ITEMS).check();
     showContextMenu();
 
-    cy.getByDataTest(DATA_TEST.MENU_FIRST_ITEM).should('not.be.visible');
-    cy.getByDataTest(DATA_TEST.MENU_SECOND_ITEM).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.MENU_FIRST_ITEM).should('not.exist');
+    cy.getByDataTest(DATA_TEST.MENU_SECOND_ITEM).should('not.exist');
   });
 
   it('Should pass payload when clicking on an Item', () => {

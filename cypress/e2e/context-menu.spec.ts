@@ -1,5 +1,6 @@
 import { DATA_TEST } from '../../example/constants';
-import { STYLE, theme, animation } from '../../src/constants';
+import { STYLE } from '../../src/constants';
+import { animation, theme } from '../fixtures/constant';
 
 const builtInAnimationClasses = Object.keys(animation).map(k => ({
   name: k,
@@ -13,7 +14,7 @@ describe('Context menu', () => {
   });
 
   it('Should not be mounted by default', () => {
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
   });
 
   it('Display the context menu', () => {
@@ -25,14 +26,14 @@ describe('Context menu', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
     cy.get('body').type('{esc}');
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
   });
 
   it('Close on Enter', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
     cy.get('body').type('{enter}');
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
   });
 
   it('Close on window resize', () => {
@@ -40,7 +41,7 @@ describe('Context menu', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
 
     cy.viewport(123, 456);
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
   });
 
   it('Prevent from rendering outside of the viewport if possible', () => {
@@ -53,13 +54,13 @@ describe('Context menu', () => {
   it('Can change trigger event', () => {
     cy.getByDataTest(DATA_TEST.EVENT_SELECTOR).select('onClick');
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
 
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).click();
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
 
     cy.getByDataTest(DATA_TEST.EVENT_SELECTOR).select('onDoubleClick');
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
 
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).dblclick();
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
@@ -118,22 +119,17 @@ describe('Context menu', () => {
 
   it('Can disable animation', () => {
     cy.getByDataTest(DATA_TEST.ANIMATION_SELECTOR).select('none');
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
 
     builtInAnimationClasses.forEach(builtInAnimation => {
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
       cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
         'not.have.class',
         builtInAnimation.enter
       );
-    });
 
-    cy.get('body').type('{esc}');
+      cy.get('body').type('{esc}');
 
-    builtInAnimationClasses.forEach(builtInAnimation => {
-      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-        'not.have.class',
-        builtInAnimation.exit
-      );
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
     });
   });
 
@@ -177,10 +173,7 @@ describe('Context menu', () => {
       // close the menu
       cy.get('body').type('{esc}');
 
-      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
-        'not.have.class',
-        builtInAnimation.exit
-      );
+      cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
 
       // wait for exit animation to complete
       cy.wait(500);
@@ -224,6 +217,6 @@ describe('Context menu', () => {
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('be.visible');
 
     cy.getByDataTest(DATA_TEST.MENU_FIRST_ITEM).click();
-    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.be.visible');
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should('not.exist');
   });
 });

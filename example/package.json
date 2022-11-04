@@ -4,21 +4,21 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html",
+    "start": "parcel --no-cache index.html",
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react-app-polyfill": "^1.0.0"
+    "react-app-polyfill": "^3.0.0"
   },
   "alias": {
     "react": "../node_modules/react",
-    "react-dom": "../node_modules/react-dom/profiling",
-    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+    "react-dom": "../node_modules/react-dom"
   },
   "devDependencies": {
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.8.4",
-    "parcel": "^1.12.3",
-    "typescript": "^3.4.5"
+    "@parcel/transformer-sass": "2.7.0",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "parcel": "^2.7.0",
+    "typescript": "^4.8.4"
   }
 }

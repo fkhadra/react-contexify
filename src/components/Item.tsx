@@ -82,6 +82,7 @@ export interface ItemProps
 }
 
 export const Item: React.FC<ItemProps> = ({
+  id,
   children,
   className,
   style,
@@ -95,6 +96,7 @@ export const Item: React.FC<ItemProps> = ({
 }) => {
   const refTracker = useRefTrackerContext();
   const handlerParams = {
+    id,
     data,
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,

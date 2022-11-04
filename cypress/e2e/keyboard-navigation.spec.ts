@@ -1,5 +1,5 @@
 import { DATA_TEST } from '../../example/constants';
-import { STYLE, theme, animation } from '../../src/constants';
+import { STYLE } from '../../src/constants';
 
 const [, submenuClassName] = STYLE.submenu.split(' ');
 
