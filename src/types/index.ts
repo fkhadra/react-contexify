@@ -1,4 +1,4 @@
-type BuiltInOrString<T> = T | (string & {});
+export type BuiltInOrString<T> = T | (string & {});
 
 /**
  * The event that triggered the context menu

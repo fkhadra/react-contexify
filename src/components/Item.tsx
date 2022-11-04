@@ -6,6 +6,7 @@ import {
   InternalProps,
   BooleanPredicate,
   HandlerParamsEvent,
+  BuiltInOrString,
 } from '../types';
 import { useRefTrackerContext } from './RefTrackerProvider';
 import { NOOP, STYLE } from '../constants';
@@ -79,6 +80,13 @@ export interface ItemProps
    * ```
    */
   onClick?: (args: ItemParams) => void;
+
+  /**
+   * Let you specify another event for the `onClick` handler
+   *
+   * default: `onClick`
+   */
+  handlerEvent?: BuiltInOrString<'onClick' | 'onMouseDown' | 'onMouseUp'>;
 }
 
 export const Item: React.FC<ItemProps> = ({
@@ -92,6 +100,7 @@ export const Item: React.FC<ItemProps> = ({
   onClick = NOOP,
   disabled = false,
   hidden = false,
+  handlerEvent = 'onClick',
   ...rest
 }) => {
   const refTracker = useRefTrackerContext();
@@ -126,16 +135,13 @@ export const Item: React.FC<ItemProps> = ({
 
   if (isHidden) return null;
 
-  const cssClasses = cx(STYLE.item, className, {
-    [`${STYLE.itemDisabled}`]: isDisabled,
-  });
-
   return (
     <div
-      {...rest}
-      className={cssClasses}
+      {...{ ...rest, [handlerEvent]: handleClick }}
+      className={cx(STYLE.item, className, {
+        [`${STYLE.itemDisabled}`]: isDisabled,
+      })}
       style={style}
-      onClick={handleClick}
       onKeyDown={handleKeyDown}
       ref={trackRef}
       tabIndex={-1}
