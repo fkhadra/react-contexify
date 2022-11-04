@@ -28,6 +28,11 @@ export type MenuId = string | number;
  */
 interface HandlerParams<Props = any, Data = any> {
   /**
+   * The id of the item when provided
+   */
+   id?:string;
+   
+  /**
    * The event that triggered the context menu
    */
   triggerEvent: HandlerParamsEvent;
