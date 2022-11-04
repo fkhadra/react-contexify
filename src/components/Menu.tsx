@@ -243,7 +243,7 @@ export const Menu: React.FC<MenuProps> = ({
     };
     // state.visible will let us get the right reference to `hide`
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.visible, menuController]);
+  }, [state.visible, menuController, preventDefaultOnKeydown]);
 
   function show({ event, props, position }: ContextMenuParams) {
     event.stopPropagation();
@@ -278,9 +278,7 @@ export const Menu: React.FC<MenuProps> = ({
 
     hasExitAnimation(animation)
       ? setState(state => ({ willLeave: state.visible }))
-      : setState(state => ({
-          visible: state.visible ? false : state.visible,
-        }));
+      : setState(state => ({ visible: state.visible ? false : state.visible }));
   }
 
   function handleAnimationEnd() {
