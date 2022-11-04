@@ -1,19 +1,35 @@
+:root{
+  --contexify-menu-minWidth: 220px;
+  --contexify-zIndex: 666;
+
+  --contexify-menu-bgColor: #fff;
+  --contexify-separator-color: rgba(0, 0, 0, 0.2);
+  --contexify-item-color: #333;
+  --contexify-activeItem-color: #fff;
+  --contexify-activeItem-bgColor: #3498db; 
+}
+
+
+@mixin focus-swag {
+  color: var(--contexify-activeItem-color);
+  background-color: var(--contexify-activeItem-bgColor);
+}
+
 .react-contexify {
   position: fixed;
   opacity: 0;
   user-select: none;
-  background-color: #ffffff;
+  background-color: var(--contexify-menu-bgColor);
   box-sizing: border-box;
-  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
   border-radius: 6px;
-  padding: 6px 0;
-  min-width: 200px;
-  z-index: 100;
+  padding: 6px;
+  min-width: var(--contexify-menu-minWidth);
+  z-index: var(--contexify-zIndex);
 
   &__submenu--is-open,
   &__submenu--is-open > &__item__content {
-    color: white;
-    background-color: #4393e6;
+    @include focus-swag;
   }
 
   &__submenu--is-open > &__submenu {
@@ -26,20 +42,19 @@
     /* negate padding */
     top: -6px;
     pointer-events: none;
-    transition: opacity 0.275s;
+    transition: opacity .265s;
   }
 
   &__submenu-arrow {
     margin-left: auto;
-    font-size: 12px;
+    display: flex;
   }
 
   &__separator {
-    width: 100%;
     height: 1px;
     cursor: default;
-    margin: 4px 0;
-    background-color: rgba(0, 0, 0, 0.2);
+    margin: 5px;
+    background-color: var(--contexify-separator-color);
   }
 
   &__will-leave--disabled {
@@ -56,8 +71,8 @@
 
     &:not(&--disabled):hover > &__content,
     &:not(&--disabled):focus > &__content {
-      color: white;
-      background-color: #4393e6;
+      @include focus-swag;
+      border-radius: 4px;
     }
 
     &:not(&--disabled):hover > .react-contexify__submenu {
@@ -67,14 +82,14 @@
 
     &--disabled {
       cursor: default;
-      opacity: 0.5;
+      opacity: .5;
     }
     &__content {
-      padding: 6px 12px;
+      padding: 6px;
       display: flex;
       align-items: center;
       white-space: nowrap;
-      color: #333;
+      color: var(--contexify-item-color);
       position: relative;
     }
   }
