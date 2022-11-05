@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import cx from 'clsx';
 
 import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
@@ -37,13 +37,6 @@ export interface SubMenuProps
   hidden?: BooleanPredicate;
 }
 
-interface SubMenuState {
-  left?: string | number;
-  right?: string | number;
-  top?: string | number;
-  bottom?: string | number;
-}
-
 export const Submenu: React.FC<SubMenuProps> = ({
   arrow,
   children,
@@ -59,11 +52,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const menuRefTracker = useRefTrackerContext();
   const refTracker = useRefTracker();
   const nodeRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<SubMenuState>({
-    left: '100%',
-    top: 0,
-    bottom: 'initial',
-  });
   const handlerParams = {
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
@@ -71,30 +59,29 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
 
-  useEffect(() => {
+  function setPosition() {
     if (nodeRef.current) {
       const { innerWidth, innerHeight } = window;
+      nodeRef.current.style.left = '100%';
+      nodeRef.current.style.top = '0';
       const rect = nodeRef.current.getBoundingClientRect();
-      const style: SubMenuState = {};
 
       if (rect.right < innerWidth) {
-        style.left = '100%';
-        style.right = undefined;
+        nodeRef.current.style.left = '100%';
+        nodeRef.current.style.right = '';
       } else {
-        style.right = '100%';
-        style.left = undefined;
+        nodeRef.current.style.right = '100%';
+        nodeRef.current.style.left = '';
       }
 
       if (rect.bottom > innerHeight) {
-        style.bottom = 0;
-        style.top = 'initial';
+        nodeRef.current.style.bottom = '0';
+        nodeRef.current.style.top = 'initial';
       } else {
-        style.bottom = 'initial';
+        nodeRef.current.style.bottom = 'initial';
       }
-
-      setPosition(style);
     }
-  }, []);
+  }
 
   function handleClick(e: React.SyntheticEvent) {
     e.stopPropagation();
@@ -106,6 +93,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
         node,
         isSubmenu: true,
         submenuRefTracker: refTracker,
+        setSubmenuPosition: setPosition,
       });
   }
 
@@ -114,11 +102,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const cssClasses = cx(STYLE.item, className, {
     [`${STYLE.itemDisabled}`]: isDisabled,
   });
-
-  const submenuStyle = {
-    ...style,
-    ...position,
-  };
 
   return (
     <RefTrackerProvider refTracker={refTracker}>
@@ -130,12 +113,14 @@ export const Submenu: React.FC<SubMenuProps> = ({
         role="menuitem"
         aria-haspopup
         aria-disabled={isDisabled}
+        onMouseEnter={setPosition}
+        onTouchStart={setPosition}
       >
         <div className={STYLE.itemContent} onClick={handleClick}>
           {label}
           <span className={STYLE.submenuArrow}>{arrow || <Arrow />}</span>
         </div>
-        <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
+        <div className={STYLE.submenu} ref={nodeRef} style={style}>
           {cloneItems(children, {
             propsFromTrigger,
             // injected by the parent

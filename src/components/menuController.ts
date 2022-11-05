@@ -74,17 +74,18 @@ export function createMenuController() {
   function openSubmenu() {
     if (isFocused() && isSubmenuFocused()) {
       const submenuItems = getSubmenuItems();
-      const currentNode = currentItems[focusedIndex].node;
+      const { node, setSubmenuPosition } = currentItems[focusedIndex];
 
-      menuList.set(currentNode, {
+      menuList.set(node, {
         isRoot: isAtRoot,
         focusedIndex,
-        parentNode: parentNode || currentNode,
+        parentNode: parentNode || node,
         items: currentItems,
       });
 
-      currentNode.classList.add(STYLE.submenuOpen);
-      parentNode = currentNode;
+      setSubmenuPosition!();
+      node.classList.add(STYLE.submenuOpen);
+      parentNode = node;
 
       if (submenuItems.length > 0) {
         focusedIndex = 0;

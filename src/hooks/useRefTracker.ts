@@ -4,6 +4,7 @@ export interface RefTrackerValue {
   node: HTMLElement;
   isSubmenu: boolean;
   submenuRefTracker?: RefTracker;
+  setSubmenuPosition?: () => void;
 }
 
 export type RefTracker = ReturnType<typeof useRefTracker>;
