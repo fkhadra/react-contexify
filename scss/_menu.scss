@@ -94,3 +94,16 @@
     }
   }
 }
+
+@keyframes react-contexify__feedback {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.react-contexify__item--feedback{
+  animation: react-contexify__feedback 0.26s both;
+}

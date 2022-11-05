@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import cx from 'clsx';
 
 import {
@@ -11,6 +11,7 @@ import {
 import { useRefTrackerContext } from './RefTrackerProvider';
 import { NOOP, STYLE } from '../constants';
 import { getPredicateValue } from './utils';
+import { contextMenu } from '../core';
 
 export interface ItemProps
   extends InternalProps,
@@ -111,6 +112,7 @@ export const Item: React.FC<ItemProps> = ({
   handlerEvent = 'onClick',
   ...rest
 }) => {
+  const nodeRef = useRef<HTMLElement>();
   const refTracker = useRefTrackerContext();
   const handlerParams = {
     id,
@@ -123,23 +125,42 @@ export const Item: React.FC<ItemProps> = ({
 
   function handleClick(e: React.MouseEvent<HTMLElement>) {
     handlerParams.event = e;
+    e.stopPropagation();
 
-    if (isDisabled || !closeOnClick) e.stopPropagation();
-    if (!isDisabled) onClick(handlerParams as ItemParams);
+    if (!isDisabled) {
+      !closeOnClick ? onClick(handlerParams) : dispatchUserHanlder();
+    }
+  }
+
+  // provide a feedback to the user that the item has been clicked before closing the menu
+  function dispatchUserHanlder() {
+    const node = nodeRef.current!;
+    node.addEventListener(
+      'animationend',
+      () => {
+        onClick(handlerParams);
+        contextMenu.hideAll();
+      },
+      { once: true }
+    );
+    node.classList.add(STYLE.itemClickedFeedback);
   }
 
   function trackRef(node: HTMLElement | null) {
-    if (node && !isDisabled)
+    if (node && !isDisabled) {
+      nodeRef.current = node;
       refTracker.set(node, {
         node,
         isSubmenu: false,
       });
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (e.key === 'Enter') {
+      e.stopPropagation();
       handlerParams.event = e;
-      onClick(handlerParams as ItemParams);
+      dispatchUserHanlder();
     }
   }
 
