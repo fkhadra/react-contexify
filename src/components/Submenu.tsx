@@ -60,25 +60,21 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const isHidden = getPredicateValue(hidden, handlerParams);
 
   function setPosition() {
-    if (nodeRef.current) {
-      const { innerWidth, innerHeight } = window;
-      nodeRef.current.style.left = '100%';
-      nodeRef.current.style.top = '0';
-      const rect = nodeRef.current.getBoundingClientRect();
+    const node = nodeRef.current;
+    if (node) {
+      node.style.left = '100%';
+      node.style.top = '0';
 
-      if (rect.right < innerWidth) {
-        nodeRef.current.style.left = '100%';
-        nodeRef.current.style.right = '';
-      } else {
-        nodeRef.current.style.right = '100%';
-        nodeRef.current.style.left = '';
-      }
+      const { innerWidth, innerHeight } = window;
+      const rect = node.getBoundingClientRect();
+
+      node.style.left = rect.right < innerWidth ? '100%' : '-100%';
 
       if (rect.bottom > innerHeight) {
-        nodeRef.current.style.bottom = '0';
-        nodeRef.current.style.top = 'initial';
+        node.style.bottom = '0';
+        node.style.top = 'initial';
       } else {
-        nodeRef.current.style.bottom = 'initial';
+        node.style.bottom = 'initial';
       }
     }
   }
