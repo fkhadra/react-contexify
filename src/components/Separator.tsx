@@ -3,10 +3,9 @@ import React from 'react';
 import { BooleanPredicate, HandlerParamsEvent, InternalProps } from '../types';
 import { getPredicateValue } from './utils';
 
-import { STYLE } from '../constants';
+import { CssClass } from '../constants';
 
-export interface SeparatorProps
-  extends InternalProps {
+export interface SeparatorProps extends InternalProps {
   /**
    * Passed to the `Separator` hidden predicate. Accessible via `data`
    */
@@ -32,7 +31,7 @@ export const Separator: React.FC<SeparatorProps> = ({
   triggerEvent,
   data,
   propsFromTrigger,
-  hidden = false
+  hidden = false,
 }) => {
   const handlerParams = {
     data,
@@ -43,5 +42,5 @@ export const Separator: React.FC<SeparatorProps> = ({
 
   if (isHidden) return null;
 
-  return <div className={STYLE.separator} />;
-}
+  return <div className={CssClass.separator} />;
+};

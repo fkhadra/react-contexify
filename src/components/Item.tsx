@@ -9,7 +9,7 @@ import {
   BuiltInOrString,
 } from '../types';
 import { useRefTrackerContext } from './RefTrackerProvider';
-import { NOOP, STYLE } from '../constants';
+import { NOOP, CssClass } from '../constants';
 import { getPredicateValue } from './utils';
 import { contextMenu } from '../core';
 
@@ -141,7 +141,7 @@ export const Item: React.FC<ItemProps> = ({
   function dispatchUserHanlder() {
     const node = nodeRef.current!;
     node.addEventListener('animationend', contextMenu.hideAll, { once: true });
-    node.classList.add(STYLE.itemClickedFeedback);
+    node.classList.add(CssClass.itemClickedFeedback);
     onClick(handlerParams);
   }
 
@@ -168,8 +168,8 @@ export const Item: React.FC<ItemProps> = ({
   return (
     <div
       {...{ ...rest, [handlerEvent]: handleClick }}
-      className={cx(STYLE.item, className, {
-        [`${STYLE.itemDisabled}`]: isDisabled,
+      className={cx(CssClass.item, className, {
+        [`${CssClass.itemDisabled}`]: isDisabled,
       })}
       style={style}
       onKeyDown={handleKeyDown}
@@ -178,7 +178,7 @@ export const Item: React.FC<ItemProps> = ({
       role="menuitem"
       aria-disabled={isDisabled}
     >
-      <div className={STYLE.itemContent}>{children}</div>
+      <div className={CssClass.itemContent}>{children}</div>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 /*
  * css classes mapping
  * */
-export const enum STYLE {
+export const enum CssClass {
   menu = 'react-contexify',
-  submenu = 'react-contexify react-contexify__submenu',
+  submenu = 'react-contexify__submenu',
   submenuArrow = 'react-contexify__submenu-arrow',
   submenuOpen = 'react-contexify__submenu--is-open',
   separator = 'react-contexify__separator',

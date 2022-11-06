@@ -14,7 +14,7 @@ import { eventManager } from '../core/eventManager';
 import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
 import { useRefTracker } from '../hooks';
 import { createMenuController } from './menuController';
-import { STYLE, EVENT, hideOnEvents } from '../constants';
+import { CssClass, EVENT, hideOnEvents } from '../constants';
 import {
   cloneItems,
   getMousePosition,
@@ -256,16 +256,16 @@ export const Menu: React.FC<MenuProps> = ({
 
     if (isStr(animation)) {
       return cx({
-        [`${STYLE.animationWillEnter}${animation}`]:
+        [`${CssClass.animationWillEnter}${animation}`]:
           animation && visible && !willLeave,
-        [`${STYLE.animationWillLeave}${animation} ${STYLE.animationWillLeave}'disabled'`]:
+        [`${CssClass.animationWillLeave}${animation} ${CssClass.animationWillLeave}'disabled'`]:
           animation && visible && willLeave,
       });
     } else if ('enter' in animation && 'exit' in animation) {
       return cx({
-        [`${STYLE.animationWillEnter}${animation.enter}`]:
+        [`${CssClass.animationWillEnter}${animation.enter}`]:
           animation.enter && visible && !willLeave,
-        [`${STYLE.animationWillLeave}${animation.exit} ${STYLE.animationWillLeave}'disabled'`]:
+        [`${CssClass.animationWillLeave}${animation.exit} ${CssClass.animationWillLeave}'disabled'`]:
           animation.exit && visible && willLeave,
       });
     }
@@ -275,9 +275,9 @@ export const Menu: React.FC<MenuProps> = ({
 
   const { visible, triggerEvent, propsFromTrigger, x, y, willLeave } = state;
   const cssClasses = cx(
-    STYLE.menu,
+    CssClass.menu,
     className,
-    { [`${STYLE.theme}${theme}`]: theme },
+    { [`${CssClass.theme}${theme}`]: theme },
     computeAnimationClasses()
   );
 

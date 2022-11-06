@@ -1,5 +1,5 @@
 import { RefTrackerValue } from '../hooks';
-import { STYLE } from '../constants';
+import { CssClass } from '../constants';
 
 interface Menu<T = RefTrackerValue> {
   items: T[];
@@ -84,7 +84,7 @@ export function createMenuController() {
       });
 
       setSubmenuPosition!();
-      node.classList.add(STYLE.submenuOpen);
+      node.classList.add(CssClass.submenuOpen);
       parentNode = node;
 
       if (submenuItems.length > 0) {
@@ -111,7 +111,7 @@ export function createMenuController() {
         parentNode: menuParentNode,
       } = menuList.get(parentNode)!;
 
-      parentNode.classList.remove(STYLE.submenuOpen);
+      parentNode.classList.remove(CssClass.submenuOpen);
 
       currentItems = items;
       parentNode = menuParentNode;

@@ -4,7 +4,7 @@ import cx from 'clsx';
 import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
 import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
 import { useRefTracker } from '../hooks';
-import { STYLE } from '../constants';
+import { CssClass } from '../constants';
 import { cloneItems, getPredicateValue } from './utils';
 import { Arrow } from './Arrow';
 
@@ -62,20 +62,17 @@ export const Submenu: React.FC<SubMenuProps> = ({
   function setPosition() {
     const node = nodeRef.current;
     if (node) {
-      node.style.left = '100%';
-      node.style.top = '0';
+      const bottom = `${CssClass.submenu}--bottom`;
+      const right = `${CssClass.submenu}--right`;
 
-      const { innerWidth, innerHeight } = window;
+      // reset to default position before computing position
+      node.classList.remove(bottom, right);
+
       const rect = node.getBoundingClientRect();
 
-      node.style.left = rect.right < innerWidth ? '100%' : '-100%';
+      if (rect.right > window.innerWidth) node.classList.add(right);
 
-      if (rect.bottom > innerHeight) {
-        node.style.bottom = '0';
-        node.style.top = 'initial';
-      } else {
-        node.style.bottom = 'initial';
-      }
+      if (rect.bottom > window.innerHeight) node.classList.add(bottom);
     }
   }
 
@@ -95,8 +92,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
 
   if (isHidden) return null;
 
-  const cssClasses = cx(STYLE.item, className, {
-    [`${STYLE.itemDisabled}`]: isDisabled,
+  const cssClasses = cx(CssClass.item, className, {
+    [`${CssClass.itemDisabled}`]: isDisabled,
   });
 
   return (
@@ -112,11 +109,15 @@ export const Submenu: React.FC<SubMenuProps> = ({
         onMouseEnter={setPosition}
         onTouchStart={setPosition}
       >
-        <div className={STYLE.itemContent} onClick={handleClick}>
+        <div className={CssClass.itemContent} onClick={handleClick}>
           {label}
-          <span className={STYLE.submenuArrow}>{arrow || <Arrow />}</span>
+          <span className={CssClass.submenuArrow}>{arrow || <Arrow />}</span>
         </div>
-        <div className={STYLE.submenu} ref={nodeRef} style={style}>
+        <div
+          className={`${CssClass.menu} ${CssClass.submenu}`}
+          ref={nodeRef}
+          style={style}
+        >
           {cloneItems(children, {
             propsFromTrigger,
             // injected by the parent

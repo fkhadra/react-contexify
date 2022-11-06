@@ -39,10 +39,22 @@
 
   & &__submenu {
     position: absolute;
-    /* negate padding */
-    top: -6px;
     pointer-events: none;
     transition: opacity .265s;
+    
+    /* Initial submenu position */
+    top: -6px;
+    left: 100%;
+
+    &--bottom{
+      bottom: -6px;
+      top: unset;
+    }
+
+    &--right {
+      right: 100%;
+      left: unset;
+    }
   }
 
   &__submenu-arrow {
