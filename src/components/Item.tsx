@@ -29,6 +29,7 @@ export interface ItemProps
   /**
    * Disable `Item`. If a function is used, a boolean must be returned
    *
+   * @param id The item id, when defined
    * @param props The props passed when you called `show(e, {props: yourProps})`
    * @param data The data defined on the `Item`
    * @param triggerEvent The event that triggered the context menu
@@ -44,6 +45,7 @@ export interface ItemProps
   /**
    * Hide the `Item`. If a function is used, a boolean must be returned
    *
+   * @param id The item id, when defined
    * @param props The props passed when you called `show(e, {props: yourProps})`
    * @param data The data defined on the `Item`
    * @param triggerEvent The event that triggered the context menu
@@ -59,6 +61,7 @@ export interface ItemProps
   /**
    * Callback when the `Item` is clicked.
    *
+   * @param id The item id, when defined
    * @param event The event that occured on the Item node
    * @param props The props passed when you called `show(e, {props: yourProps})`
    * @param data The data defined on the `Item`
