@@ -68,19 +68,21 @@ export interface ItemProps
    * @param triggerEvent The event that triggered the context menu
    *
    * ```
-   * function handleItemClick({ triggerEvent, event, props, data }: ItemParams<type of props, type of data>){
-   *    // retrieve the id of the Item or any other dom attribute
-   *    const id = e.currentTarget.id;
+   * function handleItemClick({ id, triggerEvent, event, props, data }: ItemParams<type of props, type of data>){
+   *    // retrieve the id of the Item 
+   *    console.log(id) // item-id
+   * 
+   *    // access any other dom attribute
+   *    console.log(event.currentTarget.dataset.foo) // 123
    *
    *    // access the props and the data
    *    console.log(props, data);
    *
    *    // access the coordinate of the mouse when the menu has been displayed
    *    const {  clientX, clientY } = triggerEvent;
-   *
    * }
    *
-   * <Item id="item-id" onClick={handleItemClick} data={{key: 'value'}}>Something</Item>
+   * <Item id="item-id" onClick={handleItemClick} data={{key: 'value'}} data-foo={123} >Something</Item>
    * ```
    */
   onClick?: (args: ItemParams) => void;
