@@ -69,9 +69,9 @@ export interface ItemProps
    *
    * ```
    * function handleItemClick({ id, triggerEvent, event, props, data }: ItemParams<type of props, type of data>){
-   *    // retrieve the id of the Item 
+   *    // retrieve the id of the Item
    *    console.log(id) // item-id
-   * 
+   *
    *    // access any other dom attribute
    *    console.log(event.currentTarget.dataset.foo) // 123
    *
@@ -140,15 +140,9 @@ export const Item: React.FC<ItemProps> = ({
   // provide a feedback to the user that the item has been clicked before closing the menu
   function dispatchUserHanlder() {
     const node = nodeRef.current!;
-    node.addEventListener(
-      'animationend',
-      () => {
-        onClick(handlerParams);
-        contextMenu.hideAll();
-      },
-      { once: true }
-    );
+    node.addEventListener('animationend', contextMenu.hideAll, { once: true });
     node.classList.add(STYLE.itemClickedFeedback);
+    onClick(handlerParams);
   }
 
   function trackRef(node: HTMLElement | null) {
