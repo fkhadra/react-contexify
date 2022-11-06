@@ -2,6 +2,10 @@
   --display-border: 1px solid red;
 }
 
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }

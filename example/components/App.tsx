@@ -9,10 +9,20 @@ import {
   Separator,
   Submenu,
   useContextMenu,
-  theme as builtInTheme,
-  animation as builtInAnimation,
   ItemParams,
 } from '../../src';
+
+const builtInAnimation = {
+  fade: 'fade',
+  flip: 'flip',
+  scale: 'scale',
+  slide: 'slide',
+};
+
+const builtInTheme = {
+  light: 'light',
+  dark: 'dark',
+};
 
 const selector = {
   events: ['onContextMenu', 'onClick', 'onDoubleClick'],
@@ -96,8 +106,9 @@ export function App() {
     });
   }
 
-  function handleContextMenu(e: React.MouseEvent) {
-    show(e, {
+  function handleContextMenu(event: React.MouseEvent) {
+    show({
+      event,
       props: {
         key: 'value',
       },
