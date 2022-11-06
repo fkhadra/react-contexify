@@ -167,6 +167,7 @@ export const Menu: React.FC<MenuProps> = ({
     function handleKeyboard(e: KeyboardEvent) {
       switch (e.key) {
         case 'Enter':
+        case ' ':
           if (!menuController.openSubmenu()) hide();
           break;
         case 'Escape':

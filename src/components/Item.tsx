@@ -156,7 +156,7 @@ export const Item: React.FC<ItemProps> = ({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.stopPropagation();
       handlerParams.event = e;
       dispatchUserHanlder();
