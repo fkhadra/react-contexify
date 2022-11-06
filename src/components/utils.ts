@@ -32,16 +32,13 @@ export function cloneItems(
 
 export function getMousePosition(e: TriggerEvent) {
   const pos = {
-    x: 0,
-    y: 0,
+    x: (e as MouseEvent).clientX,
+    y: (e as MouseEvent).clientY,
   };
 
   if (isTouchEvent(e) && e.changedTouches && e.changedTouches.length > 0) {
     pos.x = e.changedTouches[0].clientX;
     pos.y = e.changedTouches[0].clientY;
-  } else {
-    pos.x = (e as MouseEvent).clientX;
-    pos.y = (e as MouseEvent).clientY;
   }
 
   if (!pos.x || pos.x < 0) pos.x = 0;

@@ -12,7 +12,6 @@ function createEventManager<E = EventType>(): EventManager<E> {
 
   return {
     on<T = any>(event: E, handler: Handler<T>) {
-      //eslint-disable-next-line @typescript-eslint/no-unused-expressions
       eventList.has(event)
         ? eventList.get(event)!.add(handler)
         : eventList.set(event, new Set([handler]));

@@ -1,4 +1,3 @@
-/* global: window */
 import React, {
   ReactNode,
   useEffect,
@@ -86,9 +85,7 @@ function reducer(
   state: MenuState,
   payload: Partial<MenuState> | ((state: MenuState) => Partial<MenuState>)
 ) {
-  return isFn(payload)
-    ? { ...state, ...payload(state) }
-    : { ...state, ...payload };
+  return { ...state, ...(isFn(payload) ? payload(state) : payload) };
 }
 
 export const Menu: React.FC<MenuProps> = ({
@@ -111,29 +108,24 @@ export const Menu: React.FC<MenuProps> = ({
     willLeave: false,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
-  const didMount = useRef(false);
   const refTracker = useRefTracker();
   const [menuController] = useState(() => createMenuController());
 
   // subscribe event manager
   useEffect(() => {
-    didMount.current = true;
     eventManager.on(id, show).on(EVENT.HIDE_ALL, hide);
 
     return () => {
       eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
     };
     // hide rely on setState(dispatch), which is guaranted to be the same across render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // collect menu items for keyboard navigation
   useEffect(() => {
-    if (!state.visible) {
-      refTracker.clear();
-    } else {
-      menuController.init(Array.from(refTracker.values()));
-    }
+    !state.visible
+      ? refTracker.clear()
+      : menuController.init(Array.from(refTracker.values()));
   }, [state.visible, menuController, refTracker]);
 
   function checkBoundaries(x: number, y: number) {
@@ -155,7 +147,6 @@ export const Menu: React.FC<MenuProps> = ({
     if (state.visible) setState(checkBoundaries(state.x, state.y));
 
     // state.visible and state{x,y} are updated together
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible]);
 
   // subscribe dom events
@@ -205,14 +196,12 @@ export const Menu: React.FC<MenuProps> = ({
       for (let i = 0; i < hideOnEvents.length; i++)
         window.removeEventListener(hideOnEvents[i], hide);
     };
-    // state.visible will let us get the right reference to `hide`
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.visible, menuController, preventDefaultOnKeydown]);
 
   function show({ event, props, position }: ShowContextMenuParams) {
     event.stopPropagation();
     const p = position || getMousePosition(event);
-    // check boundaries when the menu is already visible and just moving position
+    // check boundaries when the menu is already visible
     const { x, y } = checkBoundaries(p.x, p.y);
 
     flushSync(() => {
@@ -281,6 +270,7 @@ export const Menu: React.FC<MenuProps> = ({
     computeAnimationClasses()
   );
 
+  // TODO: switch to translate instead of top left
   const menuStyle = {
     ...style,
     left: x,

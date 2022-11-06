@@ -32,15 +32,11 @@ export const Separator: React.FC<SeparatorProps> = ({
   data,
   propsFromTrigger,
   hidden = false,
-}) => {
-  const handlerParams = {
+}) =>
+  getPredicateValue(hidden, {
     data,
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
-  };
-  const isHidden = getPredicateValue(hidden, handlerParams);
-
-  if (isHidden) return null;
-
-  return <div className={CssClass.separator} />;
-};
+  }) ? null : (
+    <div className={CssClass.separator} />
+  );
