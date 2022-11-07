@@ -5,6 +5,8 @@
   --contexify-menu-bgColor: #fff;
   --contexify-separator-color: rgba(0, 0, 0, 0.2);
   --contexify-item-color: #333;
+  --contexify-rightSlot-color: rgb(111, 110, 119);
+  --contexify-active-rightSlot-color: #fff;
   --contexify-activeItem-color: #fff;
   --contexify-activeItem-bgColor: #3498db; 
 }
@@ -15,7 +17,18 @@
   background-color: var(--contexify-activeItem-bgColor);
 }
 
-.react-contexify {
+// triggered when user select item from the context menu
+@keyframes contexify__feedback {
+  from {
+    opacity: .4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.contexify {
   position: fixed;
   opacity: 0;
   user-select: none;
@@ -57,9 +70,10 @@
     }
   }
 
-  &__submenu-arrow {
+  &__right-slot {
     margin-left: auto;
     display: flex;
+    color: var(--contexify-rightSlot-color)
   }
 
   &__separator {
@@ -81,13 +95,18 @@
       outline: 0;
     }
 
+    &:not(&--disabled):hover .contexify__right-slot,
+    &:not(&--disabled):focus .contexify__right-slot{
+      color: var(--contexify-active-rightSlot-color);
+    }
+
     &:not(&--disabled):hover > &__content,
     &:not(&--disabled):focus > &__content {
       @include focus-swag;
       border-radius: 4px;
     }
 
-    &:not(&--disabled):hover > .react-contexify__submenu {
+    &:not(&--disabled):hover > .contexify__submenu {
       pointer-events: initial;
       opacity: 1;
     }
@@ -104,18 +123,9 @@
       color: var(--contexify-item-color);
       position: relative;
     }
-  }
-}
 
-@keyframes react-contexify__feedback {
-  from {
-    opacity: 0.4;
+    &--feedback{
+      animation: contexify__feedback 0.26s both;
+    }
   }
-  to {
-    opacity: 1;
-  }
-}
-
-.react-contexify__item--feedback{
-  animation: react-contexify__feedback 0.26s both;
 }
