@@ -11,7 +11,7 @@
   --contexify-separator-color: rgba(0, 0, 0, 0.2);
   --contexify-item-color: #333;
   --contexify-rightSlot-color: #6f6e77;
-  --contexify-active-rightSlot-color: #fff;
+  --contexify-activeRightSlot-color: #fff;
   --contexify-activeItem-color: #fff;
   --contexify-activeItem-bgColor: #3498db;
   --contexify-arrow-color: #6f6e77;
@@ -115,7 +115,7 @@
 
     &:not(&-disabled):hover > .contexify_itemContent .contexify_rightSlot,
     &:focus .contexify_rightSlot{
-      color: var(--contexify-active-rightSlot-color);
+      color: var(--contexify-activeRightSlot-color);
     }
 
     &:not(&-disabled)[aria-haspopup] > .contexify_itemContent .contexify_rightSlot {
