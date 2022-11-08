@@ -1,6 +1,6 @@
 $delay: 0.3s;
 
-@keyframes contexify__fadeIn {
+@keyframes contexify_fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -11,7 +11,7 @@ $delay: 0.3s;
   }
 }
 
-@keyframes contexify__fadeOut {
+@keyframes contexify_fadeOut {
   from {
     opacity: 1;
     transform: translateY(0);
@@ -22,10 +22,10 @@ $delay: 0.3s;
   }
 }
 
-.contexify__will-enter--fade {
-  animation: contexify__fadeIn $delay ease;
+.contexify_willEnter-fade {
+  animation: contexify_fadeIn $delay ease;
 }
 
-.contexify__will-leave--fade {
-  animation: contexify__fadeOut $delay ease;
+.contexify_willLeave-fade {
+  animation: contexify_fadeOut $delay ease;
 }

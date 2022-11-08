@@ -1,6 +1,6 @@
 $delay: 0.3s;
 
-@keyframes contexify__slideIn {
+@keyframes contexify_slideIn {
   from {
     opacity: 0;
     transform: scale3d(1, 0.3, 1);
@@ -11,7 +11,7 @@ $delay: 0.3s;
   }
 }
 
-@keyframes contexify__slideOut {
+@keyframes contexify_slideOut {
   from {
     opacity: 1;
   }
@@ -22,12 +22,12 @@ $delay: 0.3s;
   }
 }
 
-.contexify__will-enter--slide {
+.contexify_willEnter-slide {
   transform-origin: top center;
-  animation: contexify__slideIn $delay;
+  animation: contexify_slideIn $delay;
 }
 
-.contexify__will-leave--slide {
+.contexify_willLeave-slide {
   transform-origin: top center;
-  animation: contexify__slideOut $delay;
+  animation: contexify_slideOut $delay;
 }

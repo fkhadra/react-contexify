@@ -1,6 +1,6 @@
 $delay: 0.3s;
 
-@keyframes contexify__scaleIn {
+@keyframes contexify_scaleIn {
   from {
     opacity: 0;
     transform: scale3d(0.3, 0.3, 0.3);
@@ -11,7 +11,7 @@ $delay: 0.3s;
   }
 }
 
-@keyframes contexify__scaleOut {
+@keyframes contexify_scaleOut {
   from {
     opacity: 1;
   }
@@ -22,12 +22,12 @@ $delay: 0.3s;
   }
 }
 
-.contexify__will-enter--scale {
+.contexify_willEnter-scale {
   transform-origin: top left;
-  animation: contexify__scaleIn $delay;
+  animation: contexify_scaleIn $delay;
 }
 
-.contexify__will-leave--scale {
+.contexify_willLeave-scale {
   transform-origin: top left;
-  animation: contexify__scaleOut $delay;
+  animation: contexify_scaleOut $delay;
 }

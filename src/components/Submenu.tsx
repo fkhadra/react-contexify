@@ -2,11 +2,15 @@ import React, { ReactNode, useRef } from 'react';
 import cx from 'clsx';
 
 import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
-import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
-import { useRefTracker } from '../hooks';
+import {
+  ItemTrackerProvider,
+  useItemTrackerContext,
+} from './ItemTrackerProvider';
+import { useItemTracker } from '../hooks';
 import { CssClass } from '../constants';
 import { cloneItems, getPredicateValue } from './utils';
 import { Arrow } from './Arrow';
+import { RightSlot } from './RightSlot';
 
 export interface SubMenuProps
   extends InternalProps,
@@ -49,8 +53,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
   style,
   ...rest
 }) => {
-  const menuRefTracker = useRefTrackerContext();
-  const refTracker = useRefTracker();
+  const parentItemTracker = useItemTrackerContext();
+  const itemTracker = useItemTracker();
   const nodeRef = useRef<HTMLDivElement>(null);
   const handlerParams = {
     triggerEvent: triggerEvent as HandlerParamsEvent,
@@ -62,8 +66,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
   function setPosition() {
     const node = nodeRef.current;
     if (node) {
-      const bottom = `${CssClass.submenu}--bottom`;
-      const right = `${CssClass.submenu}--right`;
+      const bottom = `${CssClass.submenu}-bottom`;
+      const right = `${CssClass.submenu}-right`;
 
       // reset to default position before computing position
       node.classList.remove(bottom, right);
@@ -82,10 +86,10 @@ export const Submenu: React.FC<SubMenuProps> = ({
 
   function trackRef(node: HTMLElement | null) {
     if (node && !isDisabled)
-      menuRefTracker.set(node, {
+      parentItemTracker.set(node, {
         node,
         isSubmenu: true,
-        submenuRefTracker: refTracker,
+        submenuRefTracker: itemTracker,
         setSubmenuPosition: setPosition,
       });
   }
@@ -97,7 +101,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
   });
 
   return (
-    <RefTrackerProvider refTracker={refTracker}>
+    <ItemTrackerProvider value={itemTracker}>
       <div
         {...rest}
         className={cssClasses}
@@ -111,7 +115,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
       >
         <div className={CssClass.itemContent} onClick={handleClick}>
           {label}
-          <span className={CssClass.submenuArrow}>{arrow || <Arrow />}</span>
+          <RightSlot>{arrow || <Arrow />}</RightSlot>
         </div>
         <div
           className={`${CssClass.menu} ${CssClass.submenu}`}
@@ -125,6 +129,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
           })}
         </div>
       </div>
-    </RefTrackerProvider>
+    </ItemTrackerProvider>
   );
 };

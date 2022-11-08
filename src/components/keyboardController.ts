@@ -1,41 +1,36 @@
-import { RefTrackerValue } from '../hooks';
+import { ItemTracker, ItemTrackerRecord } from '../hooks';
 import { CssClass } from '../constants';
 
-interface Menu<T = RefTrackerValue> {
+interface Menu<T = ItemTrackerRecord> {
   items: T[];
   isRoot: boolean;
   focusedIndex: number;
   parentNode: HTMLElement;
 }
 
-/**
- * Used to control keyboard navigation
- */
-export function createMenuController() {
+export function createKeyboardController() {
   const menuList = new Map<HTMLElement, Menu>();
   let focusedIndex: number;
   let parentNode: HTMLElement;
-  let isAtRoot: boolean;
-  let currentItems: RefTrackerValue[];
+  let isRoot: boolean;
+  let currentItems: ItemTrackerRecord[];
   let forceCloseSubmenu = false;
 
-  function init(rootMenu: RefTrackerValue[]) {
-    currentItems = rootMenu;
+  function init(rootMenu: ItemTracker) {
+    currentItems = Array.from(rootMenu.values());
     focusedIndex = -1;
-    isAtRoot = true;
+    isRoot = true;
   }
 
   function focusSelectedItem() {
     currentItems[focusedIndex].node.focus();
   }
 
-  function isSubmenuFocused() {
-    return focusedIndex >= 0 && currentItems[focusedIndex].isSubmenu;
-  }
+  const isSubmenuFocused = () =>
+    focusedIndex >= 0 && currentItems[focusedIndex].isSubmenu;
 
-  function getSubmenuItems() {
-    return Array.from(currentItems[focusedIndex].submenuRefTracker!.values());
-  }
+  const getSubmenuItems = () =>
+    Array.from(currentItems[focusedIndex].submenuRefTracker!.values());
 
   function isFocused() {
     if (focusedIndex === -1) {
@@ -77,7 +72,7 @@ export function createMenuController() {
       const { node, setSubmenuPosition } = currentItems[focusedIndex];
 
       menuList.set(node, {
-        isRoot: isAtRoot,
+        isRoot,
         focusedIndex,
         parentNode: parentNode || node,
         items: currentItems,
@@ -94,7 +89,7 @@ export function createMenuController() {
         forceCloseSubmenu = true;
       }
 
-      isAtRoot = false;
+      isRoot = false;
 
       focusSelectedItem();
       return true;
@@ -103,28 +98,37 @@ export function createMenuController() {
   }
 
   function closeSubmenu() {
-    if (isFocused() && !isAtRoot) {
-      const {
-        isRoot,
-        items,
-        focusedIndex: parentFocusedIndex,
-        parentNode: menuParentNode,
-      } = menuList.get(parentNode)!;
+    if (isFocused() && !isRoot) {
+      const parent = menuList.get(parentNode)!;
 
-      parentNode.classList.remove(CssClass.submenuOpen);
+      parentNode!.classList.remove(CssClass.submenuOpen);
+      currentItems = parent.items;
+      parentNode = parent.parentNode;
 
-      currentItems = items;
-      parentNode = menuParentNode;
-
-      if (isRoot) {
-        isAtRoot = true;
+      if (parent.isRoot) {
+        isRoot = true;
         menuList.clear();
       }
+
       if (!forceCloseSubmenu) {
-        focusedIndex = parentFocusedIndex;
+        focusedIndex = parent.focusedIndex;
         focusSelectedItem();
       }
     }
+  }
+
+  function matchKeys(e: KeyboardEvent) {
+    // matches shortcut inside submenu as well even when submenu is not open
+    // it matches native behavior
+    function walkAndMatch(items: ItemTrackerRecord[]) {
+      for (const item of items) {
+        if (item.isSubmenu && item.submenuRefTracker)
+          walkAndMatch(Array.from(item.submenuRefTracker.values()));
+
+        item.keyMatcher && item.keyMatcher(e);
+      }
+    }
+    walkAndMatch(currentItems);
   }
 
   return {
@@ -133,5 +137,6 @@ export function createMenuController() {
     moveUp,
     openSubmenu,
     closeSubmenu,
+    matchKeys,
   };
 }

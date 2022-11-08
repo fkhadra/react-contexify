@@ -1,6 +1,6 @@
 $delay: 0.3s;
 
-@keyframes contexify__flipInX {
+@keyframes contexify_flipInX {
   from {
     transform: perspective(800px) rotate3d(1, 0, 0, 45deg);
   }
@@ -10,7 +10,7 @@ $delay: 0.3s;
   }
 }
 
-@keyframes contexify__flipOutX {
+@keyframes contexify_flipOutX {
   from {
     transform: perspective(800px);
   }
@@ -21,27 +21,14 @@ $delay: 0.3s;
   }
 }
 
-.contexify__will-enter--flip {
+.contexify_willEnter-flip {
   backface-visibility: visible !important;
   transform-origin: top center;
-  animation: contexify__flipInX $delay;
+  animation: contexify_flipInX $delay;
 }
 
-.contexify__will-leave--flip {
+.contexify_willLeave-flip {
   transform-origin: top center;
-  animation: contexify__flipOutX $delay;
+  animation: contexify_flipOutX $delay;
   backface-visibility: visible !important;
-}
-
-@keyframes swing-in-top-fwd {
-  0% {
-    transform: rotateX(-100deg);
-    transform-origin: top;
-    opacity: 0;
-  }
-  100% {
-    transform: rotateX(0deg);
-    transform-origin: top;
-    opacity: 1;
-  }
 }

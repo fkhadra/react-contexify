@@ -29,10 +29,8 @@ export function useContextMenu(
   return {
     show(params: ShowContextMenuParams) {
       contextMenu.show({
-        event: params.event,
-        id: (params?.id || props?.id) as string,
-        props: params?.props || props?.props,
-        position: params?.position,
+        ...props,
+        ...params,
       });
     },
     hideAll() {

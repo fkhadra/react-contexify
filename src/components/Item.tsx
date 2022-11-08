@@ -8,9 +8,9 @@ import {
   HandlerParamsEvent,
   BuiltInOrString,
 } from '../types';
-import { useRefTrackerContext } from './RefTrackerProvider';
+import { useItemTrackerContext } from './ItemTrackerProvider';
 import { NOOP, CssClass } from '../constants';
-import { getPredicateValue } from './utils';
+import { getPredicateValue, isFn } from './utils';
 import { contextMenu } from '../core';
 
 export interface ItemProps
@@ -88,6 +88,23 @@ export interface ItemProps
   onClick?: (args: ItemParams) => void;
 
   /**
+   * Let you implement keyboard shortcut for the menu item. It will trigger the
+   * `onClick` hander if the given callback returns `true`
+   *
+   * example:
+   *
+   * ```
+   * function handleShortcut(e: React.KeyboardEvent<HTMLElement>){
+   *   // let's say we want to match ⌘ + c
+   *   return e.metaKey && e.key === "c";
+   * }
+   *
+   * <Item onClick={doSomething}>Copy <RightSlot>⌘ C</RightSlot></Item>
+   * ```
+   */
+  keyMatcher?: (e: KeyboardEvent) => boolean;
+
+  /**
    * Useful when using form input inside the Menu
    *
    * default: `true`
@@ -110,6 +127,7 @@ export const Item: React.FC<ItemProps> = ({
   triggerEvent,
   data,
   propsFromTrigger,
+  keyMatcher,
   onClick = NOOP,
   disabled = false,
   hidden = false,
@@ -118,7 +136,7 @@ export const Item: React.FC<ItemProps> = ({
   ...rest
 }) => {
   const nodeRef = useRef<HTMLElement>();
-  const refTracker = useRefTrackerContext();
+  const itemTracker = useItemTrackerContext();
   const handlerParams = {
     id,
     data,
@@ -140,17 +158,27 @@ export const Item: React.FC<ItemProps> = ({
   // provide a feedback to the user that the item has been clicked before closing the menu
   function dispatchUserHanlder() {
     const node = nodeRef.current!;
+    node.focus();
     node.addEventListener('animationend', contextMenu.hideAll, { once: true });
     node.classList.add(CssClass.itemClickedFeedback);
     onClick(handlerParams);
   }
 
-  function trackRef(node: HTMLElement | null) {
+  function registerItem(node: HTMLElement | null) {
     if (node && !isDisabled) {
       nodeRef.current = node;
-      refTracker.set(node, {
+      itemTracker.set(node, {
         node,
         isSubmenu: false,
+        keyMatcher:
+          !isDisabled &&
+          isFn(keyMatcher) &&
+          ((e: KeyboardEvent) => {
+            if (keyMatcher(e)) {
+              e.stopPropagation();
+              dispatchUserHanlder();
+            }
+          }),
       });
     }
   }
@@ -173,7 +201,7 @@ export const Item: React.FC<ItemProps> = ({
       })}
       style={style}
       onKeyDown={handleKeyDown}
-      ref={trackRef}
+      ref={registerItem}
       tabIndex={-1}
       role="menuitem"
       aria-disabled={isDisabled}

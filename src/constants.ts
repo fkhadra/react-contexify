@@ -2,18 +2,18 @@
  * css classes mapping
  * */
 export const enum CssClass {
-  menu = 'react-contexify',
-  submenu = 'react-contexify__submenu',
-  submenuArrow = 'react-contexify__submenu-arrow',
-  submenuOpen = 'react-contexify__submenu--is-open',
-  separator = 'react-contexify__separator',
-  item = 'react-contexify__item',
-  itemDisabled = 'react-contexify__item--disabled',
-  itemContent = 'react-contexify__item__content',
-  itemClickedFeedback = 'react-contexify__item--feedback',
-  theme = 'react-contexify__theme--',
-  animationWillEnter = 'react-contexify__will-enter--',
-  animationWillLeave = 'react-contexify__will-leave--',
+  menu = 'contexify',
+  submenu = 'contexify_submenu',
+  submenuOpen = 'contexify_submenu-isOpen',
+  rightSlot = 'contexify_rightSlot',
+  separator = 'contexify_separator',
+  item = 'contexify_item',
+  itemDisabled = 'contexify_item-disabled',
+  itemContent = 'contexify_itemContent',
+  itemClickedFeedback = 'contexify_item-feedback',
+  theme = 'contexify_theme-',
+  animationWillEnter = 'contexify_willEnter-',
+  animationWillLeave = 'contexify_willLeave-',
 }
 
 export const enum EVENT {

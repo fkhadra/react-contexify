@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import cx from 'clsx';
 
-import { RefTrackerProvider } from './RefTrackerProvider';
+import { ItemTrackerProvider } from './ItemTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
 import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
-import { useRefTracker } from '../hooks';
-import { createMenuController } from './menuController';
+import { useItemTracker } from '../hooks';
+import { createKeyboardController } from './keyboardController';
 import { CssClass, EVENT, hideOnEvents } from '../constants';
 import {
   cloneItems,
@@ -108,8 +108,8 @@ export const Menu: React.FC<MenuProps> = ({
     willLeave: false,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
-  const refTracker = useRefTracker();
-  const [menuController] = useState(() => createMenuController());
+  const itemTracker = useItemTracker();
+  const [menuController] = useState(() => createKeyboardController());
 
   // subscribe event manager
   useEffect(() => {
@@ -123,10 +123,8 @@ export const Menu: React.FC<MenuProps> = ({
 
   // collect menu items for keyboard navigation
   useEffect(() => {
-    !state.visible
-      ? refTracker.clear()
-      : menuController.init(Array.from(refTracker.values()));
-  }, [state.visible, menuController, refTracker]);
+    !state.visible ? itemTracker.clear() : menuController.init(itemTracker);
+  }, [state.visible, menuController, itemTracker]);
 
   function checkBoundaries(x: number, y: number) {
     if (nodeRef.current && !disableBoundariesCheck) {
@@ -180,21 +178,22 @@ export const Menu: React.FC<MenuProps> = ({
           preventDefault(e);
           menuController.closeSubmenu();
           break;
+        default:
+          menuController.matchKeys(e);
+          break;
       }
     }
 
     if (state.visible) {
       window.addEventListener('keydown', handleKeyboard);
 
-      for (let i = 0; i < hideOnEvents.length; i++)
-        window.addEventListener(hideOnEvents[i], hide);
+      for (const ev of hideOnEvents) window.addEventListener(ev, hide);
     }
 
     return () => {
       window.removeEventListener('keydown', handleKeyboard);
 
-      for (let i = 0; i < hideOnEvents.length; i++)
-        window.removeEventListener(hideOnEvents[i], hide);
+      for (const ev of hideOnEvents) window.removeEventListener(ev, hide);
     };
   }, [state.visible, menuController, preventDefaultOnKeydown]);
 
@@ -279,7 +278,7 @@ export const Menu: React.FC<MenuProps> = ({
   };
 
   return (
-    <RefTrackerProvider refTracker={refTracker}>
+    <ItemTrackerProvider value={itemTracker}>
       {visible && (
         <div
           {...rest}
@@ -295,6 +294,6 @@ export const Menu: React.FC<MenuProps> = ({
           })}
         </div>
       )}
-    </RefTrackerProvider>
+    </ItemTrackerProvider>
   );
 };
