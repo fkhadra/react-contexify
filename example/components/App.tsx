@@ -10,6 +10,7 @@ import {
   Submenu,
   useContextMenu,
   ItemParams,
+  RightSlot,
 } from '../../src';
 
 const builtInAnimation = {
@@ -230,19 +231,17 @@ export function App() {
           event is triggered everywhere in the box
         </div>
       </section>
-      <Menu
-        id={MENU_ID}
-        theme={state.theme}
-        animation={getAnimation()}
-        data-test={DATA_TEST.CONTEXT_MENU}
-      >
+      <Menu id={MENU_ID} theme={state.theme} data-test={DATA_TEST.CONTEXT_MENU}>
         <Item
-          onClick={handleItemClick}
+          onClick={() => console.log('WTF BRO ')}
           data={{ id: 1 }}
           data-test={DATA_TEST.MENU_FIRST_ITEM}
           hidden={state.hideItems}
+          keyMatcher={e => {
+            return e.metaKey && e.key == 'c';
+          }}
         >
-          Item 1
+          Item 1<RightSlot>⌘C</RightSlot>
         </Item>
         <Item
           data-test={DATA_TEST.MENU_SECOND_ITEM}
@@ -266,8 +265,31 @@ export function App() {
           <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
           <Item>Submenu Item 2</Item>
           <Separator />
-          <Item>Submenu Item 3</Item>
+          <Item
+            onClick={() => console.log('Submenu Item 3')}
+            keyMatcher={(e: KeyboardEvent) => {
+              return e.ctrlKey && e.key == 'j';
+            }}
+          >
+            Submenu Item 3<RightSlot>J</RightSlot>
+          </Item>
           <Item>Submenu Item 4</Item>
+          <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU} disabled>
+            <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
+            <Item>Submenu Item 2</Item>
+            <Separator />
+            <Item>Submenu Item 3</Item>
+            <Item>Submenu Item 4</Item>
+            <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU}>
+              <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>
+                Submenu Item 1
+              </Item>
+              <Item>Submenu Item 2</Item>
+              <Separator />
+              <Item>Submenu Item 3</Item>
+              <Item>Submenu Item 4</Item>
+            </Submenu>
+          </Submenu>
         </Submenu>
         <Separator />
         <Item data-test={DATA_TEST.MENU_LAST_ITEM}>Item 5</Item>

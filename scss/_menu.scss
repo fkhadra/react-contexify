@@ -1,15 +1,19 @@
 :root{
-  --contexify-menu-minWidth: 220px;
   --contexify-zIndex: 666;
 
+  --contexify-menu-minWidth: 220px;
+  --contexify-menu-padding: 6px;
+  --contexify-menu-radius: 6px;
   --contexify-menu-bgColor: #fff;
+
+  --contexify-itemContent-padding: 6px;
+  --contexify-activeItem-radius: 4px;
   --contexify-separator-color: rgba(0, 0, 0, 0.2);
   --contexify-item-color: #333;
   --contexify-rightSlot-color: #6f6e77;
   --contexify-active-rightSlot-color: #fff;
   --contexify-activeItem-color: #fff;
   --contexify-activeItem-bgColor: #3498db;
-
   --contexify-arrow-color: #6f6e77;
   --contexify-active-arrow-color: #fff;
 }
@@ -18,7 +22,11 @@
 @mixin focus-swag {
   color: var(--contexify-activeItem-color);
   background-color: var(--contexify-activeItem-bgColor);
-  border-radius: 4px;
+  border-radius: var(--contexify-activeItem-radius);
+}
+
+@function negateMenuPadding() {
+  @return calc(-1 * var(--contexify-menu-padding));
 }
 
 // triggered when user select item from the context menu
@@ -39,8 +47,8 @@
   background-color: var(--contexify-menu-bgColor);
   box-sizing: border-box;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
-  border-radius: 6px;
-  padding: 6px;
+  border-radius: var(--contexify-menu-radius);
+  padding: var(--contexify-menu-padding);
   min-width: var(--contexify-menu-minWidth);
   z-index: var(--contexify-zIndex);
 
@@ -66,11 +74,11 @@
     transition: opacity .265s;
     
     /* Initial submenu position */
-    top: -6px;
+    top: negateMenuPadding();
     left: 100%;
 
     &-bottom{
-      bottom: -6px;
+      bottom: negateMenuPadding();
       top: unset;
     }
 
@@ -137,7 +145,7 @@
       opacity: .5;
     }
     &Content {
-      padding: 6px;
+      padding: var(--contexify-itemContent-padding);
       display: flex;
       align-items: center;
       white-space: nowrap;
