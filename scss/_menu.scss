@@ -131,7 +131,7 @@
     }
 
     &:not(&-disabled):hover > &Content,
-    &:focus > &Content {
+    &:not(&-disabled):focus > &Content {
       @include focus-swag;
     }
 
