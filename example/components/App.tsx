@@ -30,13 +30,13 @@ const selector = {
   themes: [
     'none',
     ...Object.keys(builtInTheme).map(
-      k => builtInTheme[k as keyof typeof builtInTheme]
+      (k) => builtInTheme[k as keyof typeof builtInTheme]
     ),
   ],
   animations: [
     'none',
     ...Object.keys(builtInAnimation).map(
-      k => builtInAnimation[k as keyof typeof builtInAnimation]
+      (k) => builtInAnimation[k as keyof typeof builtInAnimation]
     ),
   ],
 };
@@ -152,7 +152,7 @@ export function App() {
       <section>
         <h3>Settings</h3>
         <ul>
-          {Object.keys(selector).map(key => (
+          {Object.keys(selector).map((key) => (
             <li key={key}>
               <label htmlFor={key}>{key}</label>
               <Select
@@ -231,13 +231,18 @@ export function App() {
           event is triggered everywhere in the box
         </div>
       </section>
-      <Menu id={MENU_ID} theme={state.theme} data-test={DATA_TEST.CONTEXT_MENU}>
+      <Menu
+        id={MENU_ID}
+        theme={state.theme}
+        data-test={DATA_TEST.CONTEXT_MENU}
+        animation={getAnimation()}
+      >
         <Item
-          onClick={() => console.log('WTF BRO ')}
+          onClick={handleItemClick}
           data={{ id: 1 }}
           data-test={DATA_TEST.MENU_FIRST_ITEM}
           hidden={state.hideItems}
-          keyMatcher={e => {
+          keyMatcher={(e) => {
             return e.metaKey && e.key == 'c';
           }}
         >
@@ -265,30 +270,12 @@ export function App() {
           <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
           <Item>Submenu Item 2</Item>
           <Separator />
-          <Item
-            onClick={() => console.log('Submenu Item 3')}
-            keyMatcher={(e: KeyboardEvent) => {
-              return e.ctrlKey && e.key == 'j';
-            }}
-          >
-            Submenu Item 3<RightSlot>J</RightSlot>
-          </Item>
+          <Item>Submenu Item 3</Item>
           <Item>Submenu Item 4</Item>
-          <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU} disabled>
-            <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
-            <Item>Submenu Item 2</Item>
-            <Separator />
-            <Item>Submenu Item 3</Item>
-            <Item>Submenu Item 4</Item>
-            <Submenu label="Submenu" data-test={DATA_TEST.SUBMENU}>
-              <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>
-                Submenu Item 1
-              </Item>
-              <Item>Submenu Item 2</Item>
-              <Separator />
-              <Item>Submenu Item 3</Item>
-              <Item>Submenu Item 4</Item>
-            </Submenu>
+          <Submenu label="Nested Submenu" data-test={DATA_TEST.NESTED_SUBMENU}>
+            <Item data-test={DATA_TEST.NESTED_SUBMENU_FIRST_ITEM}>
+              Nested submenu Item 1
+            </Item>
           </Submenu>
         </Submenu>
         <Separator />

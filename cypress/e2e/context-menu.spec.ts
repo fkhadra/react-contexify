@@ -1,11 +1,11 @@
 import { DATA_TEST } from '../../example/constants';
-import { STYLE } from '../../src/constants';
+import { CssClass } from '../../src/constants';
 import { animation, theme } from '../fixtures/constant';
 
 const builtInAnimationClasses = Object.keys(animation).map(k => ({
   name: k,
-  enter: `${STYLE.animationWillEnter}${animation[k]}`,
-  exit: `${STYLE.animationWillLeave}${animation[k]}`,
+  enter: `${CssClass.animationWillEnter}${animation[k]}`,
+  exit: `${CssClass.animationWillLeave}${animation[k]}`,
 }));
 
 describe('Context menu', () => {
@@ -72,7 +72,7 @@ describe('Context menu', () => {
     // no theme selected
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
       'have.class',
-      `${STYLE.theme}none`
+      `${CssClass.theme}none`
     );
 
     cy.getByDataTest(DATA_TEST.THEME_SELECTOR).select(theme.light);
@@ -81,7 +81,7 @@ describe('Context menu', () => {
 
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
       'have.class',
-      `${STYLE.theme}${theme.light}`
+      `${CssClass.theme}${theme.light}`
     );
 
     cy.getByDataTest(DATA_TEST.THEME_SELECTOR).select(theme.dark);
@@ -90,7 +90,7 @@ describe('Context menu', () => {
 
     cy.getByDataTest(DATA_TEST.CONTEXT_MENU).should(
       'have.class',
-      `${STYLE.theme}${theme.dark}`
+      `${CssClass.theme}${theme.dark}`
     );
   });
 
