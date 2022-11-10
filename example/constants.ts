@@ -21,4 +21,5 @@ export const enum DATA_TEST {
   SUBMENU_FIRST_ITEM = 'submenu-firt-item',
   NESTED_SUBMENU_FIRST_ITEM = 'nested-submenu-firt-item',
   ONCLICK_PAYLOAD = 'item-payload',
+  KDB_SHORTCUT = "kbd-shortcut"
 }

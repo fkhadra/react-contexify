@@ -1,6 +1,6 @@
 import { DATA_TEST } from '../../example/constants';
 
-describe('Context menu', () => {
+describe('Context menu keyboard interaction', () => {
   beforeEach(() => {
     cy.visit('/');
   });
@@ -69,5 +69,24 @@ describe('Context menu', () => {
 
     cy.get('body').type('{leftarrow}');
     cy.focused().should('have.attr', 'data-test', DATA_TEST.SUBMENU);
+  });
+
+  it('Should handle keyboard shortcut', () => {
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+
+    cy.get('body').type('{ctrl}{u}');
+    cy.wait(500);
+    cy.getByDataTest(DATA_TEST.KDB_SHORTCUT).then((el) => {
+      expect(el.text()).eq('ctrl+u');
+    });
+
+    // nested shortcut
+    cy.getByDataTest(DATA_TEST.CONTEXT_MENU_TRIGGER).rightclick();
+
+    cy.get('body').type('{ctrl}{s}');
+    cy.wait(500);
+    cy.getByDataTest(DATA_TEST.KDB_SHORTCUT).then((el) => {
+      expect(el.text()).eq('ctrl+s');
+    });
   });
 });

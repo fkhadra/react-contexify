@@ -49,6 +49,7 @@ interface SelectorState {
   customPosition: boolean;
   disableEnterAnimation: boolean;
   disableExitAnimation: boolean;
+  kbdShortcut: string;
 }
 
 function selectorReducer(
@@ -82,6 +83,7 @@ export function App() {
     customPosition: false,
     disableEnterAnimation: false,
     disableExitAnimation: false,
+    kbdShortcut: '',
   });
   const [payload, setPayload] = React.useState({
     x: 0,
@@ -223,6 +225,13 @@ export function App() {
         </div>
       </section>
       <section>
+        <h3>Keyboard shortcut</h3>
+        <div>
+          <span>Shortcut triggered: </span>
+          <span data-test={DATA_TEST.KDB_SHORTCUT}>{state.kbdShortcut}</span>
+        </div>
+      </section>
+      <section>
         <div
           className="box"
           {...{ [`${state.event}`]: handleContextMenu }}
@@ -242,9 +251,6 @@ export function App() {
           data={{ id: 1 }}
           data-test={DATA_TEST.MENU_FIRST_ITEM}
           hidden={state.hideItems}
-          keyMatcher={(e) => {
-            return e.metaKey && e.key == 'c';
-          }}
         >
           Item 1<RightSlot>⌘C</RightSlot>
         </Item>
@@ -254,7 +260,18 @@ export function App() {
         >
           Item 2
         </Item>
-        <Item>Item 3</Item>
+        <Item
+          onClick={() => {
+            setState({
+              kbdShortcut: 'ctrl+u',
+            });
+          }}
+          keyMatcher={(e: KeyboardEvent) => {
+            return e.ctrlKey && e.key == 'u';
+          }}
+        >
+          Item 3
+        </Item>
         <Item disabled data-test={DATA_TEST.DISABLED_ITEM_VIA_BOOLEAN}>
           Disabled
         </Item>
@@ -270,7 +287,18 @@ export function App() {
           <Item data-test={DATA_TEST.SUBMENU_FIRST_ITEM}>Submenu Item 1</Item>
           <Item>Submenu Item 2</Item>
           <Separator />
-          <Item>Submenu Item 3</Item>
+          <Item
+            onClick={() => {
+              setState({
+                kbdShortcut: 'ctrl+s',
+              });
+            }}
+            keyMatcher={(e: KeyboardEvent) => {
+              return e.ctrlKey && e.key == 's';
+            }}
+          >
+            Submenu Item 3
+          </Item>
           <Item>Submenu Item 4</Item>
           <Submenu label="Nested Submenu" data-test={DATA_TEST.NESTED_SUBMENU}>
             <Item data-test={DATA_TEST.NESTED_SUBMENU_FIRST_ITEM}>

@@ -135,7 +135,7 @@ export const Item: React.FC<ItemProps> = ({
   handlerEvent = 'onClick',
   ...rest
 }) => {
-  const nodeRef = useRef<HTMLElement>();
+  const itemNode = useRef<HTMLElement>();
   const itemTracker = useItemTrackerContext();
   const handlerParams = {
     id,
@@ -157,7 +157,7 @@ export const Item: React.FC<ItemProps> = ({
 
   // provide a feedback to the user that the item has been clicked before closing the menu
   function dispatchUserHanlder() {
-    const node = nodeRef.current!;
+    const node = itemNode.current!;
     node.focus();
     node.addEventListener('animationend', contextMenu.hideAll, { once: true });
     node.classList.add(CssClass.itemClickedFeedback);
@@ -166,7 +166,7 @@ export const Item: React.FC<ItemProps> = ({
 
   function registerItem(node: HTMLElement | null) {
     if (node && !isDisabled) {
-      nodeRef.current = node;
+      itemNode.current = node;
       itemTracker.set(node, {
         node,
         isSubmenu: false,
@@ -176,6 +176,7 @@ export const Item: React.FC<ItemProps> = ({
           ((e: KeyboardEvent) => {
             if (keyMatcher(e)) {
               e.stopPropagation();
+              handlerParams.event = e;
               dispatchUserHanlder();
             }
           }),

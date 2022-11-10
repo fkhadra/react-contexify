@@ -55,7 +55,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
 }) => {
   const parentItemTracker = useItemTrackerContext();
   const itemTracker = useItemTracker();
-  const nodeRef = useRef<HTMLDivElement>(null);
+  const submenuNode = useRef<HTMLDivElement>(null);
   const handlerParams = {
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
@@ -64,7 +64,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const isHidden = getPredicateValue(hidden, handlerParams);
 
   function setPosition() {
-    const node = nodeRef.current;
+    const node = submenuNode.current;
     if (node) {
       const bottom = `${CssClass.submenu}-bottom`;
       const right = `${CssClass.submenu}-right`;
@@ -119,7 +119,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
         </div>
         <div
           className={`${CssClass.menu} ${CssClass.submenu}`}
-          ref={nodeRef}
+          ref={submenuNode}
           style={style}
         >
           {cloneItems(children, {

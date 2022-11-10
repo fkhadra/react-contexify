@@ -119,7 +119,7 @@ export function createKeyboardController() {
 
   function matchKeys(e: KeyboardEvent) {
     // matches shortcut inside submenu as well even when submenu is not open
-    // it matches native behavior
+    // it matches native menu behavior
     function walkAndMatch(items: ItemTrackerRecord[]) {
       for (const item of items) {
         if (item.isSubmenu && item.submenuRefTracker)

@@ -99,7 +99,8 @@ export interface ItemParams<Props = any, Data = any>
   event:
     | React.MouseEvent<HTMLElement>
     | React.TouchEvent<HTMLElement>
-    | React.KeyboardEvent<HTMLElement>;
+    | React.KeyboardEvent<HTMLElement>
+    | KeyboardEvent;
 }
 
 export interface InternalProps {
