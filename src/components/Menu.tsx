@@ -94,7 +94,7 @@ export const Menu: React.FC<MenuProps> = ({
   style,
   className,
   children,
-  animation = 'scale',
+  animation = 'fade',
   preventDefaultOnKeydown = true,
   disableBoundariesCheck = false,
   ...rest
@@ -229,8 +229,10 @@ export const Menu: React.FC<MenuProps> = ({
       return;
 
     hasExitAnimation(animation)
-      ? setState(state => ({ willLeave: state.visible }))
-      : setState(state => ({ visible: state.visible ? false : state.visible }));
+      ? setState((state) => ({ willLeave: state.visible }))
+      : setState((state) => ({
+          visible: state.visible ? false : state.visible,
+        }));
   }
 
   function handleAnimationEnd() {
