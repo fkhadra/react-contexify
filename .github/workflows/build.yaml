@@ -20,7 +20,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
             browser: chrome
-            start: yarn start:example
+            start: yarn start
             wait-on: 'http://localhost:1234'
       - uses: actions/upload-artifact@v1
         if: failure()
