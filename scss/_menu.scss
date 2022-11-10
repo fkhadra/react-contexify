@@ -1,14 +1,18 @@
 :root{
   --contexify-zIndex: 666;
-
   --contexify-menu-minWidth: 220px;
   --contexify-menu-padding: 6px;
   --contexify-menu-radius: 6px;
   --contexify-menu-bgColor: #fff;
+  --contexify-menu-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1),
+  2px 4px 4px rgba(0, 0, 0, 0.1),
+  3px 6px 6px rgba(0, 0, 0, 0.1);
+  --contexify-menu-negatePadding: var(--contexify-menu-padding);
 
   --contexify-itemContent-padding: 6px;
   --contexify-activeItem-radius: 4px;
   --contexify-separator-color: rgba(0, 0, 0, 0.2);
+  --contexify-separator-margin: 5px;
   --contexify-item-color: #333;
   --contexify-rightSlot-color: #6f6e77;
   --contexify-activeRightSlot-color: #fff;
@@ -26,7 +30,7 @@
 }
 
 @function negateMenuPadding() {
-  @return calc(-1 * var(--contexify-menu-padding));
+  @return calc(-1 * var(--contexify-menu-negatePadding));
 }
 
 // triggered when user select item from the context menu
@@ -46,7 +50,7 @@
   user-select: none;
   background-color: var(--contexify-menu-bgColor);
   box-sizing: border-box;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+  box-shadow:var(--contexify-menu-shadow);
   border-radius: var(--contexify-menu-radius);
   padding: var(--contexify-menu-padding);
   min-width: var(--contexify-menu-minWidth);
@@ -97,7 +101,7 @@
   &_separator {
     height: 1px;
     cursor: default;
-    margin: 5px;
+    margin: var(--contexify-separator-margin);
     background-color: var(--contexify-separator-color);
   }
 
