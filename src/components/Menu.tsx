@@ -119,7 +119,7 @@ export const Menu: React.FC<MenuProps> = ({
       eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
     };
     // hide rely on setState(dispatch), which is guaranted to be the same across render
-  }, [id]);
+  }, [id, animation, disableBoundariesCheck]);
 
   // collect menu items for keyboard navigation
   useEffect(() => {
