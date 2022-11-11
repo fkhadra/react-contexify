@@ -159,7 +159,12 @@ export const Item: React.FC<ItemProps> = ({
   function dispatchUserHanlder() {
     const node = itemNode.current!;
     node.focus();
-    node.addEventListener('animationend', contextMenu.hideAll, { once: true });
+    node.addEventListener(
+      'animationend',
+      // defer, required for react 17
+      () => setTimeout(contextMenu.hideAll),
+      { once: true }
+    );
     node.classList.add(CssClass.itemClickedFeedback);
     onClick(handlerParams);
   }

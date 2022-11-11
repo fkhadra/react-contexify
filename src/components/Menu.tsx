@@ -14,13 +14,7 @@ import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
 import { useItemTracker } from '../hooks';
 import { createKeyboardController } from './keyboardController';
 import { CssClass, EVENT, hideOnEvents } from '../constants';
-import {
-  cloneItems,
-  getMousePosition,
-  hasExitAnimation,
-  isFn,
-  isStr,
-} from './utils';
+import { cloneItems, getMousePosition, isFn, isStr } from './utils';
 import { flushSync } from 'react-dom';
 import { ShowContextMenuParams } from '../core';
 
@@ -228,7 +222,7 @@ export const Menu: React.FC<MenuProps> = ({
     )
       return;
 
-    hasExitAnimation(animation)
+    animation
       ? setState((state) => ({ willLeave: state.visible }))
       : setState((state) => ({
           visible: state.visible ? false : state.visible,

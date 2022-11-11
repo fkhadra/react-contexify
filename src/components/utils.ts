@@ -1,11 +1,6 @@
 import { Children, cloneElement, ReactNode, ReactElement } from 'react';
 
-import {
-  BooleanPredicate,
-  PredicateParams,
-  MenuAnimation,
-  TriggerEvent,
-} from '../types';
+import { BooleanPredicate, PredicateParams, TriggerEvent } from '../types';
 
 export function isFn(v: any): v is Function {
   return typeof v === 'function';
@@ -26,7 +21,7 @@ export function cloneItems(
   return Children.map(
     // remove null item
     Children.toArray(children).filter(Boolean),
-    item => cloneElement(item as ReactElement<any>, props)
+    (item) => cloneElement(item as ReactElement<any>, props)
   );
 }
 
@@ -53,11 +48,4 @@ export function getPredicateValue(
   payload: PredicateParams
 ) {
   return isFn(predicate) ? predicate(payload) : predicate;
-}
-
-export function hasExitAnimation(animation: MenuAnimation) {
-  return !!(
-    animation &&
-    (isStr(animation) || ('exit' in animation && animation.exit))
-  );
 }

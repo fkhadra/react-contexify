@@ -80,10 +80,6 @@ export const Submenu: React.FC<SubMenuProps> = ({
     }
   }
 
-  function handleClick(e: React.SyntheticEvent) {
-    e.stopPropagation();
-  }
-
   function trackRef(node: HTMLElement | null) {
     if (node && !isDisabled)
       parentItemTracker.set(node, {
@@ -113,7 +109,10 @@ export const Submenu: React.FC<SubMenuProps> = ({
         onMouseEnter={setPosition}
         onTouchStart={setPosition}
       >
-        <div className={CssClass.itemContent} onClick={handleClick}>
+        <div
+          className={CssClass.itemContent}
+          onClick={(e) => e.stopPropagation()}
+        >
           {label}
           <RightSlot>{arrow || <Arrow />}</RightSlot>
         </div>
@@ -124,8 +123,8 @@ export const Submenu: React.FC<SubMenuProps> = ({
         >
           {cloneItems(children, {
             propsFromTrigger,
-            // injected by the parent
-            triggerEvent: triggerEvent!,
+            // @ts-ignore: injected by the parent
+            triggerEvent,
           })}
         </div>
       </div>
