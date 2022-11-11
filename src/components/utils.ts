@@ -10,10 +10,6 @@ export function isStr(v: any): v is String {
   return typeof v === 'string';
 }
 
-export function isTouchEvent(e: TriggerEvent): e is TouchEvent {
-  return e.type === 'touchend';
-}
-
 export function cloneItems(
   children: ReactNode,
   props: { triggerEvent: TriggerEvent; propsFromTrigger?: object }
@@ -31,9 +27,11 @@ export function getMousePosition(e: TriggerEvent) {
     y: (e as MouseEvent).clientY,
   };
 
-  if (isTouchEvent(e) && e.changedTouches && e.changedTouches.length > 0) {
-    pos.x = e.changedTouches[0].clientX;
-    pos.y = e.changedTouches[0].clientY;
+  const touch = (e as TouchEvent).changedTouches;
+
+  if (touch) {
+    pos.x = touch[0].clientX;
+    pos.y = touch[0].clientY;
   }
 
   if (!pos.x || pos.x < 0) pos.x = 0;

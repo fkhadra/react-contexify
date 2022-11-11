@@ -10,6 +10,5 @@ export interface ItemTrackerRecord {
 
 export type ItemTracker = ReturnType<typeof useItemTracker>;
 
-export function useItemTracker() {
-  return useRef<Map<HTMLElement, ItemTrackerRecord>>(new Map()).current;
-}
+export const useItemTracker = () =>
+  useRef<Map<HTMLElement, ItemTrackerRecord>>(new Map()).current;

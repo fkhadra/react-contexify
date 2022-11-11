@@ -215,8 +215,7 @@ export const Menu: React.FC<MenuProps> = ({
     if (
       e != null &&
       // Safari trigger a click event when you ctrl + trackpad
-      ((e as SafariEvent).button === 2 ||
-        (e as SafariEvent).ctrlKey === true) &&
+      ((e as SafariEvent).button === 2 || (e as SafariEvent).ctrlKey) &&
       // Firefox trigger a click event when right click occur
       e.type !== 'contextmenu'
     )
@@ -236,16 +235,13 @@ export const Menu: React.FC<MenuProps> = ({
   }
 
   function computeAnimationClasses() {
-    if (!animation) return null;
-
     if (isStr(animation)) {
       return cx({
-        [`${CssClass.animationWillEnter}${animation}`]:
-          animation && visible && !willLeave,
+        [`${CssClass.animationWillEnter}${animation}`]: visible && !willLeave,
         [`${CssClass.animationWillLeave}${animation} ${CssClass.animationWillLeave}'disabled'`]:
-          animation && visible && willLeave,
+          visible && willLeave,
       });
-    } else if ('enter' in animation && 'exit' in animation) {
+    } else if (animation && 'enter' in animation && 'exit' in animation) {
       return cx({
         [`${CssClass.animationWillEnter}${animation.enter}`]:
           animation.enter && visible && !willLeave,
@@ -266,13 +262,7 @@ export const Menu: React.FC<MenuProps> = ({
   );
 
   // TODO: switch to translate instead of top left
-  const menuStyle = {
-    ...style,
-    left: x,
-    top: y,
-    opacity: 1,
-  };
-
+  // requires an additional dom element around the menu
   return (
     <ItemTrackerProvider value={itemTracker}>
       {visible && (
@@ -280,7 +270,12 @@ export const Menu: React.FC<MenuProps> = ({
           {...rest}
           className={cssClasses}
           onAnimationEnd={handleAnimationEnd}
-          style={menuStyle}
+          style={{
+            ...style,
+            left: x,
+            top: y,
+            opacity: 1,
+          }}
           ref={nodeRef}
           role="menu"
         >

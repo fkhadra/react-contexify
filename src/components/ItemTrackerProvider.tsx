@@ -3,9 +3,7 @@ import { ItemTracker } from '../hooks';
 
 const Context = createContext({} as ItemTracker);
 
-export function useItemTrackerContext() {
-  return useContext(Context);
-}
+export const useItemTrackerContext = () => useContext(Context);
 
 export interface ItemTrackerProviderProps {
   value: ItemTracker;
