@@ -2,7 +2,7 @@
   "version": "5.0.0",
   "license": "MIT",
   "main": "dist/index.js",
-  "modules": "dist/index.mjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
@@ -17,11 +17,9 @@
       "require": "./dist/inject-style.js",
       "import": "./dist/inject-style.esm.mjs"
     },
-    "./dist/ReactContexify.min.css": "./dist/ReactContexify.min.css",
-    "./dist/ReactContexify.css": "./dist/ReactContexify.css",
+    "./dist/ReactContexify.css": "./dist/ReactContexify.min.css",
     "./dist/ReactContexify.css.map": "./dist/ReactContexify.css.map",
-    "./ReactContexify.min.css": "./dist/ReactContexify.min.css",
-    "./ReactContexify.css": "./dist/ReactContexify.css",
+    "./ReactContexify.css": "./dist/ReactContexify.min.css",
     "./ReactContexify.css.map": "./dist/ReactContexify.css.map"
   },
   "files": [
@@ -70,7 +68,6 @@
     "react-contexify",
     "popup"
   ],
-  "module": "dist/react-contexify.esm.js",
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
