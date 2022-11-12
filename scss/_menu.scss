@@ -9,17 +9,17 @@
   3px 6px 6px rgba(0, 0, 0, 0.1);
   --contexify-menu-negatePadding: var(--contexify-menu-padding);
 
-  --contexify-itemContent-padding: 6px;
-  --contexify-activeItem-radius: 4px;
   --contexify-separator-color: rgba(0, 0, 0, 0.2);
   --contexify-separator-margin: 5px;
+  --contexify-itemContent-padding: 6px;
+  --contexify-activeItem-radius: 4px;
   --contexify-item-color: #333;
-  --contexify-rightSlot-color: #6f6e77;
-  --contexify-activeRightSlot-color: #fff;
   --contexify-activeItem-color: #fff;
   --contexify-activeItem-bgColor: #3498db;
+  --contexify-rightSlot-color: #6f6e77;
+  --contexify-activeRightSlot-color: #fff;
   --contexify-arrow-color: #6f6e77;
-  --contexify-active-arrow-color: #fff;
+  --contexify-activeArrow-color: #fff;
 }
 
 
@@ -63,7 +63,7 @@
 
   // target submenu arrow
   &_submenu-isOpen > &_itemContent &_rightSlot {
-    color: var(--contexify-active-arrow-color)
+    color: var(--contexify-activeArrow-color)
   }
 
 
@@ -131,7 +131,7 @@
     &:not(&-disabled)[aria-haspopup].contexify_submenu-isOpen  > .contexify_itemContent .contexify_rightSlot,
 
     &:not(&-disabled)[aria-haspopup]:hover > .contexify_itemContent .contexify_rightSlot  {
-      color: var(--contexify-active-arrow-color);
+      color: var(--contexify-activeArrow-color);
     }
 
     &:not(&-disabled):hover > &Content,
