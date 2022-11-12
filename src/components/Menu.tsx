@@ -13,7 +13,7 @@ import { eventManager } from '../core/eventManager';
 import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
 import { useItemTracker } from '../hooks';
 import { createKeyboardController } from './keyboardController';
-import { CssClass, EVENT, hideOnEvents } from '../constants';
+import { CssClass, EVENT } from '../constants';
 import { cloneItems, getMousePosition, isFn, isStr } from './utils';
 import { flushSync } from 'react-dom';
 import { ShowContextMenuParams } from '../core';
@@ -64,6 +64,8 @@ export interface MenuProps
    * Used to track menu visibility
    */
   onVisibilityChange?: (isVisible: boolean) => void;
+
+  hideOn?: (keyof GlobalEventHandlersEventMap)[];
 }
 
 interface MenuState {
@@ -92,6 +94,14 @@ export const Menu: React.FC<MenuProps> = ({
   preventDefaultOnKeydown = true,
   disableBoundariesCheck = false,
   onVisibilityChange,
+  hideOn = [
+    'resize',
+    'contextmenu',
+    'click',
+    'scroll',
+    // comment blur in dev so you can toggle console without closing the menu
+    'blur',
+  ],
   ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
@@ -183,13 +193,13 @@ export const Menu: React.FC<MenuProps> = ({
     if (state.visible) {
       window.addEventListener('keydown', handleKeyboard);
 
-      for (const ev of hideOnEvents) window.addEventListener(ev, hide);
+      for (const ev of hideOn) window.addEventListener(ev, hide);
     }
 
     return () => {
       window.removeEventListener('keydown', handleKeyboard);
 
-      for (const ev of hideOnEvents) window.removeEventListener(ev, hide);
+      for (const ev of hideOn) window.removeEventListener(ev, hide);
     };
   }, [state.visible, menuController, preventDefaultOnKeydown]);
 
