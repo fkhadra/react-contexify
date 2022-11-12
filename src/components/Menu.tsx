@@ -64,6 +64,11 @@ export interface MenuProps
    * Prevents scrolling the window on when typing. Defaults to true.
    */
   preventDefaultOnKeydown?: boolean;
+
+  /**
+   * Used to track menu visibility
+   */
+  onVisibilityChange?: (isVisible: boolean) => void;
 }
 
 interface MenuState {
@@ -91,6 +96,7 @@ export const Menu: React.FC<MenuProps> = ({
   animation = 'fade',
   preventDefaultOnKeydown = true,
   disableBoundariesCheck = false,
+  onVisibilityChange,
   ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
@@ -104,6 +110,8 @@ export const Menu: React.FC<MenuProps> = ({
   const nodeRef = useRef<HTMLDivElement>(null);
   const itemTracker = useItemTracker();
   const [menuController] = useState(() => createKeyboardController());
+  const wasVisible = useRef<boolean>();
+  const visibilityId = useRef<number>();
 
   // subscribe event manager
   useEffect(() => {
@@ -136,9 +144,8 @@ export const Menu: React.FC<MenuProps> = ({
   // when the menu is transitioning from not visible to visible,
   // the nodeRef is attached to the dom element this let us check the boundaries
   useEffect(() => {
-    if (state.visible) setState(checkBoundaries(state.x, state.y));
-
     // state.visible and state{x,y} are updated together
+    if (state.visible) setState(checkBoundaries(state.x, state.y));
   }, [state.visible]);
 
   // subscribe dom events
@@ -207,6 +214,12 @@ export const Menu: React.FC<MenuProps> = ({
         propsFromTrigger: props,
       });
     });
+
+    clearTimeout(visibilityId.current);
+    if (!wasVisible.current && isFn(onVisibilityChange)) {
+      onVisibilityChange(true);
+      wasVisible.current = true;
+    }
   }
 
   function hide(e?: Event) {
@@ -226,6 +239,11 @@ export const Menu: React.FC<MenuProps> = ({
       : setState((state) => ({
           visible: state.visible ? false : state.visible,
         }));
+
+    visibilityId.current = setTimeout(() => {
+      isFn(onVisibilityChange) && onVisibilityChange(false);
+      wasVisible.current = false;
+    });
   }
 
   function handleAnimationEnd() {
