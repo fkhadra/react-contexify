@@ -1,4 +1,3 @@
-/* global: window */
 import React, {
   ReactNode,
   useEffect,
@@ -8,25 +7,16 @@ import React, {
 } from 'react';
 import cx from 'clsx';
 
-import { RefTrackerProvider } from './RefTrackerProvider';
+import { ItemTrackerProvider } from './ItemTrackerProvider';
 
 import { eventManager } from '../core/eventManager';
-import {
-  TriggerEvent,
-  MenuId,
-  ContextMenuParams,
-  MenuAnimation,
-} from '../types';
-import { usePrevious, useRefTracker } from '../hooks';
-import { createMenuController } from './menuController';
-import { NOOP, STYLE, EVENT } from '../constants';
-import {
-  cloneItems,
-  getMousePosition,
-  hasExitAnimation,
-  isFn,
-  isStr,
-} from './utils';
+import { TriggerEvent, MenuId, MenuAnimation, Theme } from '../types';
+import { useItemTracker } from '../hooks';
+import { createKeyboardController } from './keyboardController';
+import { CssClass, EVENT, hideOnEvents } from '../constants';
+import { cloneItems, getMousePosition, isFn, isStr } from './utils';
+import { flushSync } from 'react-dom';
+import { ShowContextMenuParams } from '../core';
 
 export interface MenuProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'id'> {
@@ -41,38 +31,39 @@ export interface MenuProps
   children: ReactNode;
 
   /**
-   * Theme is appended to `react-contexify__theme--${given theme}`.
+   * Theme is appended to `contexify_theme-${given theme}`.
    *
    * Built-in theme are `light` and `dark`
    */
-  theme?: string;
+  theme?: Theme;
 
   /**
    * Animation is appended to
-   * - `.react-contexify__will-enter--${given animation}`
-   * - `.react-contexify__will-leave--${given animation}`
+   * - `.contexify_willEnter-${given animation}`
+   * - `.contexify_willLeave-${given animation}`
    *
    * - To disable all animations you can pass `false`
    * - To disable only the enter or the exit animation you can provide an object `{enter: false, exit: 'exitAnimation'}`
    *
-   * - default is set to `scale`
-   *
-   * To use the built-in animation a helper in available
-   * `import { animation } from 'react-contexify`
-   *
-   * animation.fade
+   * - default is set to `fade`
    */
   animation?: MenuAnimation;
 
   /**
-   * Invoked after the menu is visible.
+   * Disables menu repositioning if outside screen.
+   * This may be neeeded in some cases when using custom position.
    */
-  onShown?: () => void;
+  disableBoundariesCheck?: boolean;
 
   /**
-   * Invoked after the menu has been hidden.
+   * Prevents scrolling the window on when typing. Defaults to true.
    */
-  onHidden?: () => void;
+  preventDefaultOnKeydown?: boolean;
+
+  /**
+   * Used to track menu visibility
+   */
+  onVisibilityChange?: (isVisible: boolean) => void;
 }
 
 interface MenuState {
@@ -88,9 +79,7 @@ function reducer(
   state: MenuState,
   payload: Partial<MenuState> | ((state: MenuState) => Partial<MenuState>)
 ) {
-  return isFn(payload)
-    ? { ...state, ...payload(state) }
-    : { ...state, ...payload };
+  return { ...state, ...(isFn(payload) ? payload(state) : payload) };
 }
 
 export const Menu: React.FC<MenuProps> = ({
@@ -99,9 +88,10 @@ export const Menu: React.FC<MenuProps> = ({
   style,
   className,
   children,
-  animation = 'scale',
-  onHidden = NOOP,
-  onShown = NOOP,
+  animation = 'fade',
+  preventDefaultOnKeydown = true,
+  disableBoundariesCheck = false,
+  onVisibilityChange,
   ...rest
 }) => {
   const [state, setState] = useReducer(reducer, {
@@ -113,130 +103,103 @@ export const Menu: React.FC<MenuProps> = ({
     willLeave: false,
   });
   const nodeRef = useRef<HTMLDivElement>(null);
-  const didMount = useRef(false);
-  const wasVisible = usePrevious(state.visible);
-  const refTracker = useRefTracker();
-  const [menuController] = useState(() => createMenuController());
+  const itemTracker = useItemTracker();
+  const [menuController] = useState(() => createKeyboardController());
+  const wasVisible = useRef<boolean>();
+  const visibilityId = useRef<number>();
 
   // subscribe event manager
   useEffect(() => {
-    didMount.current = true;
     eventManager.on(id, show).on(EVENT.HIDE_ALL, hide);
 
     return () => {
       eventManager.off(id, show).off(EVENT.HIDE_ALL, hide);
     };
     // hide rely on setState(dispatch), which is guaranted to be the same across render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  // handle show/ hide callback
-  useEffect(() => {
-    if (didMount.current && state.visible !== wasVisible) {
-      state.visible ? onShown() : onHidden();
-    }
-    // wasWisible is a ref
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.visible, onHidden, onShown]);
+  }, [id, animation, disableBoundariesCheck]);
 
   // collect menu items for keyboard navigation
   useEffect(() => {
-    if (!state.visible) {
-      refTracker.clear();
-    } else {
-      menuController.init(Array.from(refTracker.values()));
-    }
-  }, [state.visible, menuController, refTracker]);
+    !state.visible ? itemTracker.clear() : menuController.init(itemTracker);
+  }, [state.visible, menuController, itemTracker]);
 
-  // compute menu position
+  function checkBoundaries(x: number, y: number) {
+    if (nodeRef.current && !disableBoundariesCheck) {
+      const { innerWidth, innerHeight } = window;
+      const { offsetWidth, offsetHeight } = nodeRef.current;
+
+      if (x + offsetWidth > innerWidth) x -= x + offsetWidth - innerWidth;
+
+      if (y + offsetHeight > innerHeight) y -= y + offsetHeight - innerHeight;
+    }
+
+    return { x, y };
+  }
+
+  // when the menu is transitioning from not visible to visible,
+  // the nodeRef is attached to the dom element this let us check the boundaries
   useEffect(() => {
-    if (state.visible) {
-      const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
-      const {
-        offsetWidth: menuWidth,
-        offsetHeight: menuHeight,
-      } = nodeRef.current!;
-      let { x, y } = state;
-
-      if (x + menuWidth > windowWidth) {
-        x -= x + menuWidth - windowWidth;
-      }
-
-      if (y + menuHeight > windowHeight) {
-        y -= y + menuHeight - windowHeight;
-      }
-
-      setState({
-        x,
-        y,
-      });
-    }
-
     // state.visible and state{x,y} are updated together
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (state.visible) setState(checkBoundaries(state.x, state.y));
   }, [state.visible]);
 
   // subscribe dom events
   useEffect(() => {
+    function preventDefault(e: KeyboardEvent) {
+      if (preventDefaultOnKeydown) e.preventDefault();
+    }
+
     function handleKeyboard(e: KeyboardEvent) {
-      e.preventDefault();
       switch (e.key) {
         case 'Enter':
+        case ' ':
           if (!menuController.openSubmenu()) hide();
           break;
         case 'Escape':
           hide();
           break;
         case 'ArrowUp':
+          preventDefault(e);
           menuController.moveUp();
           break;
         case 'ArrowDown':
+          preventDefault(e);
           menuController.moveDown();
           break;
         case 'ArrowRight':
+          preventDefault(e);
           menuController.openSubmenu();
           break;
         case 'ArrowLeft':
+          preventDefault(e);
           menuController.closeSubmenu();
+          break;
+        default:
+          menuController.matchKeys(e);
           break;
       }
     }
 
     if (state.visible) {
-      window.addEventListener('resize', hide);
-      window.addEventListener('contextmenu', hide);
-      window.addEventListener('click', hide);
-      window.addEventListener('scroll', hide);
       window.addEventListener('keydown', handleKeyboard);
 
-      // This let us debug the menu in the console in dev mode
-      if (process.env.NODE_ENV !== 'development') {
-        window.addEventListener('blur', hide);
-      }
+      for (const ev of hideOnEvents) window.addEventListener(ev, hide);
     }
 
     return () => {
-      window.removeEventListener('resize', hide);
-      window.removeEventListener('contextmenu', hide);
-      window.removeEventListener('click', hide);
-      window.removeEventListener('scroll', hide);
       window.removeEventListener('keydown', handleKeyboard);
 
-      if (process.env.NODE_ENV !== 'development') {
-        window.removeEventListener('blur', hide);
-      }
+      for (const ev of hideOnEvents) window.removeEventListener(ev, hide);
     };
-    // state.visible will let us get the right reference to `hide`
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.visible, menuController]);
+  }, [state.visible, menuController, preventDefaultOnKeydown]);
 
-  function show({ event, props, position }: ContextMenuParams) {
+  function show({ event, props, position }: ShowContextMenuParams) {
     event.stopPropagation();
-    const { x, y } = position || getMousePosition(event);
+    const p = position || getMousePosition(event);
+    // check boundaries when the menu is already visible
+    const { x, y } = checkBoundaries(p.x, p.y);
 
-    // prevent react from batching the state update
-    // if the menu is already visible we have to recompute bounding rect based on position
-    setTimeout(() => {
+    flushSync(() => {
       setState({
         visible: true,
         willLeave: false,
@@ -245,48 +208,57 @@ export const Menu: React.FC<MenuProps> = ({
         triggerEvent: event,
         propsFromTrigger: props,
       });
-    }, 0);
+    });
+
+    clearTimeout(visibilityId.current);
+    if (!wasVisible.current && isFn(onVisibilityChange)) {
+      onVisibilityChange(true);
+      wasVisible.current = true;
+    }
   }
 
-  function hide(event?: Event) {
-    // Safari trigger a click event when you ctrl + trackpad
-    // Firefox:  trigger a click event when right click occur
-    const e = event as KeyboardEvent & MouseEvent;
+  function hide(e?: Event) {
+    type SafariEvent = KeyboardEvent & MouseEvent;
 
     if (
-      typeof e !== 'undefined' &&
-      (e.button === 2 || e.ctrlKey === true) &&
+      e != null &&
+      // Safari trigger a click event when you ctrl + trackpad
+      ((e as SafariEvent).button === 2 || (e as SafariEvent).ctrlKey) &&
+      // Firefox trigger a click event when right click occur
       e.type !== 'contextmenu'
-    ) {
+    )
       return;
-    }
 
-    hasExitAnimation(animation)
-      ? setState(state => ({ willLeave: state.visible }))
-      : setState(state => ({ visible: state.visible ? false : state.visible }));
+    animation && (isStr(animation) || ('exit' in animation && animation.exit))
+      ? setState((state) => ({ willLeave: state.visible }))
+      : setState((state) => ({
+          visible: state.visible ? false : state.visible,
+        }));
+
+    visibilityId.current = setTimeout(() => {
+      isFn(onVisibilityChange) && onVisibilityChange(false);
+      wasVisible.current = false;
+    });
   }
 
   function handleAnimationEnd() {
     if (state.willLeave && state.visible) {
-      setState({ visible: false, willLeave: false });
+      flushSync(() => setState({ visible: false, willLeave: false }));
     }
   }
 
   function computeAnimationClasses() {
-    if (!animation) return null;
-
     if (isStr(animation)) {
       return cx({
-        [`${STYLE.animationWillEnter}${animation}`]:
-          animation && visible && !willLeave,
-        [`${STYLE.animationWillLeave}${animation} ${STYLE.animationWillLeave}'disabled'`]:
-          animation && visible && willLeave,
+        [`${CssClass.animationWillEnter}${animation}`]: visible && !willLeave,
+        [`${CssClass.animationWillLeave}${animation} ${CssClass.animationWillLeave}'disabled'`]:
+          visible && willLeave,
       });
-    } else if ('enter' in animation && 'exit' in animation) {
+    } else if (animation && 'enter' in animation && 'exit' in animation) {
       return cx({
-        [`${STYLE.animationWillEnter}${animation.enter}`]:
+        [`${CssClass.animationWillEnter}${animation.enter}`]:
           animation.enter && visible && !willLeave,
-        [`${STYLE.animationWillLeave}${animation.exit} ${STYLE.animationWillLeave}'disabled'`]:
+        [`${CssClass.animationWillLeave}${animation.exit} ${CssClass.animationWillLeave}'disabled'`]:
           animation.exit && visible && willLeave,
       });
     }
@@ -296,27 +268,27 @@ export const Menu: React.FC<MenuProps> = ({
 
   const { visible, triggerEvent, propsFromTrigger, x, y, willLeave } = state;
   const cssClasses = cx(
-    STYLE.menu,
+    CssClass.menu,
     className,
-    { [`${STYLE.theme}${theme}`]: theme },
+    { [`${CssClass.theme}${theme}`]: theme },
     computeAnimationClasses()
   );
 
-  const menuStyle = {
-    ...style,
-    left: x,
-    top: y,
-    opacity: 1,
-  };
-
+  // TODO: switch to translate instead of top left
+  // requires an additional dom element around the menu
   return (
-    <RefTrackerProvider refTracker={refTracker}>
+    <ItemTrackerProvider value={itemTracker}>
       {visible && (
         <div
           {...rest}
           className={cssClasses}
           onAnimationEnd={handleAnimationEnd}
-          style={menuStyle}
+          style={{
+            ...style,
+            left: x,
+            top: y,
+            opacity: 1,
+          }}
           ref={nodeRef}
           role="menu"
         >
@@ -326,6 +298,6 @@ export const Menu: React.FC<MenuProps> = ({
           })}
         </div>
       )}
-    </RefTrackerProvider>
+    </ItemTrackerProvider>
   );
 };

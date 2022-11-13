@@ -1,11 +1,16 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import cx from 'clsx';
 
 import { InternalProps, BooleanPredicate, HandlerParamsEvent } from '../types';
-import { RefTrackerProvider, useRefTrackerContext } from './RefTrackerProvider';
-import { useRefTracker } from '../hooks';
-import { STYLE } from '../constants';
+import {
+  ItemTrackerProvider,
+  useItemTrackerContext,
+} from './ItemTrackerProvider';
+import { useItemTracker } from '../hooks';
+import { CssClass } from '../constants';
 import { cloneItems, getPredicateValue } from './utils';
+import { Arrow } from './Arrow';
+import { RightSlot } from './RightSlot';
 
 export interface SubMenuProps
   extends InternalProps,
@@ -36,15 +41,8 @@ export interface SubMenuProps
   hidden?: BooleanPredicate;
 }
 
-interface SubMenuState {
-  left?: string | number;
-  right?: string | number;
-  top?: string | number;
-  bottom?: string | number;
-}
-
 export const Submenu: React.FC<SubMenuProps> = ({
-  arrow = '▶',
+  arrow,
   children,
   disabled = false,
   hidden = false,
@@ -55,14 +53,9 @@ export const Submenu: React.FC<SubMenuProps> = ({
   style,
   ...rest
 }) => {
-  const menuRefTracker = useRefTrackerContext();
-  const refTracker = useRefTracker();
-  const nodeRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<SubMenuState>({
-    left: '100%',
-    top: 0,
-    bottom: 'initial',
-  });
+  const parentItemTracker = useItemTrackerContext();
+  const itemTracker = useItemTracker();
+  const submenuNode = useRef<HTMLDivElement>(null);
   const handlerParams = {
     triggerEvent: triggerEvent as HandlerParamsEvent,
     props: propsFromTrigger,
@@ -70,57 +63,41 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
 
-  useEffect(() => {
-    if (nodeRef.current) {
-      const { innerWidth, innerHeight } = window;
-      const rect = nodeRef.current.getBoundingClientRect();
-      const style: SubMenuState = {};
+  function setPosition() {
+    const node = submenuNode.current;
+    if (node) {
+      const bottom = `${CssClass.submenu}-bottom`;
+      const right = `${CssClass.submenu}-right`;
 
-      if (rect.right < innerWidth) {
-        style.left = '100%';
-        style.right = undefined;
-      } else {
-        style.right = '100%';
-        style.left = undefined;
-      }
+      // reset to default position before computing position
+      node.classList.remove(bottom, right);
 
-      if (rect.bottom > innerHeight) {
-        style.bottom = 0;
-        style.top = 'initial';
-      } else {
-        style.bottom = 'initial';
-      }
+      const rect = node.getBoundingClientRect();
 
-      setPosition(style);
+      if (rect.right > window.innerWidth) node.classList.add(right);
+
+      if (rect.bottom > window.innerHeight) node.classList.add(bottom);
     }
-  }, []);
-
-  function handleClick(e: React.SyntheticEvent) {
-    e.stopPropagation();
   }
 
   function trackRef(node: HTMLElement | null) {
     if (node && !isDisabled)
-      menuRefTracker.set(node, {
+      parentItemTracker.set(node, {
         node,
         isSubmenu: true,
-        submenuRefTracker: refTracker,
+        submenuRefTracker: itemTracker,
+        setSubmenuPosition: setPosition,
       });
   }
 
   if (isHidden) return null;
 
-  const cssClasses = cx(STYLE.item, className, {
-    [`${STYLE.itemDisabled}`]: isDisabled,
+  const cssClasses = cx(CssClass.item, className, {
+    [`${CssClass.itemDisabled}`]: isDisabled,
   });
 
-  const submenuStyle = {
-    ...style,
-    ...position,
-  };
-
   return (
-    <RefTrackerProvider refTracker={refTracker}>
+    <ItemTrackerProvider value={itemTracker}>
       <div
         {...rest}
         className={cssClasses}
@@ -129,19 +106,28 @@ export const Submenu: React.FC<SubMenuProps> = ({
         role="menuitem"
         aria-haspopup
         aria-disabled={isDisabled}
+        onMouseEnter={setPosition}
+        onTouchStart={setPosition}
       >
-        <div className={STYLE.itemContent} onClick={handleClick}>
+        <div
+          className={CssClass.itemContent}
+          onClick={(e) => e.stopPropagation()}
+        >
           {label}
-          <span className={STYLE.submenuArrow}>{arrow}</span>
+          <RightSlot>{arrow || <Arrow />}</RightSlot>
         </div>
-        <div className={STYLE.submenu} ref={nodeRef} style={submenuStyle}>
+        <div
+          className={`${CssClass.menu} ${CssClass.submenu}`}
+          ref={submenuNode}
+          style={style}
+        >
           {cloneItems(children, {
             propsFromTrigger,
-            // injected by the parent
-            triggerEvent: triggerEvent!,
+            // @ts-ignore: injected by the parent
+            triggerEvent,
           })}
         </div>
       </div>
-    </RefTrackerProvider>
+    </ItemTrackerProvider>
   );
 };

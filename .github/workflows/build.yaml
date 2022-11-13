@@ -11,18 +11,16 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v1
         with:
-            node-version: '14.x'
+            node-version: '16.x'
       - name: Install example dependencies
         run: cd example && yarn
       - name: Install dependencies & build
         run: yarn 
-      - name: Lint
-        run: yarn lint
       - name: Run cypress 
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
             browser: chrome
-            start: yarn start:example
+            start: yarn start
             wait-on: 'http://localhost:1234'
       - uses: actions/upload-artifact@v1
         if: failure()

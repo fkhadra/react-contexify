@@ -1,0 +1,15 @@
+.contexify_theme-dark {
+  --contexify-menu-bgColor: rgba(40, 40, 40, 0.98);
+  --contexify-separator-color: #4c4c4c;
+  --contexify-item-color: #fff;
+  // --contexify-activeItem-bgColor: #bb86fc; 
+}
+
+.contexify_theme-light {
+  --contexify-separator-color: #eee;
+  --contexify-item-color: #666;
+  --contexify-activeItem-color: #3498db;
+  --contexify-activeItem-bgColor: #e0eefd; 
+  --contexify-activeRightSlot-color: #3498db;
+  --contexify-active-arrow-color: #3498db;
+}
