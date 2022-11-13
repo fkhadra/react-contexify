@@ -26,9 +26,6 @@
     "dist",
     "scss"
   ],
-  "engines": {
-    "node": ">=16"
-  },
   "scripts": {
     "start": "cd example && yarn start",
     "build": "tsup && yarn run build:style",
