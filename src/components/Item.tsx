@@ -181,6 +181,7 @@ export const Item: React.FC<ItemProps> = ({
           ((e: KeyboardEvent) => {
             if (keyMatcher(e)) {
               e.stopPropagation();
+              e.preventDefault();
               handlerParams.event = e;
               dispatchUserHanlder();
             }
