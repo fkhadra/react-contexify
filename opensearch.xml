@@ -4,8 +4,8 @@
   <ShortName>React-Contexify</ShortName>
   <Description>Search React-Contexify</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://fkhadra.github.io/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://fkhadra.github.io//search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://fkhadra.github.io//opensearch.xml" />
-  <moz:SearchForm>https://fkhadra.github.io/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://fkhadra.github.io/react-contexify/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://fkhadra.github.io/react-contexify/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://fkhadra.github.io/react-contexify/opensearch.xml" />
+  <moz:SearchForm>https://fkhadra.github.io/react-contexify/</moz:SearchForm>
 </OpenSearchDescription>
