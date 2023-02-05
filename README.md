@@ -72,7 +72,7 @@ function App() {
       case "copy":
         console.log(event, props)
         break;
-      case "cut";
+      case "cut":
         console.log(event, props);
         break;
       //etc...
