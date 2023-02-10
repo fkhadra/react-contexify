@@ -12,6 +12,7 @@ export interface ContextMenu {
 export interface ShowContextMenuParams<TProps = unknown> {
   id: MenuId;
   event: TriggerEvent;
+  disableEventPropagation?: boolean;
   props?: TProps;
   position?: {
     x: number;
@@ -20,13 +21,14 @@ export interface ShowContextMenuParams<TProps = unknown> {
 }
 
 const contextMenu: ContextMenu = {
-  show({ event, id, props, position }) {
+  show({ event, id, props, position, disableEventPropagation }) {
     if (event.preventDefault) event.preventDefault();
 
     eventManager.emit(EVENT.HIDE_ALL).emit(id, {
       event: (event as SyntheticEvent).nativeEvent || event,
       props,
       position,
+      disableEventPropagation,
     });
   },
   hideAll() {

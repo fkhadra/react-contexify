@@ -193,8 +193,16 @@ export const Menu: React.FC<MenuProps> = ({
     };
   }, [state.visible, menuController, preventDefaultOnKeydown]);
 
-  function show({ event, props, position }: ShowContextMenuParams) {
-    event.stopPropagation();
+  function show({
+    event,
+    props,
+    position,
+    disableEventPropagation = true,
+  }: ShowContextMenuParams) {
+    // If the underlying element relies on the click event to be propagated, you can disable the "stop propagation" of the event.
+    if (disableEventPropagation) {
+      event.stopPropagation();
+    }
     const p = position || getMousePosition(event);
     // check boundaries when the menu is already visible
     const { x, y } = checkBoundaries(p.x, p.y);
