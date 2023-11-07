@@ -63,7 +63,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
   const isDisabled = getPredicateValue(disabled, handlerParams);
   const isHidden = getPredicateValue(hidden, handlerParams);
 
-  function setPosition() {
+  function setPosition(event: any) {
     const node = submenuNode.current;
     if (node) {
       const bottom = `${CssClass.submenu}-bottom`;
@@ -74,9 +74,28 @@ export const Submenu: React.FC<SubMenuProps> = ({
 
       const rect = node.getBoundingClientRect();
 
-      if (rect.right > window.innerWidth) node.classList.add(right);
+			// get the menu item element
+			const menuItemElement = event.currentTarget;
+			// get the parent wrapper element
+			const menuWrapperElement = menuItemElement.parentNode;
 
-      if (rect.bottom > window.innerHeight) node.classList.add(bottom);
+			const menuItemRect = menuItemElement.getBoundingClientRect();
+			const menuWrapperRect = menuWrapperElement.getBoundingClientRect();
+
+			// if the menu item right position + submenu width is too close to the right edge of the window, then
+      if ((menuItemRect.right + rect.width) > window.innerWidth) {
+				// node.classList.add(right);
+				node.style.left = `-${rect.width}px`;
+			} else {
+				node.style.left = `${menuItemRect.width}px`;
+			}
+
+      if (rect.bottom > window.innerHeight) {
+				node.classList.add(bottom);
+			} else {
+				node.style.top = `${menuItemRect.top - menuWrapperRect.top}px`;
+				node.style.bottom = 'unset';
+			}
     }
   }
 

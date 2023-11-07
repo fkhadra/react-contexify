@@ -4,7 +4,7 @@ export interface ItemTrackerRecord {
   node: HTMLElement;
   isSubmenu: boolean;
   submenuRefTracker?: ItemTracker;
-  setSubmenuPosition?: () => void;
+  setSubmenuPosition?: (event: any) => void;
   keyMatcher?: false | ((e: KeyboardEvent) => void);
 }
 
