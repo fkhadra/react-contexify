@@ -1,6 +1,7 @@
 :root{
   --contexify-zIndex: 666;
   --contexify-menu-minWidth: 220px;
+	--contexify-menu-maxHeight: 400px;
   --contexify-menu-padding: 6px;
   --contexify-menu-radius: 6px;
   --contexify-menu-bgColor: #fff;
@@ -72,6 +73,12 @@
     opacity: 1;
   }
 
+	& &_wrapper {
+		overflow-x: hidden;
+    overflow-y: auto;
+    max-height: var(--contexify-menu-maxHeight);
+	}
+
   & &_submenu {
     position: absolute;
     pointer-events: none;
@@ -111,7 +118,7 @@
 
   &_item {
     cursor: pointer;
-    position: relative;
+    position: static;
 
     &:focus{
       outline: 0;

@@ -235,6 +235,7 @@ export const Menu: React.FC<MenuProps> = ({
           visible: state.visible ? false : state.visible,
         }));
 
+		// @ts-ignore
     visibilityId.current = setTimeout(() => {
       isFn(onVisibilityChange) && onVisibilityChange(false);
       wasVisible.current = false;
@@ -292,10 +293,12 @@ export const Menu: React.FC<MenuProps> = ({
           ref={nodeRef}
           role="menu"
         >
-          {cloneItems(children, {
-            propsFromTrigger,
-            triggerEvent,
-          })}
+          <div className={cx(CssClass.menuWrapper)}>
+						{cloneItems(children, {
+							propsFromTrigger,
+							triggerEvent,
+						})}
+					</div>
         </div>
       )}
     </ItemTrackerProvider>
