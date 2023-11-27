@@ -6,7 +6,7 @@ export interface UseContextMenuParams<TProps = unknown> {
   props?: TProps;
 }
 
-type MakeOptional<Type, Key extends keyof Type> = Omit<Type, Key> &
+export type MakeOptional<Type, Key extends keyof Type> = Omit<Type, Key> &
   Partial<Pick<Type, Key>>;
 
 export function useContextMenu<TProps>(
