@@ -7,6 +7,7 @@ import {
   BooleanPredicate,
   HandlerParamsEvent,
   BuiltInOrString,
+  HandlerParams,
 } from '../types';
 import { useItemTrackerContext } from './ItemTrackerProvider';
 import { NOOP, CssClass } from '../constants';
@@ -15,11 +16,20 @@ import { contextMenu } from '../core';
 
 export interface ItemProps
   extends InternalProps,
-    Omit<React.HTMLAttributes<HTMLElement>, 'hidden' | 'disabled' | 'onClick'> {
+    Omit<
+      React.HTMLAttributes<HTMLElement>,
+      'hidden' | 'disabled' | 'onClick' | 'children'
+    > {
   /**
    * Any valid node that can be rendered
+   * If a function is used, a ReactNode must be returned
+   *
+   * @param id The item id, when defined
+   * @param props The props passed when you called `show(e, {props: yourProps})`
+   * @param data The data defined on the `Item`
+   * @param triggerEvent The event that triggered the context menu
    */
-  children: ReactNode;
+  children: ((args: HandlerParams) => ReactNode) | ReactNode;
 
   /**
    * Passed to the `Item` onClick callback. Accessible via `data`
@@ -200,6 +210,9 @@ export const Item: React.FC<ItemProps> = ({
 
   if (isHidden) return null;
 
+  const childrenPassedProps =
+    typeof children === 'function' ? children(handlerParams) : children;
+
   return (
     <div
       {...{ ...rest, [handlerEvent]: handleClick }}
@@ -213,7 +226,7 @@ export const Item: React.FC<ItemProps> = ({
       role="menuitem"
       aria-disabled={isDisabled}
     >
-      <div className={CssClass.itemContent}>{children}</div>
+      <div className={CssClass.itemContent}>{childrenPassedProps}</div>
     </div>
   );
 };

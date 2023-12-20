@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0",
+  "version": "6.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -46,11 +46,11 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "react-contexify",
+  "name": "react-contexify-props",
   "author": "Fadi Khadra <fdkhadra@gmail.com> (https://github.com/fkhadra)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fkhadra/react-contexify.git"
+    "url": "git+https://github.com/flynow10/react-contexify-props.git"
   },
   "bugs": {
     "url": "https://github.com/fkhadra/react-contexify/issues"

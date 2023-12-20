@@ -252,14 +252,18 @@ export function App() {
           data-test={DATA_TEST.MENU_FIRST_ITEM}
           hidden={state.hideItems}
         >
-          Item 1<RightSlot>⌘C</RightSlot>
+          {(params: ItemParams) => {
+            return JSON.stringify(params.props);
+          }}
         </Item>
         <Item
+          onClick={handleItemClick}
           data-test={DATA_TEST.MENU_SECOND_ITEM}
-          hidden={() => state.hideItems}
+          hidden={state.hideItems}
         >
-          Item 2
+          Item 1<RightSlot>⌘C</RightSlot>
         </Item>
+        <Item hidden={() => state.hideItems}>Item 2</Item>
         <Item
           onClick={() => {
             setState({
