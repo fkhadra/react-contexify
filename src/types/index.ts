@@ -26,7 +26,7 @@ export type MenuId = string | number;
 /**
  * Used both by `PredicatParams` and `ItemParams`
  */
-interface HandlerParams<Props = any, Data = any> {
+export interface HandlerParams<Props = any, Data = any> {
   /**
    * The id of the item when provided
    */
