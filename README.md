@@ -1,6 +1,9 @@
 <img width="645" alt="screenshot 2018-10-31 at 13 32 57" src="https://user-images.githubusercontent.com/5574267/47815610-1806fa00-dd51-11e8-981b-2f680244ae29.png">
 
-![React-contexify CI](https://github.com/fkhadra/react-contexify/workflows/React-contexify%20CI/badge.svg) [![npm](https://img.shields.io/npm/dm/react-contexify.svg)]() [![npm](https://img.shields.io/npm/v/react-contexify.svg)]() [![license](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)]()
+[![React-contexify CI](https://github.com/fkhadra/react-contexify/workflows/React-contexify%20CI/badge.svg)](https://github.com/fkhadra/react-contexify/actions/workflows/build.yaml)
+[![npm Downloads](https://img.shields.io/npm/dm/react-contexify.svg)](https://npm-compare.com/react-contexify/#timeRange=FIVE_YEARS)
+[![npm Version](https://img.shields.io/npm/v/react-contexify.svg)](https://npmjs.com/package/react-contexify)
+[![License](https://img.shields.io/github/license/fkhadra/react-contexify.svg?maxAge=2592000)](https://github.com/fkhadra/react-contexify/blob/main/LICENSE)
 
 <div style="text-align:center">
 
