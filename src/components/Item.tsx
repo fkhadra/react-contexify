@@ -203,7 +203,7 @@ export const Item: React.FC<ItemProps> = ({
   return (
     <div
       {...{ ...rest, [handlerEvent]: handleClick }}
-      className={cx(CssClass.item, className, {
+      className={cx.clsx(CssClass.item, className, {
         [`${CssClass.itemDisabled}`]: isDisabled,
       })}
       style={style}

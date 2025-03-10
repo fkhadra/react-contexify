@@ -181,15 +181,21 @@ export const Menu: React.FC<MenuProps> = ({
     }
 
     if (state.visible) {
-      window.addEventListener('keydown', handleKeyboard);
+      nodeRef.current?.ownerDocument.addEventListener(
+        'keydown',
+        handleKeyboard
+      );
 
-      for (const ev of hideOnEvents) window.addEventListener(ev, hide);
+      for (const ev of hideOnEvents) window.document.addEventListener(ev, hide);
     }
 
     return () => {
-      window.removeEventListener('keydown', handleKeyboard);
+      nodeRef.current?.ownerDocument.removeEventListener(
+        'keydown',
+        handleKeyboard
+      );
 
-      for (const ev of hideOnEvents) window.removeEventListener(ev, hide);
+      for (const ev of hideOnEvents) window.document.removeEventListener(ev, hide);
     };
   }, [state.visible, menuController, preventDefaultOnKeydown]);
 
@@ -235,6 +241,7 @@ export const Menu: React.FC<MenuProps> = ({
           visible: state.visible ? false : state.visible,
         }));
 
+    // @ts-expect-error setTimeout is not a number
     visibilityId.current = setTimeout(() => {
       isFn(onVisibilityChange) && onVisibilityChange(false);
       wasVisible.current = false;
@@ -249,13 +256,13 @@ export const Menu: React.FC<MenuProps> = ({
 
   function computeAnimationClasses() {
     if (isStr(animation)) {
-      return cx({
+      return cx.clsx({
         [`${CssClass.animationWillEnter}${animation}`]: visible && !willLeave,
         [`${CssClass.animationWillLeave}${animation} ${CssClass.animationWillLeave}'disabled'`]:
           visible && willLeave,
       });
     } else if (animation && 'enter' in animation && 'exit' in animation) {
-      return cx({
+      return cx.clsx({
         [`${CssClass.animationWillEnter}${animation.enter}`]:
           animation.enter && visible && !willLeave,
         [`${CssClass.animationWillLeave}${animation.exit} ${CssClass.animationWillLeave}'disabled'`]:
@@ -267,7 +274,7 @@ export const Menu: React.FC<MenuProps> = ({
   }
 
   const { visible, triggerEvent, propsFromTrigger, x, y, willLeave } = state;
-  const cssClasses = cx(
+  const cssClasses = cx.clsx(
     CssClass.menu,
     className,
     { [`${CssClass.theme}${theme}`]: theme },

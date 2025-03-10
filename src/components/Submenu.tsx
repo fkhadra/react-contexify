@@ -92,7 +92,7 @@ export const Submenu: React.FC<SubMenuProps> = ({
 
   if (isHidden) return null;
 
-  const cssClasses = cx(CssClass.item, className, {
+  const cssClasses = cx.clsx(CssClass.item, className, {
     [`${CssClass.itemDisabled}`]: isDisabled,
   });
 

@@ -8,5 +8,5 @@ export interface RightSlotProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const RightSlot: React.FC<RightSlotProps> = ({ className, ...rest }) => (
-  <div className={cx(CssClass.rightSlot, className)} {...rest} />
+  <div className={cx.clsx(CssClass.rightSlot, className)} {...rest} />
 );
