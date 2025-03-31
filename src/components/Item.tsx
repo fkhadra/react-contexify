@@ -158,14 +158,23 @@ export const Item: React.FC<ItemProps> = ({
   // provide a feedback to the user that the item has been clicked before closing the menu
   function dispatchUserHanlder() {
     const node = itemNode.current!;
+
     node.focus();
-    node.addEventListener(
-      'animationend',
-      // defer, required for react 17
-      () => setTimeout(contextMenu.hideAll),
-      { once: true }
-    );
     node.classList.add(CssClass.itemClickedFeedback);
+
+    const hideMenu = () => {
+      setTimeout(contextMenu.hideAll, 0);
+    };
+
+    const hasAnimations =
+        window.getComputedStyle(node).animationName !== 'none';
+
+    if (hasAnimations) {
+      node.addEventListener('animationend', () => hideMenu(), { once: true });
+    } else {
+      hideMenu();
+    }
+
     onClick(handlerParams);
   }
 

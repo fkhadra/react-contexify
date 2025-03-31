@@ -3550,12 +3550,6 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-"ls@file:../../.nvm/versions/node/v18.20.4/lib/node_modules/ls":
-  version "0.2.1"
-  resolved "file:../../.nvm/versions/node/v18.20.4/lib/node_modules/ls"
-  dependencies:
-    glob "7.0.5"
-
 make-dir@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/make-dir/-/make-dir-4.0.0.tgz"
