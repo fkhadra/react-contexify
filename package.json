@@ -66,21 +66,22 @@
     "popup"
   ],
   "devDependencies": {
-    "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.8",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "cssnano": "^5.1.14",
     "cssnano-cli": "^1.0.5",
     "cypress": "^11.0.1",
     "postcss": "^8.4.18",
     "postcss-cli": "^10.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "sass": "^1.56.1",
     "style2js": "^1.0.1",
     "tsup": "^6.4.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "clsx": "^1.2.1"
+    "clsx": "^1.2.1",
+    "process": "^0.11.10"
   }
 }

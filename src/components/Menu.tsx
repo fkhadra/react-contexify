@@ -105,8 +105,8 @@ export const Menu: React.FC<MenuProps> = ({
   const nodeRef = useRef<HTMLDivElement>(null);
   const itemTracker = useItemTracker();
   const [menuController] = useState(() => createKeyboardController());
-  const wasVisible = useRef<boolean>();
-  const visibilityId = useRef<number>();
+  const wasVisible = useRef<boolean>(false);
+  const visibilityId = useRef<number>(0);
 
   // subscribe event manager
   useEffect(() => {
@@ -232,8 +232,8 @@ export const Menu: React.FC<MenuProps> = ({
     animation && (isStr(animation) || ('exit' in animation && animation.exit))
       ? setState((state) => ({ willLeave: state.visible }))
       : setState((state) => ({
-          visible: state.visible ? false : state.visible,
-        }));
+        visible: state.visible ? false : state.visible,
+      }));
 
     visibilityId.current = setTimeout(() => {
       isFn(onVisibilityChange) && onVisibilityChange(false);

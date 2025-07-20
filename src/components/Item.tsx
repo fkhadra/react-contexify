@@ -15,7 +15,7 @@ import { contextMenu } from '../core';
 
 export interface ItemProps
   extends InternalProps,
-    Omit<React.HTMLAttributes<HTMLElement>, 'hidden' | 'disabled' | 'onClick'> {
+  Omit<React.HTMLAttributes<HTMLElement>, 'hidden' | 'disabled' | 'onClick'> {
   /**
    * Any valid node that can be rendered
    */
@@ -135,7 +135,7 @@ export const Item: React.FC<ItemProps> = ({
   handlerEvent = 'onClick',
   ...rest
 }) => {
-  const itemNode = useRef<HTMLElement>();
+  const itemNode = useRef<HTMLElement>(null);
   const itemTracker = useItemTrackerContext();
   const handlerParams = {
     id,
