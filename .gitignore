@@ -1,3 +1,4 @@
+
 .idea/
 node_modules/
 .sass-cache/
@@ -11,3 +12,4 @@ yarn-error.log*
 .cache
 dist
 *.log
+.history
